@@ -13,6 +13,7 @@ import android.util.Log;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -39,7 +40,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String API_KEY = BuildConfig.API_KEY;
     PlacesClient placesClient;
     private static final int RC_LOCATION = 10;
-    private FusedLocationProviderClient fusedLocationProviderClient;
     LatLng latLng;
 
     @Override
@@ -50,9 +50,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        //Initialize fusedLocationProviderClient
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         // Initialize the SDK
         Places.initialize(getApplicationContext(), API_KEY);
@@ -80,14 +77,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void getCurrentLocation() {
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME,Place.Field.LAT_LNG,
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG,
                 Place.Field.TYPES);
 
 // Use the builder to create a FindCurrentPlaceRequest.
         FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
 
 // Call findCurrentPlace and handle the response (first check that the user has granted permission).
-        if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) {
             Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
             placeResponse.addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -97,10 +95,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 placeLikelihood.getPlace().getName(),
                                 placeLikelihood.getLikelihood()));
 
+                        //Move camera to the first restaurant found
+                        int i=0;
+                            while (i == 0  && placeLikelihood.getPlace().getLatLng() != null &&
+                                    placeLikelihood.getPlace().getTypes().contains(RESTAURANT) ) {
+
+
+                        mMap.moveCamera (CameraUpdateFactory.newLatLngZoom(
+                                placeLikelihood.getPlace().getLatLng(), 15));
+                            i = 1;}
+
 
                         // if latitude and longitude aren't null and if the place type is RESTAURANT
                         if (placeLikelihood.getPlace().getLatLng() != null &&
-                        placeLikelihood.getPlace().getTypes().contains(RESTAURANT)) {
+                                placeLikelihood.getPlace().getTypes().contains(RESTAURANT)) {
                             latLng = placeLikelihood.getPlace().getLatLng();
                             MarkerOptions options = new MarkerOptions()
                                     .position(latLng)
@@ -130,7 +138,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         if (requestCode == RC_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getCurrentLocation();
