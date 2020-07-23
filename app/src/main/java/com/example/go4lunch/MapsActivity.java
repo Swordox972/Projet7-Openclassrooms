@@ -3,12 +3,15 @@ package com.example.go4lunch;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -26,6 +29,7 @@ import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,13 +38,14 @@ import java.util.List;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.libraries.places.api.model.Place.Type.RESTAURANT;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
     private GoogleMap mMap;
     private String API_KEY = BuildConfig.API_KEY;
     PlacesClient placesClient;
     private static final int RC_LOCATION = 10;
     LatLng latLng;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,17 +63,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         placesClient = Places.createClient(this);
 
         getCurrentLocation();
+
+        //Initialize bottom navigation
+        bottomNavigationView= findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+
+                switch (item.getItemId()) {
+                    case R.id.page_1:
+                        startActivity(intent);
+                        break;
+
+                    case R.id.page_2:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.restaurant_fragment,
+                                new RestaurantFragment()).commit();
+
+                    case R.id.page_3:
+                        startActivity(intent);
+                }
+                return true;
+            }
+        });
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -90,34 +109,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             placeResponse.addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     FindCurrentPlaceResponse response = task.getResult();
+
+                    boolean firstRestaurantFound = false;
+
                     for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
                         Log.i("success", String.format("Place '%s' has likelihood: %f",
                                 placeLikelihood.getPlace().getName(),
                                 placeLikelihood.getLikelihood()));
 
-                        //Move camera to the first restaurant found
-                        int i=0;
-                            while (i == 0  && placeLikelihood.getPlace().getLatLng() != null &&
-                                    placeLikelihood.getPlace().getTypes().contains(RESTAURANT) ) {
-
-
-                        mMap.moveCamera (CameraUpdateFactory.newLatLngZoom(
-                                placeLikelihood.getPlace().getLatLng(), 15));
-                            i = 1;}
-
-
+                        final Place.Type lookingFor = RESTAURANT; // Place.Type.RESTAURANT
                         // if latitude and longitude aren't null and if the place type is RESTAURANT
-                        if (placeLikelihood.getPlace().getLatLng() != null &&
-                                placeLikelihood.getPlace().getTypes().contains(RESTAURANT)) {
+                        final List<Place.Type> types = placeLikelihood.getPlace().getTypes();
+                        Log.d("TYPES", types.toString());
+                        if (placeLikelihood.getPlace().getLatLng() != null && types.contains(lookingFor)) {
+
                             latLng = placeLikelihood.getPlace().getLatLng();
+
+                            //Move camera to the first restaurant found
+                            if (!firstRestaurantFound) {
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                                firstRestaurantFound = true;
+                            }
+
                             MarkerOptions options = new MarkerOptions()
                                     .position(latLng)
                                     .title(placeLikelihood.getPlace().getName());
 
                             mMap.addMarker(options);
 
-                        }
 
+
+                        }
                     }
                 } else {
                     Exception exception = task.getException();
@@ -132,6 +154,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         }
     }
+
 
     private void getLocatePermission() {
         ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, RC_LOCATION);
@@ -148,4 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
+
+
 }
