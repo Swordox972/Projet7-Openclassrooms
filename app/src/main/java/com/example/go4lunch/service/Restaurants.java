@@ -1,9 +1,8 @@
 package com.example.go4lunch.service;
 
-import com.example.go4lunch.MyRestaurantModel;
+import com.example.go4lunch.model.MyRestaurantModel;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Restaurants implements Serializable {

@@ -1,6 +1,10 @@
-package com.example.go4lunch;
+package com.example.go4lunch.model;
 
+import android.provider.ContactsContract;
 import android.widget.ImageView;
+
+import com.google.android.libraries.places.api.model.OpeningHours;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
 
 import java.io.Serializable;
 
@@ -8,22 +12,21 @@ public class MyRestaurantModel implements Serializable {
 
     private String restaurantName;
     private String restaurantAddress;
-    private String restaurantOpening;
+    private OpeningHours restaurantOpening;
     private String restaurantDistance;
-    private ImageView restaurantImageView;
 
     // Empty constructor
     public MyRestaurantModel() {
     }
 
     //Constructor with parameters
-    public MyRestaurantModel(String restaurantName, String restaurantAddress, String restaurantOpening, String restaurantDistance,
-                             ImageView restaurantImageView) {
+    public MyRestaurantModel(String restaurantName, String restaurantAddress,
+                             OpeningHours restaurantOpening, String restaurantDistance) {
         this.restaurantName = restaurantName;
         this.restaurantAddress = restaurantAddress;
         this.restaurantOpening = restaurantOpening;
         this.restaurantDistance = restaurantDistance;
-        this.restaurantImageView = restaurantImageView;
+
     }
 
     public String getRestaurantName() {
@@ -42,11 +45,11 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantAddress = restaurantAddress;
     }
 
-    public String getRestaurantOpening() {
+    public OpeningHours getRestaurantOpening() {
         return restaurantOpening;
     }
 
-    public void setRestaurantOpening(String restaurantOpening) {
+    public void setRestaurantOpening(OpeningHours restaurantOpening) {
         this.restaurantOpening = restaurantOpening;
     }
 
@@ -58,11 +61,5 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantDistance = restaurantDistance;
     }
 
-    public ImageView getRestaurantImageView() {
-        return restaurantImageView;
-    }
 
-    public void setRestaurantImageView(ImageView restaurantImageView) {
-        this.restaurantImageView = restaurantImageView;
-    }
 }
