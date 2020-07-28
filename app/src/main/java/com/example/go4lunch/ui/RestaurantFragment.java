@@ -28,6 +28,7 @@ public class RestaurantFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
         //Initialize recyclerView
@@ -36,14 +37,13 @@ public class RestaurantFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
                 DividerItemDecoration.VERTICAL));
-        setHasOptionsMenu(true);
         initList();
         return view;
     }
 
     private void initList() {
-        myAdapter = new MyRestaurantRecyclerViewAdapter(restaurantList);
         restaurantList = Restaurants.getInstance().getMyRestaurantList();
+        myAdapter = new MyRestaurantRecyclerViewAdapter(restaurantList);
         mRecyclerView.setAdapter(myAdapter);
     }
 }

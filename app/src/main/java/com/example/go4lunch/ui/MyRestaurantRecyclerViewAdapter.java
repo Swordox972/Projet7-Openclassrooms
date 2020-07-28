@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 public class MyRestaurantRecyclerViewAdapter extends
         RecyclerView.Adapter<MyRestaurantRecyclerViewAdapter.ViewHolder> {
 
-    private List<MyRestaurantModel> myRestaurantList = new ArrayList<>();
+    private List<MyRestaurantModel> myRestaurantList;
 
     public MyRestaurantRecyclerViewAdapter(List<MyRestaurantModel> items) {
         this.myRestaurantList = items;
@@ -43,12 +43,13 @@ public class MyRestaurantRecyclerViewAdapter extends
 
       holder.restaurantName.setText(myRestaurant.getRestaurantName());
       holder.restaurantAddress.setText(myRestaurant.getRestaurantAddress());
-      holder.restaurantOpeningHours.setText(myRestaurant.getRestaurantOpening().toString());
+      holder.restaurantOpeningHours.setText(myRestaurant.getRestaurantOpening());
     }
 
     @Override
     public int getItemCount() {
-        return myRestaurantList.size();
+        int i= myRestaurantList.size();
+        return i;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

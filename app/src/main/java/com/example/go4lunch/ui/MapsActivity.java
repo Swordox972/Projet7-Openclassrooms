@@ -80,7 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     case R.id.page_2:
                         getSupportFragmentManager().beginTransaction().replace(
-                                R.id.maps_linear_layout, new RestaurantFragment()).commit();
+                                R.id.maps_container, new RestaurantFragment()).commit();
 
                         break;
                     case R.id.page_3:
@@ -175,7 +175,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 // Specify the fields to return.
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
-                Place.Field.ADDRESS, Place.Field.OPENING_HOURS, Place.Field.TYPES);
+                Place.Field.ADDRESS, Place.Field.BUSINESS_STATUS, Place.Field.TYPES);
 
 // Construct a request object, passing the place ID and fields array.
         final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
@@ -192,7 +192,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
                     MyRestaurantModel restaurant = new MyRestaurantModel(place.getName(),
-                            place.getAddress(), place.getOpeningHours().getWeekdayText().get(0)
+                            place.getAddress(), place.getBusinessStatus().toString()
                             , "210m");
 
                     Restaurants.getInstance().getMyRestaurantList().add(restaurant);
