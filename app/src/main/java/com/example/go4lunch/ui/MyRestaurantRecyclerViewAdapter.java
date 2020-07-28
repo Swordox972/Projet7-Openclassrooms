@@ -12,6 +12,7 @@ import com.example.go4lunch.R;
 import com.example.go4lunch.model.MyRestaurantModel;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -20,10 +21,10 @@ import butterknife.ButterKnife;
 public class MyRestaurantRecyclerViewAdapter extends
         RecyclerView.Adapter<MyRestaurantRecyclerViewAdapter.ViewHolder> {
 
-    private List<MyRestaurantModel> myRestaurantList;
+    private List<MyRestaurantModel> myRestaurantList = new ArrayList<>();
 
-    public MyRestaurantRecyclerViewAdapter(List<MyRestaurantModel> myRestaurantList) {
-        this.myRestaurantList = myRestaurantList;
+    public MyRestaurantRecyclerViewAdapter(List<MyRestaurantModel> items) {
+        this.myRestaurantList = items;
     }
 
     @NonNull
@@ -47,7 +48,7 @@ public class MyRestaurantRecyclerViewAdapter extends
 
     @Override
     public int getItemCount() {
-        return this.myRestaurantList.size();
+        return myRestaurantList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

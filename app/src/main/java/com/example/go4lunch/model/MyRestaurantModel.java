@@ -1,18 +1,12 @@
 package com.example.go4lunch.model;
 
-import android.provider.ContactsContract;
-import android.widget.ImageView;
-
-import com.google.android.libraries.places.api.model.OpeningHours;
-import com.google.android.libraries.places.api.model.PhotoMetadata;
-
 import java.io.Serializable;
 
 public class MyRestaurantModel implements Serializable {
 
     private String restaurantName;
     private String restaurantAddress;
-    private OpeningHours restaurantOpening;
+    private String restaurantOpening;
     private String restaurantDistance;
 
     // Empty constructor
@@ -21,7 +15,7 @@ public class MyRestaurantModel implements Serializable {
 
     //Constructor with parameters
     public MyRestaurantModel(String restaurantName, String restaurantAddress,
-                             OpeningHours restaurantOpening, String restaurantDistance) {
+                             String restaurantOpening, String restaurantDistance) {
         this.restaurantName = restaurantName;
         this.restaurantAddress = restaurantAddress;
         this.restaurantOpening = restaurantOpening;
@@ -45,11 +39,11 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantAddress = restaurantAddress;
     }
 
-    public OpeningHours getRestaurantOpening() {
+    public String getRestaurantOpening() {
         return restaurantOpening;
     }
 
-    public void setRestaurantOpening(OpeningHours restaurantOpening) {
+    public void setRestaurantOpening(String restaurantOpening) {
         this.restaurantOpening = restaurantOpening;
     }
 

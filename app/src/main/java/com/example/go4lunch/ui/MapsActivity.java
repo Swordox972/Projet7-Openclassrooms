@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.MyRestaurantModel;
+import com.example.go4lunch.service.Restaurants;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -63,6 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         placesClient = Places.createClient(this);
 
         getCurrentLocation();
+        getRestaurantInformation();
 
         //Initialize bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -77,6 +79,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         break;
 
                     case R.id.page_2:
+                        getSupportFragmentManager().beginTransaction().replace(
+                                R.id.maps_linear_layout, new RestaurantFragment()).commit();
+
                         break;
                     case R.id.page_3:
                         break;
@@ -96,7 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void getCurrentLocation() {
         List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG,
                 Place.Field.TYPES);
-     // Use the builder to create a FindCurrentPlaceRequest.
+        // Use the builder to create a FindCurrentPlaceRequest.
         FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
         // Call findCurrentPlace and handle the response (first check that the user has granted permission).
         if (ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) ==
@@ -166,7 +171,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void getRestaurantInformation() {
         // Define a Place ID.
-        final String placeId = "INSERT_PLACE_ID_HERE";
+        final String placeId = "ChIJSdlt2bUeQIwReZ4p5BGp4O8";
 
 // Specify the fields to return.
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
@@ -178,10 +183,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
             Log.i("success", "Place found: " + place.getName() + place.getAddress()
-            + place.getOpeningHours());
+                    + place.getOpeningHours());
 
-            //Take restaurant informations
-            final Place.Type lookingFor= RESTAURANT;
+            //Take restaurant information
+            final Place.Type lookingFor = RESTAURANT;
+// loop for take only restaurant place and add it into my restaurant model then add into singleton list
+
+
+
+                    MyRestaurantModel restaurant = new MyRestaurantModel(place.getName(),
+                            place.getAddress(), place.getOpeningHours().getWeekdayText().get(0)
+                            , "210m");
+
+                    Restaurants.getInstance().getMyRestaurantList().add(restaurant);
+
+
+
+
 
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
