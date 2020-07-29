@@ -3,7 +3,6 @@ package com.example.go4lunch.ui;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
@@ -45,7 +44,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String API_KEY = BuildConfig.API_KEY;
     PlacesClient placesClient;
     private static final int RC_LOCATION = 10;
-    LatLng latLng;
+    LatLng myLatLng;
     private BottomNavigationView bottomNavigationView;
 
     @Override
@@ -54,7 +53,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.fragment_container_view);
+
+
+
         mapFragment.getMapAsync(this);
 
         // Initialize the SDK
@@ -79,8 +81,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         break;
 
                     case R.id.page_2:
-                        getSupportFragmentManager().beginTransaction().replace(
-                                R.id.maps_container, new RestaurantFragment()).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
+                                new RestaurantFragment()).commit();
 
                         break;
                     case R.id.page_3:
@@ -94,8 +96,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-
     }
 
     private void getCurrentLocation() {
@@ -124,16 +124,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Log.d("TYPES", types.toString());
                         if (placeLikelihood.getPlace().getLatLng() != null && types.contains(lookingFor)) {
 
-                            latLng = placeLikelihood.getPlace().getLatLng();
+                            myLatLng = placeLikelihood.getPlace().getLatLng();
 
                             //Move camera to the first restaurant found
                             if (!firstRestaurantFound) {
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
                                 firstRestaurantFound = true;
                             }
 
                             MarkerOptions options = new MarkerOptions()
-                                    .position(latLng)
+                                    .position(myLatLng)
                                     .title(placeLikelihood.getPlace().getName());
 
                             mMap.addMarker(options);
@@ -179,7 +179,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 // Construct a request object, passing the place ID and fields array.
         final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
-
+//Fetch place
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
             Log.i("success", "Place found: " + place.getName() + place.getAddress()
@@ -187,18 +187,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             //Take restaurant information
             final Place.Type lookingFor = RESTAURANT;
-// loop for take only restaurant place and add it into my restaurant model then add into singleton list
+            String restaurantName= place.getName();
+            String restaurantAddress= place.getAddress();
 
-
-
-                    MyRestaurantModel restaurant = new MyRestaurantModel(place.getName(),
-                            place.getAddress(), place.getBusinessStatus().toString()
-                            , "210m");
+                    MyRestaurantModel restaurant = new MyRestaurantModel(restaurantName,
+                            restaurantAddress.substring(0, restaurantAddress.indexOf(", Le Diamant")),
+                            place.getBusinessStatus().toString(), "210m");
 
                     Restaurants.getInstance().getMyRestaurantList().add(restaurant);
-
-
-
 
 
         }).addOnFailureListener((exception) -> {

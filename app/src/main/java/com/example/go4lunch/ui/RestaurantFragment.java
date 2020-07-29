@@ -31,6 +31,7 @@ public class RestaurantFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
+
         //Initialize recyclerView
         Context context = view.getContext();
         mRecyclerView = (RecyclerView) view;
