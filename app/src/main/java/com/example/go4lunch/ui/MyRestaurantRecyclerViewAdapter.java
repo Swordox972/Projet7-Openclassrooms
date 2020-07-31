@@ -3,6 +3,7 @@ package com.example.go4lunch.ui;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,7 @@ public class MyRestaurantRecyclerViewAdapter extends
       holder.restaurantName.setText(myRestaurant.getRestaurantName());
       holder.restaurantAddress.setText(myRestaurant.getRestaurantAddress());
       holder.restaurantOpeningHours.setText(myRestaurant.getRestaurantOpening());
+      holder.imageView.setImageBitmap(MapsActivity.bitmap);
     }
 
     @Override
@@ -59,6 +61,8 @@ public class MyRestaurantRecyclerViewAdapter extends
         TextView restaurantAddress;
         @BindView(R.id.restaurant_opening_hours)
         TextView restaurantOpeningHours;
+        @BindView(R.id.restaurant_imageview)
+        ImageView imageView;
 
 
         public ViewHolder(@NonNull View view) {

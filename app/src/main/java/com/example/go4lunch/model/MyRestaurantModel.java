@@ -1,5 +1,7 @@
 package com.example.go4lunch.model;
 
+import android.widget.ImageView;
+
 import java.io.Serializable;
 
 public class MyRestaurantModel implements Serializable {
@@ -20,6 +22,7 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantAddress = restaurantAddress;
         this.restaurantOpening = restaurantOpening;
         this.restaurantDistance = restaurantDistance;
+
 
     }
 
@@ -54,6 +57,5 @@ public class MyRestaurantModel implements Serializable {
     public void setRestaurantDistance(String restaurantDistance) {
         this.restaurantDistance = restaurantDistance;
     }
-
 
 }

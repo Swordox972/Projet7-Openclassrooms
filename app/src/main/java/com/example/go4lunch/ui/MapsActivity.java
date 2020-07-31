@@ -7,9 +7,11 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
@@ -24,8 +26,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
@@ -33,6 +37,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -46,6 +51,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int RC_LOCATION = 10;
     LatLng myLatLng;
     private BottomNavigationView bottomNavigationView;
+    String restaurantName;
+    String restaurantAddress;
+    // Define a Place ID.
+    final String placeId = "ChIJSdlt2bUeQIwReZ4p5BGp4O8";
+    ImageView imageView;
+   static Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +75,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Create a new PlacesClient instance
         placesClient = Places.createClient(this);
-
+imageView= findViewById(R.id.restaurant_imageview);
         getCurrentLocation();
         getRestaurantInformation();
 
@@ -170,12 +181,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void getRestaurantInformation() {
-        // Define a Place ID.
-        final String placeId = "ChIJSdlt2bUeQIwReZ4p5BGp4O8";
-
 // Specify the fields to return.
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
-                Place.Field.ADDRESS, Place.Field.BUSINESS_STATUS, Place.Field.TYPES);
+                Place.Field.ADDRESS, Place.Field.BUSINESS_STATUS, Place.Field.TYPES,
+                Place.Field.PHOTO_METADATAS);
 
 // Construct a request object, passing the place ID and fields array.
         final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
@@ -187,16 +196,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             //Take restaurant information
             final Place.Type lookingFor = RESTAURANT;
-            String restaurantName= place.getName();
-            String restaurantAddress= place.getAddress();
-
-                    MyRestaurantModel restaurant = new MyRestaurantModel(restaurantName,
-                            restaurantAddress.substring(0, restaurantAddress.indexOf(", Le Diamant")),
-                            place.getBusinessStatus().toString(), "210m");
-
-                    Restaurants.getInstance().getMyRestaurantList().add(restaurant);
+            restaurantName= place.getName();
+            restaurantAddress= place.getAddress();
 
 
+            MyRestaurantModel restaurant = new MyRestaurantModel(restaurantName,
+                    restaurantAddress.substring(0, restaurantAddress.indexOf(", Le Diamant")),
+                    place.getBusinessStatus().toString(), "210m");
+
+            Restaurants.getInstance().getMyRestaurantList().add(restaurant);
+
+            // Get the photo metadata.
+            final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
+            if (metadata == null || metadata.isEmpty()) {
+                Log.w("success", "No photo metadata.");
+                return;
+            }
+            final PhotoMetadata photoMetadata = metadata.get(0);
+
+            // Get the attribution text.
+            final String attributions = photoMetadata.getAttributions();
+
+            // Create a FetchPhotoRequest.
+            final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                    .setMaxWidth(300) // Optional.
+                    .setMaxHeight(250) // Optional.
+                    .build();
+            placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
+                 bitmap = fetchPhotoResponse.getBitmap();
+            }).addOnFailureListener((exception) -> {
+                if (exception instanceof ApiException) {
+                    final ApiException apiException = (ApiException) exception;
+                    Log.e("error", "Place not found: " + exception.getMessage());
+                    final int statusCode = apiException.getStatusCode();
+                    // TODO: Handle error with given status code.
+                }
+            });
+
+        //On failure
         }).addOnFailureListener((exception) -> {
             if (exception instanceof ApiException) {
                 final ApiException apiException = (ApiException) exception;
@@ -206,5 +243,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
+    }
 
-}
+

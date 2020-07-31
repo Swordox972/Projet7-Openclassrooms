@@ -6,8 +6,8 @@
     android:id="@+id/my_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="5dp"
-    android:layout_marginEnd="5dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
     tools:context="ui.RestaurantFragment"
     tools:listitem="@layout/fragment_restaurant"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
