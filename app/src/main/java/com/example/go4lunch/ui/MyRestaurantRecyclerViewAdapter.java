@@ -45,13 +45,12 @@ public class MyRestaurantRecyclerViewAdapter extends
       holder.restaurantName.setText(myRestaurant.getRestaurantName());
       holder.restaurantAddress.setText(myRestaurant.getRestaurantAddress());
       holder.restaurantOpeningHours.setText(myRestaurant.getRestaurantOpening());
-      holder.imageView.setImageBitmap(MapsActivity.bitmap);
+      holder.imageView.setImageBitmap(myRestaurant.getRestaurantImage());
     }
 
     @Override
     public int getItemCount() {
-        int i= myRestaurantList.size();
-        return i;
+        return myRestaurantList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -36,6 +36,7 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -51,12 +52,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int RC_LOCATION = 10;
     LatLng myLatLng;
     private BottomNavigationView bottomNavigationView;
-    String restaurantName;
-    String restaurantAddress;
-    // Define a Place ID.
-    final String placeId = "ChIJSdlt2bUeQIwReZ4p5BGp4O8";
+    //Stock place id
+    List<String> placeIdList;
     ImageView imageView;
-   static Bitmap bitmap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +72,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Initialize the SDK
         Places.initialize(getApplicationContext(), API_KEY);
 
+        //Initialize placeIdList
+        placeIdList= new ArrayList<>();
+
         // Create a new PlacesClient instance
         placesClient = Places.createClient(this);
 imageView= findViewById(R.id.restaurant_imageview);
         getCurrentLocation();
-        getRestaurantInformation();
+
 
         //Initialize bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -88,15 +90,20 @@ imageView= findViewById(R.id.restaurant_imageview);
 
                 switch (item.getItemId()) {
                     case R.id.page_1:
+                        //Clear restaurant list while changing fragment
+                        Restaurants.getInstance().getMyRestaurantList().clear();
                         startActivity(intent);
                         break;
 
                     case R.id.page_2:
+
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
                                 new RestaurantFragment()).commit();
 
                         break;
                     case R.id.page_3:
+                        //Clear restaurant list while changing fragment
+                        Restaurants.getInstance().getMyRestaurantList().clear();
                         break;
                 }
                 return true;
@@ -110,8 +117,8 @@ imageView= findViewById(R.id.restaurant_imageview);
     }
 
     private void getCurrentLocation() {
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG,
-                Place.Field.TYPES);
+        List<Place.Field> placeFields = Arrays.asList( Place.Field.ID,Place.Field.NAME,
+                Place.Field.LAT_LNG, Place.Field.TYPES);
         // Use the builder to create a FindCurrentPlaceRequest.
         FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
         // Call findCurrentPlace and handle the response (first check that the user has granted permission).
@@ -129,12 +136,17 @@ imageView= findViewById(R.id.restaurant_imageview);
                                 placeLikelihood.getPlace().getName(),
                                 placeLikelihood.getLikelihood()));
 
+
                         final Place.Type lookingFor = RESTAURANT; // Place.Type.RESTAURANT
                         // if latitude and longitude aren't null and if the place type is RESTAURANT
                         final List<Place.Type> types = placeLikelihood.getPlace().getTypes();
                         Log.d("TYPES", types.toString());
                         if (placeLikelihood.getPlace().getLatLng() != null && types.contains(lookingFor)) {
 
+                            //Get restaurant place id and stock it in placeId list
+                            String placeId= placeLikelihood.getPlace().getId();
+                            placeIdList.add(placeId);
+                            //Get latitude and longitude
                             myLatLng = placeLikelihood.getPlace().getLatLng();
 
                             //Move camera to the first restaurant found
@@ -148,8 +160,12 @@ imageView= findViewById(R.id.restaurant_imageview);
                                     .title(placeLikelihood.getPlace().getName());
 
                             mMap.addMarker(options);
+
+
                         }
                     }
+                    //Call method to get restaurant information
+                    getRestaurantInformation();
                 } else {
                     Exception exception = task.getException();
                     if (exception instanceof ApiException) {
@@ -181,13 +197,18 @@ imageView= findViewById(R.id.restaurant_imageview);
     }
 
     private void getRestaurantInformation() {
+
 // Specify the fields to return.
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
                 Place.Field.ADDRESS, Place.Field.BUSINESS_STATUS, Place.Field.TYPES,
                 Place.Field.PHOTO_METADATAS);
 
+        //Do a loop for place id
+        for(int i=0; i<placeIdList.size(); i++) {
+        // Define a Place ID.
+
 // Construct a request object, passing the place ID and fields array.
-        final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeId, placeFields);
+        final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeIdList.get(i), placeFields);
 //Fetch place
         placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
             Place place = response.getPlace();
@@ -195,16 +216,8 @@ imageView= findViewById(R.id.restaurant_imageview);
                     + place.getOpeningHours());
 
             //Take restaurant information
-            final Place.Type lookingFor = RESTAURANT;
-            restaurantName= place.getName();
-            restaurantAddress= place.getAddress();
-
-
-            MyRestaurantModel restaurant = new MyRestaurantModel(restaurantName,
-                    restaurantAddress.substring(0, restaurantAddress.indexOf(", Le Diamant")),
-                    place.getBusinessStatus().toString(), "210m");
-
-            Restaurants.getInstance().getMyRestaurantList().add(restaurant);
+           String restaurantName= place.getName();
+           String restaurantAddress= place.getAddress();
 
             // Get the photo metadata.
             final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
@@ -220,10 +233,20 @@ imageView= findViewById(R.id.restaurant_imageview);
             // Create a FetchPhotoRequest.
             final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
                     .setMaxWidth(300) // Optional.
-                    .setMaxHeight(250) // Optional.
+                    .setMaxHeight(300) // Optional.
                     .build();
             placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
-                 bitmap = fetchPhotoResponse.getBitmap();
+                //reset bitmap value;
+                Bitmap bitmap = fetchPhotoResponse.getBitmap();
+
+                 //Create a new MyRestaurantModel and add it in the Singleton's list
+                MyRestaurantModel restaurant = new MyRestaurantModel(restaurantName,
+                        restaurantAddress.substring(0, restaurantAddress.indexOf(", Le Diamant")),
+                        place.getBusinessStatus().toString(), "210m", bitmap);
+
+                Restaurants.getInstance().getMyRestaurantList().add(restaurant);
+                //reset restaurant value
+                restaurant= null;
             }).addOnFailureListener((exception) -> {
                 if (exception instanceof ApiException) {
                     final ApiException apiException = (ApiException) exception;
@@ -232,6 +255,7 @@ imageView= findViewById(R.id.restaurant_imageview);
                     // TODO: Handle error with given status code.
                 }
             });
+
 
         //On failure
         }).addOnFailureListener((exception) -> {
@@ -242,7 +266,7 @@ imageView= findViewById(R.id.restaurant_imageview);
                 // TODO: Handle error with given status code.
             }
         });
-    }
+    }}
     }
 
 
