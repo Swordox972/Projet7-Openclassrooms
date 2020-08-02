@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_restaurant"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="100dp"
     android:orientation="vertical"
     tools:context=".ui.RestaurantFragment">
 
@@ -32,10 +32,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="fill_vertical"
+        android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="@id/fragment_restaurant"
         app:layout_constraintStart_toStartOf="@id/fragment_restaurant"
         />
 
+    <TextView
+        android:id="@+id/restaurant_distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#CABDBD"
+        app:layout_constraintTop_toTopOf="@id/fragment_restaurant"
+        app:layout_constraintEnd_toStartOf="@id/restaurant_imageview"/>
     <ImageView
         android:id="@+id/restaurant_imageview"
         android:contentDescription="restaurant_photo"

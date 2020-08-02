@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -38,7 +39,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -50,7 +50,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String API_KEY = BuildConfig.API_KEY;
     PlacesClient placesClient;
     private static final int RC_LOCATION = 10;
-    LatLng myLatLng;
+    LatLng firstRestaurantLatLng;
+    LatLng myCurrentLatLng;
     private BottomNavigationView bottomNavigationView;
     //Stock place id
     List<String> placeIdList;
@@ -66,18 +67,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.fragment_container_view);
 
 
-
         mapFragment.getMapAsync(this);
 
         // Initialize the SDK
         Places.initialize(getApplicationContext(), API_KEY);
 
         //Initialize placeIdList
-        placeIdList= new ArrayList<>();
+        placeIdList = new ArrayList<>();
 
         // Create a new PlacesClient instance
         placesClient = Places.createClient(this);
-imageView= findViewById(R.id.restaurant_imageview);
+        imageView = findViewById(R.id.restaurant_imageview);
         getCurrentLocation();
 
 
@@ -102,8 +102,6 @@ imageView= findViewById(R.id.restaurant_imageview);
 
                         break;
                     case R.id.page_3:
-                        //Clear restaurant list while changing fragment
-                        Restaurants.getInstance().getMyRestaurantList().clear();
                         break;
                 }
                 return true;
@@ -117,7 +115,7 @@ imageView= findViewById(R.id.restaurant_imageview);
     }
 
     private void getCurrentLocation() {
-        List<Place.Field> placeFields = Arrays.asList( Place.Field.ID,Place.Field.NAME,
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
                 Place.Field.LAT_LNG, Place.Field.TYPES);
         // Use the builder to create a FindCurrentPlaceRequest.
         FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
@@ -128,14 +126,18 @@ imageView= findViewById(R.id.restaurant_imageview);
             placeResponse.addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     FindCurrentPlaceResponse response = task.getResult();
-
+                    boolean firstLocation = true;
                     boolean firstRestaurantFound = false;
-
                     for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
                         Log.i("success", String.format("Place '%s' has likelihood: %f",
                                 placeLikelihood.getPlace().getName(),
                                 placeLikelihood.getLikelihood()));
 
+                        //Get my current latitude and longitude
+                        if (firstLocation) {
+                            myCurrentLatLng = placeLikelihood.getPlace().getLatLng();
+                            firstLocation = false;
+                        }
 
                         final Place.Type lookingFor = RESTAURANT; // Place.Type.RESTAURANT
                         // if latitude and longitude aren't null and if the place type is RESTAURANT
@@ -144,19 +146,20 @@ imageView= findViewById(R.id.restaurant_imageview);
                         if (placeLikelihood.getPlace().getLatLng() != null && types.contains(lookingFor)) {
 
                             //Get restaurant place id and stock it in placeId list
-                            String placeId= placeLikelihood.getPlace().getId();
+                            String placeId = placeLikelihood.getPlace().getId();
                             placeIdList.add(placeId);
-                            //Get latitude and longitude
-                            myLatLng = placeLikelihood.getPlace().getLatLng();
+
+                            //Get latitude and longitude of the first restaurant
+                            firstRestaurantLatLng = placeLikelihood.getPlace().getLatLng();
 
                             //Move camera to the first restaurant found
                             if (!firstRestaurantFound) {
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 15));
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(firstRestaurantLatLng, 15));
                                 firstRestaurantFound = true;
                             }
 
                             MarkerOptions options = new MarkerOptions()
-                                    .position(myLatLng)
+                                    .position(firstRestaurantLatLng)
                                     .title(placeLikelihood.getPlace().getName());
 
                             mMap.addMarker(options);
@@ -201,52 +204,72 @@ imageView= findViewById(R.id.restaurant_imageview);
 // Specify the fields to return.
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
                 Place.Field.ADDRESS, Place.Field.BUSINESS_STATUS, Place.Field.TYPES,
-                Place.Field.PHOTO_METADATAS);
+                Place.Field.PHOTO_METADATAS,Place.Field.LAT_LNG);
 
         //Do a loop for place id
-        for(int i=0; i<placeIdList.size(); i++) {
-        // Define a Place ID.
-
+        for (int i = 0; i < placeIdList.size(); i++) {
 // Construct a request object, passing the place ID and fields array.
-        final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeIdList.get(i), placeFields);
+            final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeIdList.get(i), placeFields);
 //Fetch place
-        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-            Place place = response.getPlace();
-            Log.i("success", "Place found: " + place.getName() + place.getAddress()
-                    + place.getOpeningHours());
+            placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
+                Place place = response.getPlace();
+                Log.i("success", "Place found: " + place.getName() + place.getAddress()
+                        + place.getOpeningHours());
 
-            //Take restaurant information
-           String restaurantName= place.getName();
-           String restaurantAddress= place.getAddress();
+                //Take restaurant information
+                String restaurantName = place.getName();
+                String restaurantAddress = place.getAddress();
+                //To wait a real value of openingHours
+                String restaurantOpeningHours = place.getBusinessStatus().toString();
+                //Get restaurant distance
+                float[] results = new float[1];
+                Location.distanceBetween(myCurrentLatLng.latitude,
+                        myCurrentLatLng.longitude, place.getLatLng().latitude,
+                        place.getLatLng().longitude, results);
 
-            // Get the photo metadata.
-            final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
-            if (metadata == null || metadata.isEmpty()) {
-                Log.w("success", "No photo metadata.");
-                return;
-            }
-            final PhotoMetadata photoMetadata = metadata.get(0);
+                //format the distance value to be round
+                String format= String.format("%.0f", results[0]);
+                String restaurantDistance= format + "m";
 
-            // Get the attribution text.
-            final String attributions = photoMetadata.getAttributions();
+                // Get the photo metadata.
+                final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
+                if (metadata == null || metadata.isEmpty()) {
+                    Log.w("success", "No photo metadata.");
+                    return;
+                }
+                final PhotoMetadata photoMetadata = metadata.get(0);
 
-            // Create a FetchPhotoRequest.
-            final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
-                    .setMaxWidth(300) // Optional.
-                    .setMaxHeight(300) // Optional.
-                    .build();
-            placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
-                //reset bitmap value;
-                Bitmap bitmap = fetchPhotoResponse.getBitmap();
+                // Get the attribution text.
+                final String attributions = photoMetadata.getAttributions();
 
-                 //Create a new MyRestaurantModel and add it in the Singleton's list
-                MyRestaurantModel restaurant = new MyRestaurantModel(restaurantName,
-                        restaurantAddress.substring(0, restaurantAddress.indexOf(", Le Diamant")),
-                        place.getBusinessStatus().toString(), "210m", bitmap);
+                // Create a FetchPhotoRequest.
+                final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                        .setMaxWidth(300) // Optional.
+                        .setMaxHeight(300) // Optional.
+                        .build();
+                placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
+                    //Get bitmap to add in myRestaurantModel
+                    Bitmap bitmap = fetchPhotoResponse.getBitmap();
 
-                Restaurants.getInstance().getMyRestaurantList().add(restaurant);
-                //reset restaurant value
-                restaurant= null;
+                    //Create a new MyRestaurantModel and add it in the Singleton's list
+                    MyRestaurantModel restaurant = new MyRestaurantModel(restaurantName,
+                            restaurantAddress.substring(0, restaurantAddress.indexOf(", Le Diamant")),
+                            restaurantOpeningHours, restaurantDistance, bitmap);
+
+                    Restaurants.getInstance().getMyRestaurantList().add(restaurant);
+                    //reset restaurant value
+                    restaurant = null;
+                }).addOnFailureListener((exception) -> {
+                    if (exception instanceof ApiException) {
+                        final ApiException apiException = (ApiException) exception;
+                        Log.e("error", "Place not found: " + exception.getMessage());
+                        final int statusCode = apiException.getStatusCode();
+                        // TODO: Handle error with given status code.
+                    }
+                });
+
+
+                //On failure
             }).addOnFailureListener((exception) -> {
                 if (exception instanceof ApiException) {
                     final ApiException apiException = (ApiException) exception;
@@ -255,18 +278,7 @@ imageView= findViewById(R.id.restaurant_imageview);
                     // TODO: Handle error with given status code.
                 }
             });
-
-
-        //On failure
-        }).addOnFailureListener((exception) -> {
-            if (exception instanceof ApiException) {
-                final ApiException apiException = (ApiException) exception;
-                Log.e("error", "Place not found: " + exception.getMessage());
-                final int statusCode = apiException.getStatusCode();
-                // TODO: Handle error with given status code.
-            }
-        });
-    }}
+        }
     }
 
-
+}

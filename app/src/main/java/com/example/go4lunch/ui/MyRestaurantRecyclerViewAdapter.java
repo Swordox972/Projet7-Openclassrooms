@@ -13,6 +13,8 @@ import com.example.go4lunch.R;
 import com.example.go4lunch.model.MyRestaurantModel;
 
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +47,7 @@ public class MyRestaurantRecyclerViewAdapter extends
       holder.restaurantName.setText(myRestaurant.getRestaurantName());
       holder.restaurantAddress.setText(myRestaurant.getRestaurantAddress());
       holder.restaurantOpeningHours.setText(myRestaurant.getRestaurantOpening());
+      holder.restaurantDistance.setText(myRestaurant.getRestaurantDistance());
       holder.imageView.setImageBitmap(myRestaurant.getRestaurantImage());
     }
 
@@ -60,8 +63,11 @@ public class MyRestaurantRecyclerViewAdapter extends
         TextView restaurantAddress;
         @BindView(R.id.restaurant_opening_hours)
         TextView restaurantOpeningHours;
+        @BindView(R.id.restaurant_distance)
+        TextView restaurantDistance;
         @BindView(R.id.restaurant_imageview)
         ImageView imageView;
+
 
 
         public ViewHolder(@NonNull View view) {
