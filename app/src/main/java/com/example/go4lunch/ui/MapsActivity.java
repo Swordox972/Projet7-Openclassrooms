@@ -37,9 +37,14 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.libraries.places.api.model.Place.Type.RESTAURANT;
@@ -53,6 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LatLng firstRestaurantLatLng;
     LatLng myCurrentLatLng;
     private BottomNavigationView bottomNavigationView;
+    String restaurantOpeningHours;
     //Stock place id
     List<String> placeIdList;
     ImageView imageView;
@@ -203,7 +209,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 // Specify the fields to return.
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
-                Place.Field.ADDRESS, Place.Field.BUSINESS_STATUS, Place.Field.TYPES,
+                Place.Field.ADDRESS, Place.Field.OPENING_HOURS, Place.Field.TYPES,
                 Place.Field.PHOTO_METADATAS,Place.Field.LAT_LNG);
 
         //Do a loop for place id
@@ -219,8 +225,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //Take restaurant information
                 String restaurantName = place.getName();
                 String restaurantAddress = place.getAddress();
-                //To wait a real value of openingHours
-                String restaurantOpeningHours = place.getBusinessStatus().toString();
+                //Get opening hours
+                Calendar calendar= Calendar.getInstance();
+                int dayOfWeek= calendar.get(Calendar.DAY_OF_WEEK);
+                if (dayOfWeek > 1) {
+                    restaurantOpeningHours = place.getOpeningHours().getWeekdayText().get(dayOfWeek-2);
+                }else {
+                    restaurantOpeningHours= place.getOpeningHours().getWeekdayText().get(dayOfWeek+5);
+                }
                 //Get restaurant distance
                 float[] results = new float[1];
                 Location.distanceBetween(myCurrentLatLng.latitude,
