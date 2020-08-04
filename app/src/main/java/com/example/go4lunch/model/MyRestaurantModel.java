@@ -1,7 +1,6 @@
 package com.example.go4lunch.model;
 
 import android.graphics.Bitmap;
-import android.widget.ImageView;
 
 import java.io.Serializable;
 
@@ -26,7 +25,7 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantAddress = restaurantAddress;
         this.restaurantOpening = restaurantOpening;
         this.restaurantDistance = restaurantDistance;
-        this.restaurantImage= restaurantImage;
+        this.restaurantImage = restaurantImage;
 
 
     }

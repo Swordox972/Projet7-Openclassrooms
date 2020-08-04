@@ -8,9 +8,9 @@ import java.util.ArrayList;
 public class Restaurants implements Serializable {
 
     // Singleton
-    private static final Restaurants ourInstance= new Restaurants();
-    private ArrayList<MyRestaurantModel> myRestaurantList= new ArrayList<>();
-    private ArrayList<MyRestaurantModel> saveRestaurantList= new ArrayList<>();
+    private static final Restaurants ourInstance = new Restaurants();
+    private ArrayList<MyRestaurantModel> myRestaurantList = new ArrayList<>();
+    private ArrayList<MyRestaurantModel> saveRestaurantList = new ArrayList<>();
 
     //getInstance method to access Singleton
     public static Restaurants getInstance() {
@@ -18,7 +18,8 @@ public class Restaurants implements Serializable {
     }
 
     //Empty constructor
-    private Restaurants () {}
+    private Restaurants() {
+    }
 
     public ArrayList<MyRestaurantModel> getMyRestaurantList() {
         return this.myRestaurantList;

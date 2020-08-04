@@ -1,22 +1,20 @@
 package com.example.go4lunch.ui;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+
 import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
-import com.example.go4lunch.model.MyRestaurantModel;
+import com.example.go4lunch.service.RestaurantInformation;
 import com.example.go4lunch.service.Restaurants;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,24 +25,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.FetchPhotoRequest;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.libraries.places.api.model.Place.Type.RESTAURANT;
@@ -58,7 +48,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     LatLng firstRestaurantLatLng;
     LatLng myCurrentLatLng;
     private BottomNavigationView bottomNavigationView;
-    String restaurantOpeningHours;
     //Stock place id
     List<String> placeIdList;
     ImageView imageView;
@@ -78,14 +67,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Initialize the SDK
         Places.initialize(getApplicationContext(), API_KEY);
 
-        //Initialize placeIdList
-        placeIdList = new ArrayList<>();
-
         // Create a new PlacesClient instance
         placesClient = Places.createClient(this);
+        //Initialize placeIdList
+        placeIdList = new ArrayList<>();
         imageView = findViewById(R.id.restaurant_imageview);
         getCurrentLocation();
-
 
         //Initialize bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -169,12 +156,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                     .title(placeLikelihood.getPlace().getName());
 
                             mMap.addMarker(options);
-
-
                         }
                     }
                     //Call method to get restaurant information
-                    getRestaurantInformation();
+                    RestaurantInformation.getRestaurantInformation(placesClient, placeIdList,
+                            myCurrentLatLng);
                 } else {
                     Exception exception = task.getException();
                     if (exception instanceof ApiException) {
@@ -205,92 +191,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void getRestaurantInformation() {
-
-// Specify the fields to return.
-        final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
-                Place.Field.ADDRESS, Place.Field.OPENING_HOURS, Place.Field.TYPES,
-                Place.Field.PHOTO_METADATAS,Place.Field.LAT_LNG);
-
-        //Do a loop for place id
-        for (int i = 0; i < placeIdList.size(); i++) {
-// Construct a request object, passing the place ID and fields array.
-            final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeIdList.get(i), placeFields);
-//Fetch place
-            placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-                Place place = response.getPlace();
-                Log.i("success", "Place found: " + place.getName() + place.getAddress()
-                        + place.getOpeningHours());
-
-                //Take restaurant information
-                String restaurantName = place.getName();
-                String restaurantAddress = place.getAddress();
-                //Get opening hours
-                Calendar calendar= Calendar.getInstance();
-                int dayOfWeek= calendar.get(Calendar.DAY_OF_WEEK);
-                if (dayOfWeek > 1) {
-                    restaurantOpeningHours = place.getOpeningHours().getWeekdayText().get(dayOfWeek-2);
-                }else {
-                    restaurantOpeningHours= place.getOpeningHours().getWeekdayText().get(dayOfWeek+5);
-                }
-                //Get restaurant distance
-                float[] results = new float[1];
-                Location.distanceBetween(myCurrentLatLng.latitude,
-                        myCurrentLatLng.longitude, place.getLatLng().latitude,
-                        place.getLatLng().longitude, results);
-
-                //format the distance value to be round
-                String format= String.format("%.0f", results[0]);
-                String restaurantDistance= format + "m";
-
-                // Get the photo metadata.
-                final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
-                if (metadata == null || metadata.isEmpty()) {
-                    Log.w("success", "No photo metadata.");
-                    return;
-                }
-                final PhotoMetadata photoMetadata = metadata.get(0);
-
-                // Get the attribution text.
-                final String attributions = photoMetadata.getAttributions();
-
-                // Create a FetchPhotoRequest.
-                final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
-                        .setMaxWidth(300) // Optional.
-                        .setMaxHeight(300) // Optional.
-                        .build();
-                placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
-                    //Get bitmap to add in myRestaurantModel
-                    Bitmap bitmap = fetchPhotoResponse.getBitmap();
-
-                    //Create a new MyRestaurantModel and add it in the Singleton's list
-                    MyRestaurantModel restaurant = new MyRestaurantModel(restaurantName,
-                            restaurantAddress.substring(0, restaurantAddress.indexOf(", Le Diamant")),
-                            restaurantOpeningHours, restaurantDistance, bitmap);
-
-                    Restaurants.getInstance().getMyRestaurantList().add(restaurant);
-                    //reset restaurant value
-                    restaurant = null;
-                }).addOnFailureListener((exception) -> {
-                    if (exception instanceof ApiException) {
-                        final ApiException apiException = (ApiException) exception;
-                        Log.e("error", "Place not found: " + exception.getMessage());
-                        final int statusCode = apiException.getStatusCode();
-                        // TODO: Handle error with given status code.
-                    }
-                });
-
-
-                //On failure
-            }).addOnFailureListener((exception) -> {
-                if (exception instanceof ApiException) {
-                    final ApiException apiException = (ApiException) exception;
-                    Log.e("error", "Place not found: " + exception.getMessage());
-                    final int statusCode = apiException.getStatusCode();
-                    // TODO: Handle error with given status code.
-                }
-            });
-        }
-    }
 
 }
