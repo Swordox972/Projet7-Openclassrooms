@@ -10,7 +10,7 @@ public class MyRestaurantModel implements Serializable {
     private String restaurantAddress;
     private String restaurantOpening;
     private String restaurantDistance;
-    private Bitmap restaurantImage;
+    private transient Bitmap restaurantImage; //transient to not serializable it
 
 
     // Empty constructor

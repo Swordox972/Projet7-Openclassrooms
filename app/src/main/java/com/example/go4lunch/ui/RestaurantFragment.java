@@ -1,7 +1,9 @@
 package com.example.go4lunch.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.EventLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,8 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.go4lunch.R;
+import com.example.go4lunch.events.OpenRestaurantEvent;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.Restaurants;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -46,4 +52,26 @@ public class RestaurantFragment extends Fragment {
         myAdapter = new MyRestaurantRecyclerViewAdapter(restaurantList);
         mRecyclerView.setAdapter(myAdapter);
     }
-}
+
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Subscribe
+    public void onOpenRestaurant(OpenRestaurantEvent event) {
+        MyRestaurantModel myRestaurantModel= event.myRestaurantModel;
+        if (myRestaurantModel != null) {
+            startActivity(new Intent(getContext() , DetailRestaurantActivity.class)
+                    .putExtra("Restaurant", myRestaurantModel));
+        }
+    }
+
+    }

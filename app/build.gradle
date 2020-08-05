@@ -33,7 +33,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     //FRAGMENT
     implementation 'androidx.fragment:fragment:1.2.5'
@@ -44,7 +44,7 @@ dependencies {
     implementation 'com.google.android.libraries.places:places:2.3.0'
 
     //BOTTOM NAVIGATION
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.material:material:1.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //BUTTER KNIFES
@@ -53,5 +53,8 @@ dependencies {
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    //EVENT BUS
+    implementation 'org.greenrobot:eventbus:3.2.0'
 
 }
