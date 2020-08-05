@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
+import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.RestaurantInformation;
 import com.example.go4lunch.service.Restaurants;
 import com.google.android.gms.common.api.ApiException;
@@ -21,6 +23,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
@@ -31,6 +34,7 @@ import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,18 +44,19 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.libraries.places.api.model.Place.Type.RESTAURANT;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
+   //Initialize variables
     private GoogleMap mMap;
     private String API_KEY = BuildConfig.API_KEY;
     PlacesClient placesClient;
     private static final int RC_LOCATION = 10;
     LatLng firstRestaurantLatLng;
     LatLng myCurrentLatLng;
+    FloatingActionButton floatingActionButton;
     private BottomNavigationView bottomNavigationView;
     //Stock place id
     List<String> placeIdList;
     ImageView imageView;
-
+    private List<MyRestaurantModel> singletonListRestaurant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,42 +77,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Initialize placeIdList
         placeIdList = new ArrayList<>();
         imageView = findViewById(R.id.restaurant_imageview);
-        getCurrentLocation();
+      singletonListRestaurant=Restaurants.getInstance().getMyRestaurantList();
+
+        //Initialize floating action button
+        floatingActionButton= findViewById(R.id.fao_current_location);
+        floatingActionButton.setOnClickListener((View view) ->{
+            singletonListRestaurant.clear();
+                getCurrentLocation();
+
+        });
 
         //Initialize bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        bottomNavigationView.setOnNavigationItemSelectedListener( (@NonNull MenuItem item) ->
+             {
                 Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
 
                 switch (item.getItemId()) {
                     case R.id.page_1:
                         //Clear restaurant list while changing fragment
-                        Restaurants.getInstance().getMyRestaurantList().clear();
+                        floatingActionButton.setVisibility(View.VISIBLE);
+                        singletonListRestaurant.clear();
                         startActivity(intent);
                         break;
 
                     case R.id.page_2:
-
+                       floatingActionButton.hide();
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
                                 new RestaurantFragment()).commit();
 
                         break;
                     case R.id.page_3:
+                        floatingActionButton.hide();
                         break;
                 }
                 return true;
-            }
-        });
+            });
+
+
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        singletonListRestaurant.size();
         mMap = googleMap;
+        getCurrentLocation();
     }
 
     private void getCurrentLocation() {
+        Restaurants.getInstance().getMyRestaurantList().clear();
         List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
                 Place.Field.LAT_LNG, Place.Field.TYPES);
         // Use the builder to create a FindCurrentPlaceRequest.
@@ -161,6 +179,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     //Call method to get restaurant information
                     RestaurantInformation.getRestaurantInformation(placesClient, placeIdList,
                             myCurrentLatLng);
+                   placeIdList.clear();
                 } else {
                     Exception exception = task.getException();
                     if (exception instanceof ApiException) {

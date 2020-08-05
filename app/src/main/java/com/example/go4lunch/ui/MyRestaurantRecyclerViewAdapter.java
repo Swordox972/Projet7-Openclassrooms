@@ -33,13 +33,14 @@ public class MyRestaurantRecyclerViewAdapter extends
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_restaurant,
                 parent, false);
 
+        myRestaurantList.size();
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final MyRestaurantModel myRestaurant = myRestaurantList.get(position);
-
+       myRestaurantList.size();
         holder.restaurantName.setText(myRestaurant.getRestaurantName());
         holder.restaurantAddress.setText(myRestaurant.getRestaurantAddress());
         holder.restaurantOpeningHours.setText(myRestaurant.getRestaurantOpening());
