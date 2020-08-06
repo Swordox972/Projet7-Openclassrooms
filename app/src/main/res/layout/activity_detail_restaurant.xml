@@ -11,11 +11,15 @@
 
     <ImageView
         android:id="@+id/detail_restaurant_photo"
+        android:contentDescription="activity detail restaurant photo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
         android:adjustViewBounds="true"
-        android:src="@drawable/abc_vector_test"/>
+        android:src="@drawable/abc_vector_test"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/detail_restaurant_address"
