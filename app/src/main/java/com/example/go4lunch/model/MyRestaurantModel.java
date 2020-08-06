@@ -1,7 +1,5 @@
 package com.example.go4lunch.model;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
 
 public class MyRestaurantModel implements Serializable {
@@ -10,7 +8,7 @@ public class MyRestaurantModel implements Serializable {
     private String restaurantAddress;
     private String restaurantOpening;
     private String restaurantDistance;
-    private transient Bitmap restaurantImage; //transient to not serializable it
+    private String restaurantImageName;
 
 
     // Empty constructor
@@ -20,12 +18,12 @@ public class MyRestaurantModel implements Serializable {
     //Constructor with parameters
     public MyRestaurantModel(String restaurantName, String restaurantAddress,
                              String restaurantOpening, String restaurantDistance,
-                             Bitmap restaurantImage) {
+                             String restaurantImageName) {
         this.restaurantName = restaurantName;
         this.restaurantAddress = restaurantAddress;
         this.restaurantOpening = restaurantOpening;
         this.restaurantDistance = restaurantDistance;
-        this.restaurantImage = restaurantImage;
+        this.restaurantImageName = restaurantImageName;
 
 
     }
@@ -62,12 +60,12 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantDistance = restaurantDistance;
     }
 
-    public Bitmap getRestaurantImage() {
-        return restaurantImage;
+    public String getRestaurantImageName() {
+        return restaurantImageName;
     }
 
-    public void setRestaurantImage(Bitmap restaurantImage) {
-        this.restaurantImage = restaurantImage;
+    public void setRestaurantImageName(String restaurantImageName) {
+        this.restaurantImageName = restaurantImageName;
     }
 
 }

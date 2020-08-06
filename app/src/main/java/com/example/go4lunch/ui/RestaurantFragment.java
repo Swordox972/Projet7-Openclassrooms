@@ -3,7 +3,6 @@ package com.example.go4lunch.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.EventLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +68,7 @@ public class RestaurantFragment extends Fragment {
     public void onOpenRestaurant(OpenRestaurantEvent event) {
         MyRestaurantModel myRestaurantModel= event.myRestaurantModel;
         if (myRestaurantModel != null) {
-            startActivity(new Intent(getContext() , DetailRestaurantActivity.class)
+            startActivity(new Intent(getContext() , OnClickRestaurantActivity.class)
                     .putExtra("Restaurant", myRestaurantModel));
         }
     }

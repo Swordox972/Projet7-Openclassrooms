@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.go4lunch.R;
 import com.example.go4lunch.events.OpenRestaurantEvent;
 import com.example.go4lunch.model.MyRestaurantModel;
+import com.example.go4lunch.service.RestaurantInformation;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -48,7 +49,8 @@ public class MyRestaurantRecyclerViewAdapter extends
         holder.restaurantAddress.setText(myRestaurant.getRestaurantAddress());
         holder.restaurantOpeningHours.setText(myRestaurant.getRestaurantOpening());
         holder.restaurantDistance.setText(myRestaurant.getRestaurantDistance());
-        holder.imageView.setImageBitmap(myRestaurant.getRestaurantImage());
+        holder.imageView.setImageBitmap(RestaurantInformation.StringToBitMap(
+                myRestaurant.getRestaurantImageName()));
 
         holder.itemView.setOnClickListener((View view) -> {
             EventBus.getDefault().post(new OpenRestaurantEvent(myRestaurant));

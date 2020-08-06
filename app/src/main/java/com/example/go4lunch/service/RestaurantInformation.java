@@ -1,11 +1,15 @@
 package com.example.go4lunch.service;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.util.Base64;
 import android.util.Log;
 
 import com.example.go4lunch.model.MyRestaurantModel;
+import com.example.go4lunch.ui.MapsActivity;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
@@ -13,6 +17,7 @@ import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -84,11 +89,13 @@ public class RestaurantInformation {
                 placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
                     //Get bitmap to add in myRestaurantModel
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
+                    String bitmapName= bitmapToString(bitmap);
+
 
                     //Create a new MyRestaurantModel and add it in the Singleton's list
                     MyRestaurantModel restaurant = new MyRestaurantModel(restaurantName,
                             restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                            restaurantOpeningHours, restaurantDistance, bitmap);
+                            restaurantOpeningHours, restaurantDistance, bitmapName);
 
                     Restaurants.getInstance().getMyRestaurantList().add(restaurant);
                     //reset restaurant value
@@ -112,6 +119,25 @@ public class RestaurantInformation {
                     // TODO: Handle error with given status code.
                 }
             });
+        }
+    }
+    public static String bitmapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+    public static Bitmap StringToBitMap(String encodedString) {
+        try {
+            byte[] encodeByte = Base64.decode(encodedString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(encodeByte, 0,
+                    encodeByte.length);
+            return bitmap;
+        } catch (Exception e) {
+            e.getMessage();
+            return null;
         }
     }
 }
