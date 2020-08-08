@@ -19,6 +19,7 @@ import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
 import com.example.go4lunch.service.restaurant.Restaurants;
 import com.example.go4lunch.ui.colleague.ColleagueFragment;
+import com.example.go4lunch.ui.restaurant.OnClickRestaurantActivity;
 import com.example.go4lunch.ui.restaurant.RestaurantFragment;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
@@ -51,7 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String API_KEY = BuildConfig.API_KEY;
     PlacesClient placesClient;
     private static final int RC_LOCATION = 10;
-    LatLng firstRestaurantLatLng;
+   public static LatLng firstRestaurantLatLng;
     LatLng myCurrentLatLng;
     FloatingActionButton floatingActionButton;
     private BottomNavigationView bottomNavigationView;
@@ -173,8 +175,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 firstRestaurantFound = true;
                             }
 
+
+                            //Add marker with mMap
                             MarkerOptions options = new MarkerOptions()
-                                    .position(firstRestaurantLatLng)
+                                    .position(MapsActivity.firstRestaurantLatLng)
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant))
                                     .title(placeLikelihood.getPlace().getName());
 
@@ -184,6 +188,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     //Call method to get restaurant information
                     RestaurantInformation.getRestaurantInformation(placesClient, placeIdList,
                             myCurrentLatLng);
+                    //Set marker clickable to open OnClickRestaurantActivity
+                    Intent intent= new Intent(this, OnClickRestaurantActivity.class);
+                    mMap.setOnMarkerClickListener((Marker marker) -> {
+                            for(int i= 0 ; i<singletonListRestaurant.size(); i++) {
+                              MyRestaurantModel myRestaurantModel =singletonListRestaurant.get(i);
+                                if (myRestaurantModel.getRestaurantName().equals(marker.getTitle())) {
+                                    intent.putExtra("MapsActivityRestaurant", myRestaurantModel);
+                                    startActivity(intent);
+
+                                    break;
+                                }
+                            }
+                            return true;
+                        });
                     placeIdList.clear();
                 } else {
                     Exception exception = task.getException();
@@ -197,7 +215,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             getLocatePermission();
         }
     }
-
 
     private void getLocatePermission() {
         ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, RC_LOCATION);
@@ -214,6 +231,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
+
 
 
 }

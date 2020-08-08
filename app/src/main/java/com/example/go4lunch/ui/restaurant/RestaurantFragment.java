@@ -70,7 +70,7 @@ public class RestaurantFragment extends Fragment {
     public void onOpenRestaurant(OpenRestaurantEvent event) {
         MyRestaurantModel myRestaurantModel = event.myRestaurantModel;
         if (myRestaurantModel != null) {
-            startActivity(new Intent(getContext(), onClickRestaurantActivity.class)
+            startActivity(new Intent(getContext(), OnClickRestaurantActivity.class)
                     .putExtra("Restaurant", myRestaurantModel));
         }
     }

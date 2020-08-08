@@ -6,9 +6,15 @@ import android.location.Location;
 import android.util.Base64;
 import android.util.Log;
 
+import com.example.go4lunch.R;
 import com.example.go4lunch.model.MyRestaurantModel;
+import com.example.go4lunch.ui.MapsActivity;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
@@ -96,6 +102,7 @@ public class RestaurantInformation {
                             restaurantOpeningHours, restaurantDistance, bitmapName);
 
                     Restaurants.getInstance().getMyRestaurantList().add(restaurant);
+
                     //reset restaurant value
                     restaurant = null;
                 }).addOnFailureListener((exception) -> {
