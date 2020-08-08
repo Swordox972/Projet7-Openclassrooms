@@ -2,9 +2,7 @@ package com.example.go4lunch.events;
 
 import com.example.go4lunch.model.MyRestaurantModel;
 
-import java.io.Serializable;
-
-public class OpenRestaurantEvent  {
+public class OpenRestaurantEvent {
 
     /**
      * Restaurant to open

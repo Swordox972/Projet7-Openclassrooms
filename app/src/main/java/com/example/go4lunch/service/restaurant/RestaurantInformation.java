@@ -1,4 +1,4 @@
-package com.example.go4lunch.service;
+package com.example.go4lunch.service.restaurant;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,9 +7,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.example.go4lunch.model.MyRestaurantModel;
-import com.example.go4lunch.ui.MapsActivity;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
@@ -89,7 +87,7 @@ public class RestaurantInformation {
                 placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
                     //Get bitmap to add in myRestaurantModel
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
-                    String bitmapName= bitmapToString(bitmap);
+                    String bitmapName = bitmapToString(bitmap);
 
 
                     //Create a new MyRestaurantModel and add it in the Singleton's list
@@ -121,6 +119,7 @@ public class RestaurantInformation {
             });
         }
     }
+
     public static String bitmapToString(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);

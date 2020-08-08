@@ -1,4 +1,4 @@
-package com.example.go4lunch.ui;
+package com.example.go4lunch.ui.restaurant;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.go4lunch.R;
 import com.example.go4lunch.events.OpenRestaurantEvent;
 import com.example.go4lunch.model.MyRestaurantModel;
-import com.example.go4lunch.service.RestaurantInformation;
+import com.example.go4lunch.service.restaurant.RestaurantInformation;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -37,14 +37,13 @@ public class MyRestaurantRecyclerViewAdapter extends
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_restaurant,
                 parent, false);
 
-        myRestaurantList.size();
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final MyRestaurantModel myRestaurant = myRestaurantList.get(position);
-       myRestaurantList.size();
+
         holder.restaurantName.setText(myRestaurant.getRestaurantName());
         holder.restaurantAddress.setText(myRestaurant.getRestaurantAddress());
         holder.restaurantOpeningHours.setText(myRestaurant.getRestaurantOpening());

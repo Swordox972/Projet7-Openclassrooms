@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:orientation="vertical"
-    tools:context=".ui.RestaurantFragment">
+    tools:context=".ui.restaurant.RestaurantFragment">
 
     <TextView
         android:id="@+id/restaurant_name"

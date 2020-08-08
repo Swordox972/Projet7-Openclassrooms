@@ -1,20 +1,13 @@
 package com.example.go4lunch.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -22,16 +15,16 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
-import com.example.go4lunch.events.OpenRestaurantEvent;
 import com.example.go4lunch.model.MyRestaurantModel;
-import com.example.go4lunch.service.RestaurantInformation;
-import com.example.go4lunch.service.Restaurants;
+import com.example.go4lunch.service.restaurant.RestaurantInformation;
+import com.example.go4lunch.service.restaurant.Restaurants;
+import com.example.go4lunch.ui.colleague.ColleagueFragment;
+import com.example.go4lunch.ui.restaurant.RestaurantFragment;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -45,10 +38,6 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,7 +46,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.libraries.places.api.model.Place.Type.RESTAURANT;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-   //Initialize variables
+    //Initialize variables
     private GoogleMap mMap;
     private String API_KEY = BuildConfig.API_KEY;
     PlacesClient placesClient;
@@ -90,42 +79,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Initialize placeIdList
         placeIdList = new ArrayList<>();
         imageView = findViewById(R.id.restaurant_imageview);
-      singletonListRestaurant=Restaurants.getInstance().getMyRestaurantList();
+        singletonListRestaurant = Restaurants.getInstance().getMyRestaurantList();
 
         //Initialize floating action button
-        floatingActionButton= findViewById(R.id.fao_current_location);
-        floatingActionButton.setOnClickListener((View view) ->{
+        floatingActionButton = findViewById(R.id.fao_current_location);
+        floatingActionButton.setOnClickListener((View view) -> {
             singletonListRestaurant.clear();
-                getCurrentLocation();
+            getCurrentLocation();
 
         });
 
         //Initialize bottom navigation
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener( (@NonNull MenuItem item) ->
-             {
-                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        bottomNavigationView.setOnNavigationItemSelectedListener((@NonNull MenuItem item) ->
+        {
+            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
 
-                switch (item.getItemId()) {
-                    case R.id.page_1:
-                        //Clear restaurant list while changing fragment
-                        floatingActionButton.setVisibility(View.VISIBLE);
-                        singletonListRestaurant.clear();
-                        startActivity(intent);
-                        break;
+            switch (item.getItemId()) {
+                case R.id.page_1:
+                    //Clear restaurant list while changing fragment
+                    floatingActionButton.setVisibility(View.VISIBLE);
+                    singletonListRestaurant.clear();
+                    startActivity(intent);
+                    break;
 
-                    case R.id.page_2:
-                       floatingActionButton.hide();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
-                                new RestaurantFragment()).commit();
+                case R.id.page_2:
+                    floatingActionButton.hide();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
+                            new RestaurantFragment()).commit();
 
-                        break;
-                    case R.id.page_3:
-                        floatingActionButton.hide();
-                        break;
-                }
-                return true;
-            });
+                    break;
+                case R.id.page_3:
+                    floatingActionButton.hide();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
+                            new ColleagueFragment()).commit();
+                    break;
+            }
+            return true;
+        });
 
 
     }
@@ -193,7 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     //Call method to get restaurant information
                     RestaurantInformation.getRestaurantInformation(placesClient, placeIdList,
                             myCurrentLatLng);
-                   placeIdList.clear();
+                    placeIdList.clear();
                 } else {
                     Exception exception = task.getException();
                     if (exception instanceof ApiException) {
@@ -223,8 +214,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-
-
 
 
 }

@@ -1,4 +1,4 @@
-package com.example.go4lunch.ui;
+package com.example.go4lunch.ui.restaurant;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.go4lunch.R;
 import com.example.go4lunch.events.OpenRestaurantEvent;
 import com.example.go4lunch.model.MyRestaurantModel;
-import com.example.go4lunch.service.Restaurants;
+import com.example.go4lunch.service.restaurant.Restaurants;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -40,8 +40,10 @@ public class RestaurantFragment extends Fragment {
         Context context = view.getContext();
         mRecyclerView = (RecyclerView) view;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
-                DividerItemDecoration.VERTICAL));
+        if (getContext() != null) {
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(),
+                    DividerItemDecoration.VERTICAL));
+        }
         initList();
         return view;
     }
@@ -66,11 +68,11 @@ public class RestaurantFragment extends Fragment {
 
     @Subscribe
     public void onOpenRestaurant(OpenRestaurantEvent event) {
-        MyRestaurantModel myRestaurantModel= event.myRestaurantModel;
+        MyRestaurantModel myRestaurantModel = event.myRestaurantModel;
         if (myRestaurantModel != null) {
-            startActivity(new Intent(getContext() , onClickRestaurantActivity.class)
+            startActivity(new Intent(getContext(), onClickRestaurantActivity.class)
                     .putExtra("Restaurant", myRestaurantModel));
         }
     }
 
-    }
+}

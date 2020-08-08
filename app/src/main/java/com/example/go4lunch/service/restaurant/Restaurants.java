@@ -1,4 +1,4 @@
-package com.example.go4lunch.service;
+package com.example.go4lunch.service.restaurant;
 
 import com.example.go4lunch.model.MyRestaurantModel;
 
