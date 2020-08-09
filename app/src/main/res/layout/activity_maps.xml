@@ -21,8 +21,8 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="75dp"
         android:layout_marginEnd="15dp"
-        android:backgroundTint="@android:color/white"
-        android:src="@drawable/ic_baseline_gps_fixed_18" />
+        android:src="@drawable/ic_baseline_gps_fixed_18"
+        map:backgroundTint="@android:color/white"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

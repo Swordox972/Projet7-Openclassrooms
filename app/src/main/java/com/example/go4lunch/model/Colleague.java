@@ -1,9 +1,13 @@
 package com.example.go4lunch.model;
 
-public class Colleague {
+import java.io.Serializable;
+
+public class Colleague implements Serializable {
     int colleagueId;
     String colleagueName;
+    String restaurantChosen;
     String avatarUrl;
+
 
     //Empty constructor
     public Colleague() {

@@ -1,6 +1,7 @@
 package com.example.go4lunch.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class MyRestaurantModel implements Serializable {
 
@@ -9,6 +10,7 @@ public class MyRestaurantModel implements Serializable {
     private String restaurantOpening;
     private String restaurantDistance;
     private String restaurantImageName;
+    private List<Colleague> colleagueList;
 
 
     // Empty constructor
@@ -18,14 +20,13 @@ public class MyRestaurantModel implements Serializable {
     //Constructor with parameters
     public MyRestaurantModel(String restaurantName, String restaurantAddress,
                              String restaurantOpening, String restaurantDistance,
-                             String restaurantImageName) {
+                             String restaurantImageName, List<Colleague> colleagueList) {
         this.restaurantName = restaurantName;
         this.restaurantAddress = restaurantAddress;
         this.restaurantOpening = restaurantOpening;
         this.restaurantDistance = restaurantDistance;
         this.restaurantImageName = restaurantImageName;
-
-
+        this.colleagueList= colleagueList;
     }
 
     public String getRestaurantName() {
@@ -68,4 +69,11 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantImageName = restaurantImageName;
     }
 
+    public List<Colleague> getColleagueList() {
+        return colleagueList;
+    }
+
+    public void setColleagueList(List<Colleague> colleagueList) {
+        this.colleagueList = colleagueList;
+    }
 }
