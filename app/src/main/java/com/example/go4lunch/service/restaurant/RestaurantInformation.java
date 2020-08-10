@@ -103,11 +103,11 @@ public class RestaurantInformation {
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
                     String bitmapName = bitmapToString(bitmap);
 
-                 List<Colleague> colleagueList= RestaurantChoice.setColleagueChoice();
+
                     //Create a new MyRestaurantModel and add it in the Singleton's list
                     MyRestaurantModel restaurant = new MyRestaurantModel(restaurantName,
                             restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                            restaurantOpeningHours, restaurantDistance, bitmapName, colleagueList);
+                            restaurantOpeningHours, restaurantDistance, bitmapName, null);
 
                     Restaurants.getInstance().getMyRestaurantList().add(restaurant);
 

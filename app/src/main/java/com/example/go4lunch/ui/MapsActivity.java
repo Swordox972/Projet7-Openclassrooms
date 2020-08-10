@@ -15,7 +15,9 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
+import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
+import com.example.go4lunch.service.colleague.RestaurantChoice;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
 import com.example.go4lunch.service.restaurant.Restaurants;
 import com.example.go4lunch.ui.colleague.ColleagueFragment;
@@ -128,6 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         singletonListRestaurant.size();
         mMap = googleMap;
         getCurrentLocation();
+
     }
 
     private void getCurrentLocation() {
@@ -203,6 +206,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             }
                             return true;
                         });
+
                     placeIdList.clear();
                 } else {
                     Exception exception = task.getException();

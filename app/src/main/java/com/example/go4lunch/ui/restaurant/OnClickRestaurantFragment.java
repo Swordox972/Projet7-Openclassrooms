@@ -13,9 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.Colleague;
+import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.restaurant.Restaurants;
 import com.example.go4lunch.ui.colleague.MyColleagueRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OnClickRestaurantFragment extends Fragment {
@@ -48,7 +50,20 @@ public class OnClickRestaurantFragment extends Fragment {
     }
 
     private void initChoiceList() {
-        colleagueList= Restaurants.getInstance().getMyRestaurantList().get(0).getColleagueList();
+        colleagueList= new ArrayList<>();
+        if (getActivity().getIntent().getSerializableExtra("Restaurant")!= null) {
+            MyRestaurantModel myRestaurant = (MyRestaurantModel) getActivity().getIntent()
+                    .getSerializableExtra("Restaurant");
+            if (myRestaurant.getColleagueList()!= null)
+            colleagueList= myRestaurant.getColleagueList();
+        }
+        if (getActivity().getIntent().getSerializableExtra("MapsActivityRestaurant") != null) {
+            MyRestaurantModel myRestaurant = (MyRestaurantModel) getActivity().getIntent()
+                    .getSerializableExtra("MapsActivityRestaurant");
+
+            if (myRestaurant.getColleagueList()!= null)
+                colleagueList= myRestaurant.getColleagueList();
+        }
         myAdapter = new MyColleagueRecyclerViewAdapter(colleagueList);
         mRecyclerView.setAdapter(myAdapter);
     }

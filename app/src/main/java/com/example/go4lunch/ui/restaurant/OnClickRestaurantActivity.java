@@ -10,8 +10,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.go4lunch.R;
+import com.example.go4lunch.di.DI;
 import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
+import com.example.go4lunch.service.colleague.ColleagueApiService;
+import com.example.go4lunch.service.colleague.DummyColleagueApiService;
+import com.example.go4lunch.service.colleague.RestaurantChoice;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -27,13 +31,14 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButton;
     private boolean isSelected=false;
     private List<Colleague> colleagueChoiceList;
+    private ColleagueApiService apiService;
 
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_click_restaurant);
-
+        apiService= DI.getColleagueApiService();
         // commit fragment
           getSupportFragmentManager().beginTransaction().replace(R.id.on_click_activity_fragment_container_view,
                   new OnClickRestaurantFragment()).commit();
@@ -41,6 +46,7 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
         //Get restaurant data to know which restaurant the user clicked on
         if ((MyRestaurantModel) getIntent().getSerializableExtra("Restaurant") != null) {
             this.initializeRestaurant("Restaurant");
+
         }
 
         if ((MyRestaurantModel) getIntent().getSerializableExtra("MapsActivityRestaurant") !=
@@ -68,6 +74,10 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
                     myRestaurant.getRestaurantImageName()));
             restaurantAddress = findViewById(R.id.detail_restaurant_address);
             restaurantAddress.setText(myRestaurant.getRestaurantAddress());
+
+            if (myRestaurant.getRestaurantName().equals("Poyo Rico Diamant")) {
+                myRestaurant.setColleagueList(RestaurantChoice.setColleagueChoice());
+            }
 
     }
 
