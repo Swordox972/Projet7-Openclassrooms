@@ -1,5 +1,6 @@
 package com.example.go4lunch.ui.colleague;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public class MyColleagueRecyclerViewAdapter extends
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Colleague myColleague = myColleagueList.get(position);
 
-        holder.colleagueRestaurantChoice.setText(myColleague.getColleagueName());
+        holder.colleagueRestaurantChoice.setText(myColleague.getColleagueNameAndChoice());
         Glide.with(holder.colleaguePhoto.getContext())
                 .load(myColleague.getAvatarUrl())
                 .apply(RequestOptions.circleCropTransform())

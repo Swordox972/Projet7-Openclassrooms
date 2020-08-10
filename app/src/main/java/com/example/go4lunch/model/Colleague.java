@@ -4,8 +4,7 @@ import java.io.Serializable;
 
 public class Colleague implements Serializable {
     int colleagueId;
-    String colleagueName;
-    String restaurantChosen;
+    String colleagueNameAndChoice;
     String avatarUrl;
 
 
@@ -14,9 +13,9 @@ public class Colleague implements Serializable {
     }
 
     //Constructor with parameters
-    public Colleague(int colleagueId, String colleagueName, String avatarUrl) {
+    public Colleague(int colleagueId, String colleagueNameAndChoice, String avatarUrl) {
         this.colleagueId = colleagueId;
-        this.colleagueName = colleagueName;
+        this.colleagueNameAndChoice = colleagueNameAndChoice;
         this.avatarUrl = avatarUrl;
     }
 
@@ -29,12 +28,12 @@ public class Colleague implements Serializable {
         this.colleagueId = userId;
     }
 
-    public String getColleagueName() {
-        return colleagueName;
+    public String getColleagueNameAndChoice() {
+        return colleagueNameAndChoice;
     }
 
-    public void setColleagueName(String colleagueName) {
-        this.colleagueName = colleagueName;
+    public void setColleagueNameAndChoice(String colleagueNameAndChoice) {
+        this.colleagueNameAndChoice = colleagueNameAndChoice;
     }
 
     public String getAvatarUrl() {

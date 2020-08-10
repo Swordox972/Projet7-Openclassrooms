@@ -160,5 +160,10 @@
 
     <!-- TODO: Add fragment which be controled by detail activity -->
 
-
+<androidx.fragment.app.FragmentContainerView
+    android:id="@+id/on_click_activity_fragment_container_view"
+    android:layout_width="match_parent"
+    android:layout_height="170dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/on_click_activity_view_divider"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

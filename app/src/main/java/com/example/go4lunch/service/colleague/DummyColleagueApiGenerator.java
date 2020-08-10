@@ -33,4 +33,5 @@ public abstract class DummyColleagueApiGenerator {
     static List<Colleague> generateColleague() {
         return new ArrayList<>(DUMMY_COLLEAGUES);
     }
+
 }

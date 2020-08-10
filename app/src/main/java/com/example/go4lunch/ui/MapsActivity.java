@@ -188,15 +188,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     //Call method to get restaurant information
                     RestaurantInformation.getRestaurantInformation(placesClient, placeIdList,
                             myCurrentLatLng);
+
                     //Set marker clickable to open OnClickRestaurantActivity
                     Intent intent= new Intent(this, OnClickRestaurantActivity.class);
+                    //OnClick marker
                     mMap.setOnMarkerClickListener((Marker marker) -> {
                             for(int i= 0 ; i<singletonListRestaurant.size(); i++) {
                               MyRestaurantModel myRestaurantModel =singletonListRestaurant.get(i);
                                 if (myRestaurantModel.getRestaurantName().equals(marker.getTitle())) {
                                     intent.putExtra("MapsActivityRestaurant", myRestaurantModel);
                                     startActivity(intent);
-
                                     break;
                                 }
                             }
