@@ -1,4 +1,4 @@
-package com.example.go4lunch.ui.colleague;
+package com.example.go4lunch.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import com.example.go4lunch.R;
 import com.example.go4lunch.di.DI;
 import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.service.colleague.ColleagueApiService;
+import com.example.go4lunch.ui.adapter.MyColleagueRecyclerViewAdapter;
 
 import java.util.List;
 

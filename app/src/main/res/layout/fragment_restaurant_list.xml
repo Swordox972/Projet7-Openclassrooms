@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
-    tools:context=".ui.restaurant.RestaurantFragment"
+    tools:context=".ui.fragment.RestaurantFragment"
     tools:listitem="@layout/fragment_restaurant"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 

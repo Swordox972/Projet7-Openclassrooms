@@ -1,4 +1,4 @@
-package com.example.go4lunch.ui.restaurant;
+package com.example.go4lunch.ui.fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +16,8 @@ import com.example.go4lunch.R;
 import com.example.go4lunch.events.OpenRestaurantEvent;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.restaurant.Restaurants;
+import com.example.go4lunch.ui.activity.OnClickRestaurantActivity;
+import com.example.go4lunch.ui.adapter.MyRestaurantRecyclerViewAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

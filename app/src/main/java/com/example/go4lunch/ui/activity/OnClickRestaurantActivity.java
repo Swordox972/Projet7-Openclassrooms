@@ -1,4 +1,4 @@
-package com.example.go4lunch.ui.restaurant;
+package com.example.go4lunch.ui.activity;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -14,8 +14,9 @@ import com.example.go4lunch.di.DI;
 import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.colleague.ColleagueApiService;
-import com.example.go4lunch.service.colleague.RestaurantChoice;
+import com.example.go4lunch.service.colleague.ColleagueChoice;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
+import com.example.go4lunch.ui.fragment.OnClickRestaurantFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -76,11 +77,11 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
 
             //Add dummy colleague to the first restaurant of the singleton List
             if (myRestaurant.getRestaurantId().equals(RestaurantInformation.restaurantId1)) {
-                myRestaurant.setColleagueList(RestaurantChoice.setScarlettAndHughChoice());
+                myRestaurant.setColleagueList(ColleagueChoice.setScarlettAndHughChoice());
             }
 
             if (myRestaurant.getRestaurantId().equals(RestaurantInformation.restaurantId2)) {
-                myRestaurant.setColleagueList(RestaurantChoice.setNanaAndGodfreyChoice());
+                myRestaurant.setColleagueList(ColleagueChoice.setNanaAndGodfreyChoice());
             }
 
 

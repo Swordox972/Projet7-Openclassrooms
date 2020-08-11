@@ -1,4 +1,4 @@
-package com.example.go4lunch.ui;
+package com.example.go4lunch.ui.activity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,14 +15,11 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
-import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
-import com.example.go4lunch.service.colleague.RestaurantChoice;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
 import com.example.go4lunch.service.restaurant.Restaurants;
-import com.example.go4lunch.ui.colleague.ColleagueFragment;
-import com.example.go4lunch.ui.restaurant.OnClickRestaurantActivity;
-import com.example.go4lunch.ui.restaurant.RestaurantFragment;
+import com.example.go4lunch.ui.fragment.ColleagueFragment;
+import com.example.go4lunch.ui.fragment.RestaurantFragment;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

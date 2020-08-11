@@ -7,7 +7,7 @@
     android:id="@+id/fragment_colleague"
     android:layout_marginTop="10dp"
     android:orientation="vertical"
-    tools:context=".ui.colleague.ColleagueFragment">
+    tools:context=".ui.fragment.ColleagueFragment">
 
 
     <ImageView
@@ -22,22 +22,30 @@
 
 
     <TextView
-        android:id="@+id/colleague_restaurant_choice"
+        android:id="@+id/colleague_restaurant_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_gravity="center"
         android:textColor="#8E8888"
-        android:textSize="20sp"
+        android:textSize="13sp"
         app:layout_constraintStart_toEndOf="@id/colleague_photo"
         app:layout_constraintTop_toTopOf="@id/colleague_photo"
         app:layout_constraintBottom_toBottomOf="@id/colleague_photo" />
 
+    <TextView
+        android:id="@+id/colleague_restaurant_choice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        app:layout_constraintStart_toEndOf="@id/colleague_restaurant_name"
+        app:layout_constraintTop_toTopOf="@id/colleague_restaurant_name"
+        app:layout_constraintBottom_toBottomOf="@id/colleague_restaurant_name"/>
 
     <View
         android:layout_width="300dp"
         android:layout_height="1dp"
         android:background="#DDDDDD"
-        app:layout_constraintStart_toStartOf="@id/colleague_restaurant_choice"
+        app:layout_constraintStart_toStartOf="@id/colleague_restaurant_name"
         app:layout_constraintBottom_toBottomOf="@id/colleague_photo" />
 </androidx.constraintlayout.widget.ConstraintLayout>

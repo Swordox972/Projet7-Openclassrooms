@@ -1,5 +1,7 @@
-package com.example.go4lunch.ui.colleague;
+package com.example.go4lunch.ui.adapter;
 
+import android.graphics.Color;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.Colleague;
+import com.example.go4lunch.service.colleague.ColleagueChoice;
+import com.example.go4lunch.service.restaurant.RestaurantInformation;
 
 import java.util.List;
 
@@ -39,8 +43,17 @@ public class MyColleagueRecyclerViewAdapter extends
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Colleague myColleague = myColleagueList.get(position);
+        //Set Scarlett and Hugh choice
+        ColleagueChoice.setScarlettAndHughChoiceRestaurant();
+        ColleagueChoice.setNanaAndGodfreyChoiceRestaurant();
+        ColleagueChoice.setOtherColleagueChoiceRestaurant();
+        holder.colleagueRestaurantName.setText(myColleague.getColleagueName());
 
-        holder.colleagueRestaurantChoice.setText(myColleague.getColleagueName());
+        holder.colleagueRestaurantChoice.setText(myColleague.getColleagueChoice());
+        holder.colleagueRestaurantChoice.setTextColor(Color.parseColor("#000000"));
+        holder.colleagueRestaurantChoice.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+
+
         Glide.with(holder.colleaguePhoto.getContext())
                 .load(myColleague.getAvatarUrl())
                 .apply(RequestOptions.circleCropTransform())
@@ -55,6 +68,8 @@ public class MyColleagueRecyclerViewAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.colleague_photo)
         ImageView colleaguePhoto;
+        @BindView(R.id.colleague_restaurant_name)
+        TextView colleagueRestaurantName;
         @BindView(R.id.colleague_restaurant_choice)
         TextView colleagueRestaurantChoice;
 

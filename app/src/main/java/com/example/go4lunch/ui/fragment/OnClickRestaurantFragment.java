@@ -1,4 +1,4 @@
-package com.example.go4lunch.ui.restaurant;
+package com.example.go4lunch.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,15 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
-import com.example.go4lunch.service.restaurant.Restaurants;
-import com.example.go4lunch.ui.colleague.MyColleagueRecyclerViewAdapter;
+import com.example.go4lunch.ui.adapter.MyColleagueRecyclerViewAdapter;
+import com.example.go4lunch.ui.adapter.MyOnClickRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class OnClickRestaurantFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private List<Colleague> colleagueList;
-    private MyColleagueRecyclerViewAdapter myAdapter;
+    private MyOnClickRecyclerViewAdapter myAdapter;
 
     public OnClickRestaurantFragment() {
         // Required empty public constructor
@@ -66,7 +65,7 @@ public class OnClickRestaurantFragment extends Fragment {
             if (myRestaurant.getColleagueList()!= null)
                 colleagueList= myRestaurant.getColleagueList();
         }
-        myAdapter = new MyColleagueRecyclerViewAdapter(colleagueList);
+        myAdapter = new MyOnClickRecyclerViewAdapter(colleagueList);
         mRecyclerView.setAdapter(myAdapter);
     }
 }

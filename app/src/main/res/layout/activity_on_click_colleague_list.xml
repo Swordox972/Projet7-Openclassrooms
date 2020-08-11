@@ -8,8 +8,8 @@
     android:layout_height="match_parent"
     android:layout_marginStart="10dp"
     android:layout_marginEnd="10dp"
-    tools:context=".ui.restaurant.OnClickRestaurantFragment"
-    tools:listitem="@layout/fragment_colleague"
+    tools:context=".ui.fragment.OnClickRestaurantFragment"
+    tools:listitem="@layout/fragment_on_click_colleague"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
     >
 

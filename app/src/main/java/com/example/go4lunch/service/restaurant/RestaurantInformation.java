@@ -27,6 +27,8 @@ public class RestaurantInformation {
     private static ColleagueApiService apiService;
    public static String restaurantId1;
    public static String restaurantId2;
+   public static String restaurantName1;
+   public static String restaurantName2;
     static boolean firstRestaurantId=true;
      static boolean secondRestaurantId=true;
 
@@ -53,15 +55,15 @@ public class RestaurantInformation {
                 String restaurantId= place.getId();
                 if (!firstRestaurantId && secondRestaurantId) {
                     restaurantId2= place.getId();
+                    restaurantName2= place.getName();
                     secondRestaurantId= false;
                 }
 
                 if (firstRestaurantId ){
                     restaurantId1= place.getId();
+                    restaurantName1= place.getName();
                     firstRestaurantId= false;
                 }
-
-
 
                 String restaurantName = place.getName();
                 String restaurantAddress = place.getAddress();
