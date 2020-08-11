@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 public class Colleague implements Serializable {
     int colleagueId;
-    String colleagueNameAndChoice;
+    String colleagueName;
+    String colleagueJoinOrNot;
+    String colleagueChoice;
     String avatarUrl;
 
 
@@ -13,9 +15,12 @@ public class Colleague implements Serializable {
     }
 
     //Constructor with parameters
-    public Colleague(int colleagueId, String colleagueNameAndChoice, String avatarUrl) {
+    public Colleague(int colleagueId, String colleagueName, String colleagueJoinOrNot,
+            String colleagueChoice,String avatarUrl) {
         this.colleagueId = colleagueId;
-        this.colleagueNameAndChoice = colleagueNameAndChoice;
+        this.colleagueName = colleagueName;
+        this.colleagueJoinOrNot= colleagueJoinOrNot;
+        this.colleagueChoice= colleagueChoice;
         this.avatarUrl = avatarUrl;
     }
 
@@ -28,12 +33,28 @@ public class Colleague implements Serializable {
         this.colleagueId = userId;
     }
 
-    public String getColleagueNameAndChoice() {
-        return colleagueNameAndChoice;
+    public String getColleagueName() {
+        return colleagueName;
     }
 
-    public void setColleagueNameAndChoice(String colleagueNameAndChoice) {
-        this.colleagueNameAndChoice = colleagueNameAndChoice;
+    public void setColleagueName(String colleagueName) {
+        this.colleagueName = colleagueName;
+    }
+
+    public String getColleagueJoinOrNot() {
+        return colleagueJoinOrNot;
+    }
+
+    public void setColleagueJoinOrNot(String colleagueJoinOrNot) {
+        this.colleagueJoinOrNot = colleagueJoinOrNot;
+    }
+
+    public String getColleagueChoice() {
+        return colleagueChoice;
+    }
+
+    public void setColleagueChoice(String colleagueChoice) {
+        this.colleagueChoice = colleagueChoice;
     }
 
     public String getAvatarUrl() {

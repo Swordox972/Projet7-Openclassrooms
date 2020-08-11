@@ -6,22 +6,10 @@ import android.location.Location;
 import android.util.Base64;
 import android.util.Log;
 
-import androidx.activity.ComponentActivity;
-
-import com.example.go4lunch.R;
-import com.example.go4lunch.di.DI;
-import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.colleague.ColleagueApiService;
-import com.example.go4lunch.service.colleague.DummyColleagueApiService;
-import com.example.go4lunch.service.colleague.RestaurantChoice;
-import com.example.go4lunch.ui.MapsActivity;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
@@ -29,7 +17,6 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -37,7 +24,12 @@ import java.util.List;
 public class RestaurantInformation {
 
     static String restaurantOpeningHours;
-   private  static ColleagueApiService apiService;
+    private static ColleagueApiService apiService;
+   public static String restaurantId1;
+   public static String restaurantId2;
+    static boolean firstRestaurantId=true;
+     static boolean secondRestaurantId=true;
+
     public static void getRestaurantInformation(PlacesClient placesClient, List<String> placeIdList
             , LatLng myCurrentLatLng) {
 
@@ -57,6 +49,20 @@ public class RestaurantInformation {
                         + place.getOpeningHours());
 
                 //Take restaurant information
+                //Get restaurantId to pass to onClick activity for colleague choice
+                String restaurantId= place.getId();
+                if (!firstRestaurantId && secondRestaurantId) {
+                    restaurantId2= place.getId();
+                    secondRestaurantId= false;
+                }
+
+                if (firstRestaurantId ){
+                    restaurantId1= place.getId();
+                    firstRestaurantId= false;
+                }
+
+
+
                 String restaurantName = place.getName();
                 String restaurantAddress = place.getAddress();
 
@@ -103,9 +109,8 @@ public class RestaurantInformation {
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
                     String bitmapName = bitmapToString(bitmap);
 
-
                     //Create a new MyRestaurantModel and add it in the Singleton's list
-                    MyRestaurantModel restaurant = new MyRestaurantModel(restaurantName,
+                    MyRestaurantModel restaurant = new MyRestaurantModel(restaurantId,restaurantName,
                             restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
                             restaurantOpeningHours, restaurantDistance, bitmapName, null);
 

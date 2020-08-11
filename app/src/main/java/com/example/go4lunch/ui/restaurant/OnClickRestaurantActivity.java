@@ -14,7 +14,6 @@ import com.example.go4lunch.di.DI;
 import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.colleague.ColleagueApiService;
-import com.example.go4lunch.service.colleague.DummyColleagueApiService;
 import com.example.go4lunch.service.colleague.RestaurantChoice;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -75,9 +74,15 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
             restaurantAddress = findViewById(R.id.detail_restaurant_address);
             restaurantAddress.setText(myRestaurant.getRestaurantAddress());
 
-            if (myRestaurant.getRestaurantName().equals("Poyo Rico Diamant")) {
-                myRestaurant.setColleagueList(RestaurantChoice.setColleagueChoice());
+            //Add dummy colleague to the first restaurant of the singleton List
+            if (myRestaurant.getRestaurantId().equals(RestaurantInformation.restaurantId1)) {
+                myRestaurant.setColleagueList(RestaurantChoice.setScarlettAndHughChoice());
             }
+
+            if (myRestaurant.getRestaurantId().equals(RestaurantInformation.restaurantId2)) {
+                myRestaurant.setColleagueList(RestaurantChoice.setNanaAndGodfreyChoice());
+            }
+
 
     }
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 public class MyRestaurantModel implements Serializable {
 
+    String restaurantId;
     private String restaurantName;
     private String restaurantAddress;
     private String restaurantOpening;
@@ -18,15 +19,25 @@ public class MyRestaurantModel implements Serializable {
     }
 
     //Constructor with parameters
-    public MyRestaurantModel(String restaurantName, String restaurantAddress,
+    public MyRestaurantModel(String restaurantId, String restaurantName, String restaurantAddress,
                              String restaurantOpening, String restaurantDistance,
                              String restaurantImageName, List<Colleague> colleagueList) {
+
+        this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
         this.restaurantAddress = restaurantAddress;
         this.restaurantOpening = restaurantOpening;
         this.restaurantDistance = restaurantDistance;
         this.restaurantImageName = restaurantImageName;
-        this.colleagueList= colleagueList;
+        this.colleagueList = colleagueList;
+    }
+
+    public String getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(String restaurantId) {
+        this.restaurantId = restaurantId;
     }
 
     public String getRestaurantName() {

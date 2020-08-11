@@ -51,12 +51,14 @@ public class OnClickRestaurantFragment extends Fragment {
 
     private void initChoiceList() {
         colleagueList= new ArrayList<>();
+        //If click in list view
         if (getActivity().getIntent().getSerializableExtra("Restaurant")!= null) {
             MyRestaurantModel myRestaurant = (MyRestaurantModel) getActivity().getIntent()
                     .getSerializableExtra("Restaurant");
             if (myRestaurant.getColleagueList()!= null)
             colleagueList= myRestaurant.getColleagueList();
         }
+        //If click on Map marker
         if (getActivity().getIntent().getSerializableExtra("MapsActivityRestaurant") != null) {
             MyRestaurantModel myRestaurant = (MyRestaurantModel) getActivity().getIntent()
                     .getSerializableExtra("MapsActivityRestaurant");
