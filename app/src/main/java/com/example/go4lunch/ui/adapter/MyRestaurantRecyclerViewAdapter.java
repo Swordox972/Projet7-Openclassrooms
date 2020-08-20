@@ -1,5 +1,6 @@
 package com.example.go4lunch.ui.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.go4lunch.R;
@@ -25,6 +28,7 @@ public class MyRestaurantRecyclerViewAdapter extends
         RecyclerView.Adapter<MyRestaurantRecyclerViewAdapter.ViewHolder> {
 
     private List<MyRestaurantModel> myRestaurantList;
+    private Context context;
 
     public MyRestaurantRecyclerViewAdapter(List<MyRestaurantModel> items) {
         this.myRestaurantList = items;
@@ -37,6 +41,7 @@ public class MyRestaurantRecyclerViewAdapter extends
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_restaurant,
                 parent, false);
 
+        context= parent.getContext();
         return new ViewHolder(view);
     }
 
@@ -48,8 +53,13 @@ public class MyRestaurantRecyclerViewAdapter extends
         holder.restaurantAddress.setText(myRestaurant.getRestaurantAddress());
         holder.restaurantOpeningHours.setText(myRestaurant.getRestaurantOpening());
         holder.restaurantDistance.setText(myRestaurant.getRestaurantDistance());
-        holder.imageView.setImageBitmap(RestaurantInformation.StringToBitMap(
+        holder.restaurantImageView.setImageBitmap(RestaurantInformation.StringToBitMap(
                 myRestaurant.getRestaurantImageName()));
+        if (myRestaurant.getColleagueList().size() != 0) {
+            holder.restaurantPersonImageView.setImageDrawable( ContextCompat.getDrawable(
+                    context, R.drawable.ic_outline_person_24));
+            holder.restaurantPersonNumber.setText("(" + myRestaurant.getColleagueList().size() + ")");
+        }
 
         holder.itemView.setOnClickListener((View view) -> {
             EventBus.getDefault().post(new OpenRestaurantEvent(myRestaurant));
@@ -71,8 +81,11 @@ public class MyRestaurantRecyclerViewAdapter extends
         @BindView(R.id.restaurant_distance)
         TextView restaurantDistance;
         @BindView(R.id.restaurant_imageview)
-        ImageView imageView;
-
+        ImageView restaurantImageView;
+        @BindView(R.id.restaurant_person_image_view)
+        ImageView restaurantPersonImageView;
+        @BindView(R.id.restaurant_person_number)
+        TextView restaurantPersonNumber;
 
         public ViewHolder(@NonNull View view) {
             super(view);

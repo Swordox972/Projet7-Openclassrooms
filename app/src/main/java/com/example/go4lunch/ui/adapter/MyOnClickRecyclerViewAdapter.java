@@ -40,11 +40,12 @@ public class MyOnClickRecyclerViewAdapter extends
         final Colleague myColleague = myColleagueList.get(position);
 
         holder.colleagueName.setText(myColleague.getColleagueName());
-        holder.restaurantJoining.setText(myColleague.getColleagueJoinOrNot());
+        holder.restaurantJoining.setText(myColleague.getColleagueIsJoining());
         Glide.with(holder.colleaguePhoto.getContext())
                 .load(myColleague.getAvatarUrl())
                 .apply(RequestOptions.circleCropTransform())
                 .into(holder.colleaguePhoto);
+
     }
 
     @Override

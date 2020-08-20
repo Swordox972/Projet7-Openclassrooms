@@ -50,7 +50,7 @@ public class OnClickRestaurantFragment extends Fragment {
 
     private void initChoiceList() {
         colleagueList= new ArrayList<>();
-        //If click in list view
+        //If click on list view
         if (getActivity().getIntent().getSerializableExtra("Restaurant")!= null) {
             MyRestaurantModel myRestaurant = (MyRestaurantModel) getActivity().getIntent()
                     .getSerializableExtra("Restaurant");

@@ -11,4 +11,15 @@
     <string name="call">Call</string>
     <string name="like">Like</string>
     <string name="website">Website</string>
+
+    <string-array name="colleague_name">
+        <item>Scarlett</item>
+        <item>Hugh</item>
+        <item>Nana</item>
+        <item>Godfrey</item>
+        <item>Henry</item>
+        <item>Angelina</item>
+        <item>Robert</item>
+        <item>Emma</item>
+    </string-array>
 </resources>

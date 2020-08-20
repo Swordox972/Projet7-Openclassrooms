@@ -1,11 +1,29 @@
 package com.example.go4lunch.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
-public class Colleague implements Serializable {
+public class Colleague implements Serializable, Parcelable {
+
+    public static final Parcelable.Creator CREATOR= new Parcelable.Creator<Colleague>() {
+        @Override
+        public Colleague createFromParcel(Parcel parcel) {
+            return new Colleague(parcel);
+        }
+
+        @Override
+        public Colleague[] newArray(int i) {
+            return new Colleague[i];
+        }
+    };
+
     int colleagueId;
     String colleagueName;
-    String colleagueJoinOrNot;
+    String colleagueIsJoining;
     String colleagueChoice;
     String avatarUrl;
 
@@ -15,11 +33,11 @@ public class Colleague implements Serializable {
     }
 
     //Constructor with parameters
-    public Colleague(int colleagueId, String colleagueName, String colleagueJoinOrNot,
+    public Colleague(int colleagueId, String colleagueName, String colleagueIsJoining,
             String colleagueChoice,String avatarUrl) {
         this.colleagueId = colleagueId;
         this.colleagueName = colleagueName;
-        this.colleagueJoinOrNot= colleagueJoinOrNot;
+        this.colleagueIsJoining = colleagueIsJoining;
         this.colleagueChoice= colleagueChoice;
         this.avatarUrl = avatarUrl;
     }
@@ -41,12 +59,12 @@ public class Colleague implements Serializable {
         this.colleagueName = colleagueName;
     }
 
-    public String getColleagueJoinOrNot() {
-        return colleagueJoinOrNot;
+    public String getColleagueIsJoining() {
+        return colleagueIsJoining;
     }
 
-    public void setColleagueJoinOrNot(String colleagueJoinOrNot) {
-        this.colleagueJoinOrNot = colleagueJoinOrNot;
+    public void setColleagueIsJoining(String colleagueIsJoining) {
+        this.colleagueIsJoining = colleagueIsJoining;
     }
 
     public String getColleagueChoice() {
@@ -65,5 +83,27 @@ public class Colleague implements Serializable {
         this.avatarUrl = avatarUrl;
     }
 
+    //Parceling part
+    public Colleague(Parcel in) {
+        this.colleagueId= in.readInt();
+        this.colleagueName= in.readString();
+        this.colleagueIsJoining= in.readString();
+        this.colleagueChoice= in.readString();
+        this.avatarUrl= in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+     parcel.writeInt(colleagueId);
+     parcel.writeString(colleagueName);
+     parcel.writeString(colleagueIsJoining);
+     parcel.writeString(colleagueChoice);
+     parcel.writeString(avatarUrl);
+    }
 
 }

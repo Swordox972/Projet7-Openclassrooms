@@ -6,8 +6,10 @@ import android.location.Location;
 import android.util.Base64;
 import android.util.Log;
 
+import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.colleague.ColleagueApiService;
+import com.example.go4lunch.service.colleague.ColleagueChoice;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
@@ -17,6 +19,7 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -25,12 +28,15 @@ public class RestaurantInformation {
 
     static String restaurantOpeningHours;
     private static ColleagueApiService apiService;
-   public static String restaurantId1;
-   public static String restaurantId2;
-   public static String restaurantName1;
-   public static String restaurantName2;
-    static boolean firstRestaurantId=true;
-     static boolean secondRestaurantId=true;
+    public static String restaurantId1;
+    public static String restaurantId2;
+    public static String restaurantName1;
+    public static String restaurantName2;
+    public static LatLng restaurantLatLng1;
+    public static LatLng restaurantLatLng2;
+    static boolean firstRestaurantId = false;
+    static boolean secondRestaurantId = false;
+    public static List<Colleague> emptyColleagueList= new ArrayList<>();
 
     public static void getRestaurantInformation(PlacesClient placesClient, List<String> placeIdList
             , LatLng myCurrentLatLng) {
@@ -51,19 +57,7 @@ public class RestaurantInformation {
                         + place.getOpeningHours());
 
                 //Take restaurant information
-                //Get restaurantId to pass to onClick activity for colleague choice
-                String restaurantId= place.getId();
-                if (!firstRestaurantId && secondRestaurantId) {
-                    restaurantId2= place.getId();
-                    restaurantName2= place.getName();
-                    secondRestaurantId= false;
-                }
 
-                if (firstRestaurantId ){
-                    restaurantId1= place.getId();
-                    restaurantName1= place.getName();
-                    firstRestaurantId= false;
-                }
 
                 String restaurantName = place.getName();
                 String restaurantAddress = place.getAddress();
@@ -111,11 +105,35 @@ public class RestaurantInformation {
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
                     String bitmapName = bitmapToString(bitmap);
 
+                    //Get restaurantId to pass to onClick activity for colleague choice
                     //Create a new MyRestaurantModel and add it in the Singleton's list
-                    MyRestaurantModel restaurant = new MyRestaurantModel(restaurantId,restaurantName,
-                            restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                            restaurantOpeningHours, restaurantDistance, bitmapName, null);
+                    String restaurantId = place.getId();
 
+                    MyRestaurantModel restaurant;
+                    //First restaurant
+                    if (!firstRestaurantId) {
+                        restaurantId1 = place.getId();
+                        restaurantName1 = place.getName();
+                        restaurantLatLng1 = place.getLatLng();
+                        restaurant = new MyRestaurantModel(restaurantId, restaurantName,
+                                restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
+                                restaurantOpeningHours, restaurantDistance, bitmapName, ColleagueChoice.setScarlettAndHughChoice());
+                        firstRestaurantId = true;
+                        //Second restaurant
+                    } else if (firstRestaurantId && !secondRestaurantId) {
+                        restaurantId2 = place.getId();
+                        restaurantName2 = place.getName();
+                        restaurantLatLng2 = place.getLatLng();
+                        restaurant = new MyRestaurantModel(restaurantId, restaurantName,
+                                restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
+                                restaurantOpeningHours, restaurantDistance, bitmapName, ColleagueChoice.setNanaAndGodfreyChoice());
+                        secondRestaurantId = true;
+                        //Other restaurants
+                    } else {
+                        restaurant = new MyRestaurantModel(restaurantId, restaurantName,
+                                restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
+                                restaurantOpeningHours, restaurantDistance, bitmapName, emptyColleagueList);
+                    }
                     Restaurants.getInstance().getMyRestaurantList().add(restaurant);
 
                     //reset restaurant value

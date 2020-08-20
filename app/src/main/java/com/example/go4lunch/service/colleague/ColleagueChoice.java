@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ColleagueChoice {
-    static ColleagueApiService apiService;
+
+     static ColleagueApiService apiService;
 
     public static List<Colleague> setScarlettAndHughChoice() {
         apiService = DI.getColleagueApiService();
@@ -17,8 +18,8 @@ public class ColleagueChoice {
 
         Colleague scarlett = colleagueList.get(0);
         Colleague hugh = colleagueList.get(1);
-        scarlett.setColleagueJoinOrNot("is joining!");
-        hugh.setColleagueJoinOrNot("is joining!");
+        scarlett.setColleagueIsJoining("is joining!");
+        hugh.setColleagueIsJoining("is joining!");
         List<Colleague> colleagueChoiceList = new ArrayList<>();
         colleagueChoiceList.add(scarlett);
         colleagueChoiceList.add(hugh);
@@ -32,8 +33,8 @@ public class ColleagueChoice {
 
         Colleague nana = colleagueList.get(2);
         Colleague godfrey = colleagueList.get(3);
-        nana.setColleagueJoinOrNot("is joining!");
-        godfrey.setColleagueJoinOrNot("is joining!");
+        nana.setColleagueIsJoining("is joining!");
+        godfrey.setColleagueIsJoining("is joining!");
         List<Colleague> colleagueChoiceList = new ArrayList<>();
         colleagueChoiceList.add(nana);
         colleagueChoiceList.add(godfrey);
@@ -61,15 +62,17 @@ public class ColleagueChoice {
 
     public static void setOtherColleagueChoiceRestaurant() {
         apiService=DI.getColleagueApiService();
+        String notDecided= " hasn't decided yet";
         List<Colleague> colleagueList= apiService.getColleagues();
         Colleague henry= colleagueList.get(4);
         Colleague angelina= colleagueList.get(5);
         Colleague robert=colleagueList.get(6);
         Colleague emma=colleagueList.get(7);
-        henry.setColleagueChoice(" hasn't decided yet");
-        angelina.setColleagueChoice(" hasn't decided yet");
-        robert.setColleagueChoice(" hasn't decided yet");
-        emma.setColleagueChoice(" hasn't decided yet");
+        henry.setColleagueChoice(notDecided);
+        angelina.setColleagueChoice(notDecided);
+        robert.setColleagueChoice(notDecided);
+        emma.setColleagueChoice(notDecided);
 
     }
 }
+
