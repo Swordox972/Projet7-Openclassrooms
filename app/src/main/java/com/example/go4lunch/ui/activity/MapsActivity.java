@@ -94,14 +94,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener((@NonNull MenuItem item) ->
         {
-            Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+            Intent intent = new Intent(this, MapsActivity.class);
 
             switch (item.getItemId()) {
                 case R.id.page_1:
+                    startActivity(intent);
+                    //Reset boolean variables of RestaurantInformation
+                    RestaurantInformation.firstRestaurant = false;
+                    RestaurantInformation.secondRestaurant = false;
                     //Clear restaurant list while changing fragment
                     floatingActionButton.setVisibility(View.VISIBLE);
                     singletonListRestaurant.clear();
-                    startActivity(intent);
+                    onBackPressed();
                     break;
 
                 case R.id.page_2:
@@ -133,7 +137,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void getCurrentLocation() {
         Restaurants.getInstance().getMyRestaurantList().clear();
         List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
-                Place.Field.LAT_LNG, Place.Field.TYPES);
+                Place.Field.LAT_LNG, Place.Field.TYPES, Place.Field.PHOTO_METADATAS);
         // Use the builder to create a FindCurrentPlaceRequest.
         FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
         // Call findCurrentPlace and handle the response (first check that the user has granted permission).
@@ -145,7 +149,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     FindCurrentPlaceResponse response = task.getResult();
                     boolean firstLocation = true;
                     boolean firstRestaurantFound = false;
-                    boolean secondRestaurantFound=false;
+                    boolean secondRestaurantFound = false;
                     for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
                         Log.i("success", String.format("Place '%s' has likelihood: %f",
                                 placeLikelihood.getPlace().getName(),
@@ -173,21 +177,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             /*Move camera to the first restaurant found, setFirstRestaurantFound
                              to true and set marker selected to the first and second restaurant */
                             //Add marker with mMap
-                            if (!firstRestaurantFound) {
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurantLatLng, 15));
+                            if (!firstRestaurantFound &&
+                                    placeLikelihood.getPlace().getPhotoMetadatas().get(0) != null) {
                                 firstRestaurantFound = true;
 
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurantLatLng, 15));
                                 MarkerOptions options = new MarkerOptions()
                                         .position(MapsActivity.restaurantLatLng)
                                         .icon(BitmapDescriptorFactory.fromResource
                                                 (R.drawable.marker_restaurant_selected))
                                         .title(placeLikelihood.getPlace().getName());
-
                                 mMap.addMarker(options);
-                                
-                            } else if (firstRestaurantFound && !secondRestaurantFound) {
+
+
+                            } else if (firstRestaurantFound && !secondRestaurantFound &&
+                                    placeLikelihood.getPlace().getPhotoMetadatas().get(0) != null) {
+                                secondRestaurantFound = true;
                                 //Add marker selected to second restaurant
-                                secondRestaurantFound=true;
                                 MarkerOptions options = new MarkerOptions()
                                         .position(MapsActivity.restaurantLatLng)
                                         .icon(BitmapDescriptorFactory.fromResource
@@ -197,12 +203,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                             } else {
 
-                            MarkerOptions options = new MarkerOptions()
-                                    .position(MapsActivity.restaurantLatLng)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant))
-                                    .title(placeLikelihood.getPlace().getName());
+                                MarkerOptions options = new MarkerOptions()
+                                        .position(MapsActivity.restaurantLatLng)
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant))
+                                        .title(placeLikelihood.getPlace().getName());
 
-                            mMap.addMarker(options);
+                                mMap.addMarker(options);
                             }
                         }
                     }

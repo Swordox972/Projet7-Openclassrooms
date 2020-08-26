@@ -75,6 +75,7 @@
             android:orientation="vertical">
 
             <ImageButton
+                android:id="@+id/restaurant_call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -98,6 +99,7 @@
             android:orientation="vertical">
 
             <ImageButton
+                android:id="@+id/restaurant_like"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -121,6 +123,7 @@
             android:orientation="vertical">
 
             <ImageButton
+                android:id="@+id/restaurant_website"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

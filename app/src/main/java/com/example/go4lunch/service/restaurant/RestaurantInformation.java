@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
-import com.example.go4lunch.service.colleague.ColleagueApiService;
 import com.example.go4lunch.service.colleague.ColleagueChoice;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
@@ -27,47 +26,44 @@ import java.util.List;
 public class RestaurantInformation {
 
     static String restaurantOpeningHours;
-    private static ColleagueApiService apiService;
     public static String restaurantId1;
     public static String restaurantId2;
     public static String restaurantName1;
     public static String restaurantName2;
     public static LatLng restaurantLatLng1;
     public static LatLng restaurantLatLng2;
-    static boolean firstRestaurantId = false;
-    static boolean secondRestaurantId = false;
-    public static List<Colleague> emptyColleagueList= new ArrayList<>();
+    public static boolean firstRestaurant;
+    public static boolean secondRestaurant;
+    public static List<Colleague> emptyColleagueList = new ArrayList<>();
 
     public static void getRestaurantInformation(PlacesClient placesClient, List<String> placeIdList
             , LatLng myCurrentLatLng) {
 
-// Specify the fields to return.
+        // Specify the fields to return.
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
                 Place.Field.ADDRESS, Place.Field.OPENING_HOURS, Place.Field.TYPES,
-                Place.Field.PHOTO_METADATAS, Place.Field.LAT_LNG);
+                Place.Field.PHOTO_METADATAS, Place.Field.LAT_LNG,Place.Field.PHONE_NUMBER);
 
         //Do a loop for place id
         for (int i = 0; i < placeIdList.size(); i++) {
-// Construct a request object, passing the place ID and fields array.
+             // Construct a request object, passing the place ID and fields array.
             final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeIdList.get(i), placeFields);
-//Fetch place
+            //Fetch place
             placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
                 Place place = response.getPlace();
                 Log.i("success", "Place found: " + place.getName() + place.getAddress()
                         + place.getOpeningHours());
 
                 //Take restaurant information
-
-
+                String restaurantId = place.getId();
                 String restaurantName = place.getName();
                 String restaurantAddress = place.getAddress();
 
-                //Get opening hours
+                    //Get opening hours
                 Calendar calendar = Calendar.getInstance();
                 int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-                if (dayOfWeek > 1) {
-                    if (place.getOpeningHours() != null) {
+                if (dayOfWeek >= 1) {
+                    if (place.getOpeningHours() != null && dayOfWeek != 1) {
                         restaurantOpeningHours = place.getOpeningHours().getWeekdayText().get(dayOfWeek - 2);
                     } else {
                         if (place.getOpeningHours() != null)
@@ -75,16 +71,19 @@ public class RestaurantInformation {
                     }
                 }
 
-                //Get restaurant distance
+                    //Get restaurant distance
                 float[] results = new float[1];
                 Location.distanceBetween(myCurrentLatLng.latitude,
                         myCurrentLatLng.longitude, place.getLatLng().latitude,
                         place.getLatLng().longitude, results);
-                //format the distance value to be round
+                       //format the distance value to be round
                 String format = String.format("%.0f", results[0]);
                 String restaurantDistance = format + "m";
 
-                // Get the photo metadata.
+                // Get the phone number
+                String restaurantPhoneNumber= place.getPhoneNumber();
+
+                   // Get the photo metadata.
                 final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
                 if (metadata == null || metadata.isEmpty()) {
                     Log.w("success", "No photo metadata.");
@@ -100,44 +99,44 @@ public class RestaurantInformation {
                         .setMaxWidth(300) // Optional.
                         .setMaxHeight(300) // Optional.
                         .build();
+
                 placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
                     //Get bitmap to add in myRestaurantModel
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
                     String bitmapName = bitmapToString(bitmap);
 
-                    //Get restaurantId to pass to onClick activity for colleague choice
                     //Create a new MyRestaurantModel and add it in the Singleton's list
-                    String restaurantId = place.getId();
-
                     MyRestaurantModel restaurant;
                     //First restaurant
-                    if (!firstRestaurantId) {
+                    if (!firstRestaurant) {
                         restaurantId1 = place.getId();
                         restaurantName1 = place.getName();
                         restaurantLatLng1 = place.getLatLng();
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName, ColleagueChoice.setScarlettAndHughChoice());
-                        firstRestaurantId = true;
+                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber,
+                                ColleagueChoice.setScarlettAndHughChoice());
+                        firstRestaurant = true;
                         //Second restaurant
-                    } else if (firstRestaurantId && !secondRestaurantId) {
+                    } else if (firstRestaurant && !secondRestaurant) {
                         restaurantId2 = place.getId();
                         restaurantName2 = place.getName();
                         restaurantLatLng2 = place.getLatLng();
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName, ColleagueChoice.setNanaAndGodfreyChoice());
-                        secondRestaurantId = true;
+                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber,
+                                ColleagueChoice.setNanaAndGodfreyChoice());
+                        secondRestaurant = true;
                         //Other restaurants
                     } else {
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName, emptyColleagueList);
+                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber,
+                                emptyColleagueList);
                     }
+
                     Restaurants.getInstance().getMyRestaurantList().add(restaurant);
 
-                    //reset restaurant value
-                    restaurant = null;
                 }).addOnFailureListener((exception) -> {
                     if (exception instanceof ApiException) {
                         final ApiException apiException = (ApiException) exception;

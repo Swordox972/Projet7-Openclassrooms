@@ -2,8 +2,10 @@ package com.example.go4lunch.ui.activity;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,9 +33,8 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     private TextView restaurantAddress;
     private ImageView restaurantPhoto;
     private FloatingActionButton floatingActionButton;
+    private ImageButton restaurantCall;
     private boolean isSelected = false;
-    private ArrayList<Colleague> colleagueList;
-    private ColleagueApiService apiService;
     Drawable fao_not_selected;
     Drawable fao_selected;
 
@@ -42,7 +43,6 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_click_restaurant);
-        apiService = DI.getColleagueApiService();
         // commit fragment
         getSupportFragmentManager().beginTransaction().replace(R.id.on_click_activity_fragment_container_view,
                 new OnClickRestaurantFragment()).commit();
@@ -79,16 +79,12 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
                 myRestaurant.getRestaurantImageName()));
         restaurantAddress = findViewById(R.id.detail_restaurant_address);
         restaurantAddress.setText(myRestaurant.getRestaurantAddress());
-
-        //Add dummy colleague to the first restaurant of the singleton List
-        if (myRestaurant.getRestaurantId().equals(RestaurantInformation.restaurantId1)) {
-            myRestaurant.setColleagueList(ColleagueChoice.setScarlettAndHughChoice());
-        }
-
-        if (myRestaurant.getRestaurantId().equals(RestaurantInformation.restaurantId2)) {
-            myRestaurant.setColleagueList(ColleagueChoice.setNanaAndGodfreyChoice());
-        }
-
+        restaurantCall= findViewById(R.id.restaurant_call);
+        restaurantCall.setOnClickListener((View view) -> {
+            Intent intent= new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:"+ myRestaurant.getRestaurantPhoneNumber()));
+            startActivity(intent);
+        });
     }
 
     private void initializeFao() {
@@ -112,5 +108,6 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
 
         });
     }
+
 
 }
