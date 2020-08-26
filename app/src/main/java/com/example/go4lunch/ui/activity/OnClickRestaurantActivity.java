@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +35,7 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     private ImageView restaurantPhoto;
     private FloatingActionButton floatingActionButton;
     private ImageButton restaurantCall;
+    private ImageButton restaurantWebsite;
     private boolean isSelected = false;
     Drawable fao_not_selected;
     Drawable fao_selected;
@@ -79,14 +81,29 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
                 myRestaurant.getRestaurantImageName()));
         restaurantAddress = findViewById(R.id.detail_restaurant_address);
         restaurantAddress.setText(myRestaurant.getRestaurantAddress());
-        restaurantCall= findViewById(R.id.restaurant_call);
-        restaurantCall.setOnClickListener((View view) -> {
-            Intent intent= new Intent(Intent.ACTION_DIAL);
-            intent.setData(Uri.parse("tel:"+ myRestaurant.getRestaurantPhoneNumber()));
-            startActivity(intent);
-        });
-    }
+        restaurantCall = findViewById(R.id.restaurant_call);
 
+            restaurantCall.setOnClickListener((View view) -> {
+                if (myRestaurant.getRestaurantPhoneNumber() != null) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + myRestaurant.getRestaurantPhoneNumber()));
+                startActivity(intent);
+                } else {
+                    Toast.makeText(this, "No Phone number", Toast.LENGTH_SHORT).show();
+                }
+            });
+        restaurantWebsite= findViewById(R.id.restaurant_website);
+            restaurantWebsite.setOnClickListener((View view) -> {
+                if (myRestaurant.getRestaurantWebsite() != null) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(myRestaurant.getRestaurantWebsite()));
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "No website", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+    }
     private void initializeFao() {
 
         fao_not_selected = ResourcesCompat.getDrawable(getResources(),
@@ -97,8 +114,7 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
         floatingActionButton = findViewById(R.id.fao_chose_restaurant);
         floatingActionButton.setOnClickListener((View view) -> {
             if (!isSelected) {
-                Intent intent = new Intent(this, ChooseColleagueForRestaurantActivity.class);
-                startActivity(intent);
+                floatingActionButton.setImageDrawable(fao_selected);
                 isSelected=true;
 
             } else {

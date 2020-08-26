@@ -178,7 +178,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                              to true and set marker selected to the first and second restaurant */
                             //Add marker with mMap
                             if (!firstRestaurantFound &&
-                                    placeLikelihood.getPlace().getPhotoMetadatas().get(0) != null) {
+                                    placeLikelihood.getPlace().getPhotoMetadatas() != null) {
                                 firstRestaurantFound = true;
 
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurantLatLng, 15));
@@ -191,7 +191,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
                             } else if (firstRestaurantFound && !secondRestaurantFound &&
-                                    placeLikelihood.getPlace().getPhotoMetadatas().get(0) != null) {
+                                    placeLikelihood.getPlace().getPhotoMetadatas() != null) {
                                 secondRestaurantFound = true;
                                 //Add marker selected to second restaurant
                                 MarkerOptions options = new MarkerOptions()
@@ -202,7 +202,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 mMap.addMarker(options);
 
                             } else {
-
                                 MarkerOptions options = new MarkerOptions()
                                         .position(MapsActivity.restaurantLatLng)
                                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant))

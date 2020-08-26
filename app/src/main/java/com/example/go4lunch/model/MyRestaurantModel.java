@@ -12,6 +12,7 @@ public class MyRestaurantModel implements Serializable {
     private String restaurantDistance;
     private String restaurantImageName;
     private String restaurantPhoneNumber;
+    private String restaurantWebsite;
     private List<Colleague> colleagueList;
 
 
@@ -23,7 +24,7 @@ public class MyRestaurantModel implements Serializable {
     public MyRestaurantModel(String restaurantId, String restaurantName, String restaurantAddress,
                              String restaurantOpening, String restaurantDistance,
                              String restaurantImageName, String restaurantPhoneNumber,
-                             List<Colleague> colleagueList) {
+                             String restaurantWebsite, List<Colleague> colleagueList) {
 
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
@@ -32,6 +33,7 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantDistance = restaurantDistance;
         this.restaurantImageName = restaurantImageName;
         this.restaurantPhoneNumber= restaurantPhoneNumber;
+        this.restaurantWebsite= restaurantWebsite;
         this.colleagueList = colleagueList;
     }
 
@@ -89,6 +91,14 @@ public class MyRestaurantModel implements Serializable {
 
     public void setRestaurantPhoneNumber(String restaurantPhoneNumber) {
         this.restaurantPhoneNumber = restaurantPhoneNumber;
+    }
+
+    public String getRestaurantWebsite() {
+        return restaurantWebsite;
+    }
+
+    public void setRestaurantWebsite(String restaurantWebsite) {
+        this.restaurantWebsite = restaurantWebsite;
     }
 
     public List<Colleague> getColleagueList() {

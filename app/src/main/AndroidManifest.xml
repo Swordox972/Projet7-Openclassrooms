@@ -17,8 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.ChooseColleagueForRestaurantActivity"
-            android:theme="@style/Theme.AppCompat.Dialog.Alert"/>
         <activity
             android:name=".ui.activity.OnClickRestaurantActivity"
             android:theme="@style/AppTheme.NoActionBar" />

@@ -3,6 +3,7 @@ package com.example.go4lunch.service.restaurant;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
@@ -32,6 +33,7 @@ public class RestaurantInformation {
     public static String restaurantName2;
     public static LatLng restaurantLatLng1;
     public static LatLng restaurantLatLng2;
+    static String restaurantWebsite;
     public static boolean firstRestaurant;
     public static boolean secondRestaurant;
     public static List<Colleague> emptyColleagueList = new ArrayList<>();
@@ -42,7 +44,8 @@ public class RestaurantInformation {
         // Specify the fields to return.
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
                 Place.Field.ADDRESS, Place.Field.OPENING_HOURS, Place.Field.TYPES,
-                Place.Field.PHOTO_METADATAS, Place.Field.LAT_LNG,Place.Field.PHONE_NUMBER);
+                Place.Field.PHOTO_METADATAS, Place.Field.LAT_LNG,Place.Field.PHONE_NUMBER,
+                Place.Field.WEBSITE_URI);
 
         //Do a loop for place id
         for (int i = 0; i < placeIdList.size(); i++) {
@@ -83,6 +86,11 @@ public class RestaurantInformation {
                 // Get the phone number
                 String restaurantPhoneNumber= place.getPhoneNumber();
 
+                //Get the website
+
+                if (place.getWebsiteUri() != null) {
+                 restaurantWebsite= place.getWebsiteUri().toString();
+                }
                    // Get the photo metadata.
                 final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
                 if (metadata == null || metadata.isEmpty()) {
@@ -114,7 +122,7 @@ public class RestaurantInformation {
                         restaurantLatLng1 = place.getLatLng();
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber,
+                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber, restaurantWebsite ,
                                 ColleagueChoice.setScarlettAndHughChoice());
                         firstRestaurant = true;
                         //Second restaurant
@@ -124,19 +132,21 @@ public class RestaurantInformation {
                         restaurantLatLng2 = place.getLatLng();
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber,
+                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber,restaurantWebsite ,
                                 ColleagueChoice.setNanaAndGodfreyChoice());
                         secondRestaurant = true;
                         //Other restaurants
                     } else {
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber,
+                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber, restaurantWebsite,
                                 emptyColleagueList);
                     }
 
                     Restaurants.getInstance().getMyRestaurantList().add(restaurant);
 
+                    // Reset restaurantWebsite value
+                    restaurantWebsite= null;
                 }).addOnFailureListener((exception) -> {
                     if (exception instanceof ApiException) {
                         final ApiException apiException = (ApiException) exception;
