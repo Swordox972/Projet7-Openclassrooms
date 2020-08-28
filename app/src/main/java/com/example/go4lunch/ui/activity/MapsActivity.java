@@ -201,7 +201,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         .title(placeLikelihood.getPlace().getName());
                                 mMap.addMarker(options);
 
-                            } else {
+                            } else if ( firstRestaurantFound && secondRestaurantFound &&
+                            placeLikelihood.getPlace().getPhotoMetadatas() != null){
                                 MarkerOptions options = new MarkerOptions()
                                         .position(MapsActivity.restaurantLatLng)
                                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant))

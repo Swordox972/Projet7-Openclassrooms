@@ -57,40 +57,6 @@ public class RestaurantInformation {
                 Log.i("success", "Place found: " + place.getName() + place.getAddress()
                         + place.getOpeningHours());
 
-                //Take restaurant information
-                String restaurantId = place.getId();
-                String restaurantName = place.getName();
-                String restaurantAddress = place.getAddress();
-
-                    //Get opening hours
-                Calendar calendar = Calendar.getInstance();
-                int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-                if (dayOfWeek >= 1) {
-                    if (place.getOpeningHours() != null && dayOfWeek != 1) {
-                        restaurantOpeningHours = place.getOpeningHours().getWeekdayText().get(dayOfWeek - 2);
-                    } else {
-                        if (place.getOpeningHours() != null)
-                            restaurantOpeningHours = place.getOpeningHours().getWeekdayText().get(dayOfWeek + 5);
-                    }
-                }
-
-                    //Get restaurant distance
-                float[] results = new float[1];
-                Location.distanceBetween(myCurrentLatLng.latitude,
-                        myCurrentLatLng.longitude, place.getLatLng().latitude,
-                        place.getLatLng().longitude, results);
-                       //format the distance value to be round
-                String format = String.format("%.0f", results[0]);
-                String restaurantDistance = format + "m";
-
-                // Get the phone number
-                String restaurantPhoneNumber= place.getPhoneNumber();
-
-                //Get the website
-
-                if (place.getWebsiteUri() != null) {
-                 restaurantWebsite= place.getWebsiteUri().toString();
-                }
                    // Get the photo metadata.
                 final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
                 if (metadata == null || metadata.isEmpty()) {
@@ -107,12 +73,44 @@ public class RestaurantInformation {
                         .setMaxWidth(300) // Optional.
                         .setMaxHeight(300) // Optional.
                         .build();
-
                 placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
+                    //Take restaurant information
+                    String restaurantId = place.getId();
+                    String restaurantName = place.getName();
+                    String restaurantAddress = place.getAddress();
+
+                    //Get opening hours
+                    Calendar calendar = Calendar.getInstance();
+                    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                    if (dayOfWeek >= 1) {
+                        if (place.getOpeningHours() != null && dayOfWeek != 1) {
+                            restaurantOpeningHours = place.getOpeningHours().getWeekdayText().get(dayOfWeek - 2);
+                        } else {
+                            if (place.getOpeningHours() != null)
+                                restaurantOpeningHours = place.getOpeningHours().getWeekdayText().get(dayOfWeek + 5);
+                        }
+                    }
+
+                    //Get restaurant distance
+                    float[] results = new float[1];
+                    Location.distanceBetween(myCurrentLatLng.latitude,
+                            myCurrentLatLng.longitude, place.getLatLng().latitude,
+                            place.getLatLng().longitude, results);
+                    //format the distance value to be round
+                    String format = String.format("%.0f", results[0]);
+                    String restaurantDistance = format + "m";
+
+                    // Get the phone number
+                    String restaurantPhoneNumber= place.getPhoneNumber();
                     //Get bitmap to add in myRestaurantModel
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
                     String bitmapName = bitmapToString(bitmap);
-
+                    //Get the website
+                    if (place.getWebsiteUri() != null) {
+                        restaurantWebsite= place.getWebsiteUri().toString();
+                    } else {
+                        restaurantWebsite= null;
+                    }
                     //Create a new MyRestaurantModel and add it in the Singleton's list
                     MyRestaurantModel restaurant;
                     //First restaurant
@@ -144,7 +142,6 @@ public class RestaurantInformation {
                     }
 
                     Restaurants.getInstance().getMyRestaurantList().add(restaurant);
-
                     // Reset restaurantWebsite value
                     restaurantWebsite= null;
                 }).addOnFailureListener((exception) -> {
@@ -152,10 +149,9 @@ public class RestaurantInformation {
                         final ApiException apiException = (ApiException) exception;
                         Log.e("error", "Place not found: " + exception.getMessage());
                         final int statusCode = apiException.getStatusCode();
-                        // TODO: Handle error with given status code.
+                        Log.e("error", "status code: " + statusCode);
                     }
                 });
-
 
                 //On failure
             }).addOnFailureListener((exception) -> {
@@ -163,7 +159,7 @@ public class RestaurantInformation {
                     final ApiException apiException = (ApiException) exception;
                     Log.e("error", "Place not found: " + exception.getMessage());
                     final int statusCode = apiException.getStatusCode();
-                    // TODO: Handle error with given status code.
+                    Log.e("error", "status code: " + statusCode);
                 }
             });
         }
