@@ -10,6 +10,7 @@ import android.util.Log;
 import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.colleague.ColleagueChoice;
+import com.example.go4lunch.service.colleague.ColleagueLike;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
@@ -64,10 +65,8 @@ public class RestaurantInformation {
                     return;
                 }
                 final PhotoMetadata photoMetadata = metadata.get(0);
-
                 // Get the attribution text.
                 final String attributions = photoMetadata.getAttributions();
-
                 // Create a FetchPhotoRequest.
                 final FetchPhotoRequest photoRequest = FetchPhotoRequest.builder(photoMetadata)
                         .setMaxWidth(300) // Optional.
@@ -121,7 +120,7 @@ public class RestaurantInformation {
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
                                 restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber, restaurantWebsite ,
-                                ColleagueChoice.setScarlettAndHughChoice());
+                                ColleagueChoice.setScarlettAndHughChoice(), ColleagueLike.setSevenPeopleLike());
                         firstRestaurant = true;
                         //Second restaurant
                     } else if (firstRestaurant && !secondRestaurant) {
@@ -131,14 +130,14 @@ public class RestaurantInformation {
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
                                 restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber,restaurantWebsite ,
-                                ColleagueChoice.setNanaAndGodfreyChoice());
+                                ColleagueChoice.setNanaAndGodfreyChoice(), ColleagueLike.setFivePeopleLikes());
                         secondRestaurant = true;
                         //Other restaurants
                     } else {
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
                                 restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber, restaurantWebsite,
-                                emptyColleagueList);
+                                emptyColleagueList, ColleagueLike.setThreePeopleLikes());
                     }
 
                     Restaurants.getInstance().getMyRestaurantList().add(restaurant);

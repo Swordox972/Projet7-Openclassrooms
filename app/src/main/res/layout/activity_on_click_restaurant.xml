@@ -37,14 +37,40 @@
         app:layout_constraintBottom_toBottomOf="@id/on_click_activity_frame_layout"
         app:layout_constraintTop_toTopOf="@id/detail_linear_layout_icons">
 
-        <TextView
-            android:id="@+id/detail_restaurant_name"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/detail_restaurant_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/on_click_star1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginStart="15dp"
+                />
+
+            <ImageView
+                android:id="@+id/on_click_star2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"/>
+
+            <ImageView
+                android:id="@+id/on_click_star3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/detail_restaurant_address"
@@ -145,8 +171,8 @@
         android:id="@+id/fao_chose_restaurant"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_check_circle_24"
         android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_baseline_check_circle_24"
         app:backgroundTint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="@id/on_click_activity_frame_layout"
         app:layout_constraintEnd_toEndOf="parent"
@@ -158,16 +184,14 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#DDDDDD"
-        app:layout_constraintBottom_toBottomOf="@id/detail_linear_layout_icons"
-        />
+        app:layout_constraintBottom_toBottomOf="@id/detail_linear_layout_icons" />
 
 
-
-<androidx.fragment.app.FragmentContainerView
-    android:id="@+id/on_click_activity_fragment_container_view"
-    android:layout_width="match_parent"
-    android:layout_height="180dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/on_click_activity_view_divider"/>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/on_click_activity_fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/on_click_activity_view_divider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

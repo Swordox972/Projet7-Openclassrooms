@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.go4lunch.R;
@@ -41,7 +40,7 @@ public class MyRestaurantRecyclerViewAdapter extends
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_restaurant,
                 parent, false);
 
-        context= parent.getContext();
+        context = parent.getContext();
         return new ViewHolder(view);
     }
 
@@ -56,9 +55,23 @@ public class MyRestaurantRecyclerViewAdapter extends
         holder.restaurantImageView.setImageBitmap(RestaurantInformation.StringToBitMap(
                 myRestaurant.getRestaurantImageName()));
         if (myRestaurant.getColleagueList().size() != 0) {
-            holder.restaurantPersonImageView.setImageDrawable( ContextCompat.getDrawable(
+            holder.restaurantPersonImageView.setImageDrawable(ContextCompat.getDrawable(
                     context, R.drawable.ic_outline_person_24));
             holder.restaurantPersonNumber.setText("(" + myRestaurant.getColleagueList().size() + ")");
+        }
+
+        //Add star to restaurant considering colleagueLikeList size
+        if (myRestaurant.getColleagueLikeList().size() == 3 && myRestaurant.getColleagueLikeList().size() < 5) {
+            holder.star1.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
+        }
+        if (myRestaurant.getColleagueLikeList().size() == 5 && myRestaurant.getColleagueLikeList().size() < 7) {
+            holder.star1.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
+            holder.star2.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
+        }
+        if (myRestaurant.getColleagueLikeList().size() == 7 || myRestaurant.getColleagueLikeList().size()  > 7) {
+            holder.star1.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
+            holder.star2.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
+            holder.star3.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
         }
 
         holder.itemView.setOnClickListener((View view) -> {
@@ -86,6 +99,12 @@ public class MyRestaurantRecyclerViewAdapter extends
         ImageView restaurantPersonImageView;
         @BindView(R.id.restaurant_person_number)
         TextView restaurantPersonNumber;
+        @BindView(R.id.star1)
+        ImageView star1;
+        @BindView(R.id.star2)
+        ImageView star2;
+        @BindView(R.id.star3)
+        ImageView star3;
 
         public ViewHolder(@NonNull View view) {
             super(view);
