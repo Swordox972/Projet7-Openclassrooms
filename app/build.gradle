@@ -49,6 +49,7 @@ dependencies {
 
     //BUTTER KNIFES
     implementation 'com.jakewharton:butterknife:10.2.1'
+    implementation 'org.jetbrains:annotations:15.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

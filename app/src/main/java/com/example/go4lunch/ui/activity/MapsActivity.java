@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -21,6 +24,7 @@ import com.example.go4lunch.service.restaurant.Restaurants;
 import com.example.go4lunch.ui.fragment.ColleagueFragment;
 import com.example.go4lunch.ui.fragment.RestaurantFragment;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -36,12 +40,18 @@ import com.google.android.libraries.places.api.model.PlaceLikelihood;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
 import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.libraries.places.api.model.Place.Type.RESTAURANT;
@@ -52,23 +62,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String API_KEY = BuildConfig.API_KEY;
     PlacesClient placesClient;
     private static final int RC_LOCATION = 10;
+    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
     public static LatLng restaurantLatLng;
     LatLng myCurrentLatLng;
-    FloatingActionButton floatingActionButton;
-    private BottomNavigationView bottomNavigationView;
     //Stock place id
     List<String> placeIdList;
-    ImageView imageView;
     private List<MyRestaurantModel> singletonListRestaurant;
+   @BindView(R.id.fao_current_location) FloatingActionButton floatingActionButton;
+   @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
+   @BindView(R.id.autocomplete_toolbar) Toolbar toolbar;
+   @BindView(R.id.toolbar_search) ImageButton toolbar_search;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        ButterKnife.bind(this);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_container_view);
-
 
         mapFragment.getMapAsync(this);
 
@@ -79,51 +92,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         placesClient = Places.createClient(this);
         //Initialize placeIdList
         placeIdList = new ArrayList<>();
-        imageView = findViewById(R.id.restaurant_imageview);
         singletonListRestaurant = Restaurants.getInstance().getMyRestaurantList();
 
+        //Initialize toolbar
+       initializeAutocompleteToolbar();
         //Initialize floating action button
-        floatingActionButton = findViewById(R.id.fao_current_location);
         floatingActionButton.setOnClickListener((View view) -> {
             singletonListRestaurant.clear();
             getCurrentLocation();
-
         });
-
-        //Initialize bottom navigation
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener((@NonNull MenuItem item) ->
-        {
-            Intent intent = new Intent(this, MapsActivity.class);
-
-            switch (item.getItemId()) {
-                case R.id.page_1:
-                    startActivity(intent);
-                    //Reset boolean variables of RestaurantInformation
-                    RestaurantInformation.firstRestaurant = false;
-                    RestaurantInformation.secondRestaurant = false;
-                    //Clear restaurant list while changing fragment
-                    floatingActionButton.setVisibility(View.VISIBLE);
-                    singletonListRestaurant.clear();
-                    onBackPressed();
-                    break;
-
-                case R.id.page_2:
-                    floatingActionButton.hide();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
-                            new RestaurantFragment()).commit();
-
-                    break;
-                case R.id.page_3:
-                    floatingActionButton.hide();
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
-                            new ColleagueFragment()).commit();
-                    break;
-            }
-            return true;
-        });
-
-
+        initializeBottomNavigation();
     }
 
     @Override
@@ -131,7 +109,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         singletonListRestaurant.size();
         mMap = googleMap;
         getCurrentLocation();
-
     }
 
     private void getCurrentLocation() {
@@ -245,6 +222,57 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    private void onSearchCalled() {
+        // Set the fields to specify which types of place data to
+        // return after the user has made a selection.
+        List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
+
+        // Start the autocomplete intent.
+        Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                .build(this);
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
+    }
+
+    private void initializeAutocompleteToolbar() {
+        toolbar_search.setOnClickListener((View view) -> {
+            onSearchCalled();
+        });
+    }
+    private void initializeBottomNavigation() {
+        bottomNavigationView.setOnNavigationItemSelectedListener((@NonNull MenuItem item) ->
+        {
+            Intent intent = new Intent(this, MapsActivity.class);
+
+            switch (item.getItemId()) {
+                case R.id.page_1:
+                    startActivity(intent);
+                    toolbar.setVisibility(View.VISIBLE);
+                    //Reset boolean variables of RestaurantInformation
+                    RestaurantInformation.firstRestaurant = false;
+                    RestaurantInformation.secondRestaurant = false;
+                    //Clear restaurant list while changing fragment
+                    floatingActionButton.setVisibility(View.VISIBLE);
+                    singletonListRestaurant.clear();
+                    onBackPressed();
+                    break;
+
+                case R.id.page_2:
+                    toolbar.setVisibility(View.VISIBLE);
+                    floatingActionButton.hide();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
+                            new RestaurantFragment()).commit();
+                    break;
+                case R.id.page_3:
+                    floatingActionButton.hide();
+                    toolbar.setVisibility(View.GONE);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
+                            new ColleagueFragment()).commit();
+                    break;
+            }
+            return true;
+        });
+    }
+
     private void getLocatePermission() {
         ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, RC_LOCATION);
     }
@@ -261,5 +289,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                Log.i("success", "Place: " + place.getName() + ", " + place.getId());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 20));
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                Status status = Autocomplete.getStatusFromIntent(data);
+                Log.i("error", status.getStatusMessage());
+            } else if (resultCode == RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+            return;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }
