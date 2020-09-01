@@ -16,6 +16,7 @@ import com.example.go4lunch.R;
 import com.example.go4lunch.events.OpenRestaurantEvent;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.restaurant.Restaurants;
+import com.example.go4lunch.ui.activity.MapsActivity;
 import com.example.go4lunch.ui.activity.OnClickRestaurantActivity;
 import com.example.go4lunch.ui.adapter.MyRestaurantRecyclerViewAdapter;
 
@@ -23,12 +24,15 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
+import java.util.Map;
 
 
 public class RestaurantFragment extends Fragment {
 
+    private MapsActivity mapsActivity;
     private RecyclerView mRecyclerView;
-    private List<MyRestaurantModel> restaurantList;
+    private List<MyRestaurantModel> restaurantList= Restaurants.getInstance().getMyRestaurantList();
+    private List<MyRestaurantModel> restaurantFilteredList;
     private MyRestaurantRecyclerViewAdapter myAdapter;
 
     @Override
@@ -37,7 +41,7 @@ public class RestaurantFragment extends Fragment {
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
-
+        mapsActivity= (MapsActivity) getActivity();
         //Initialize recyclerView
         Context context = view.getContext();
         mRecyclerView = (RecyclerView) view;
@@ -51,9 +55,26 @@ public class RestaurantFragment extends Fragment {
     }
 
     private void initList() {
+        if (mapsActivity.placeSearch == null) {
         restaurantList = Restaurants.getInstance().getMyRestaurantList();
         myAdapter = new MyRestaurantRecyclerViewAdapter(restaurantList);
         mRecyclerView.setAdapter(myAdapter);
+        }
+        else {
+            restaurantFilteredList= Restaurants.getInstance().getFilteredRestaurantList();
+            MyRestaurantModel myRestaurantModel;
+                    for (int i=0; i< restaurantList.size(); i++) {
+                        if (restaurantList.get(i).getRestaurantId().equals(
+                                mapsActivity.placeSearch.getId())) {
+                            myRestaurantModel= restaurantList.get(i);
+                            restaurantFilteredList.add(myRestaurantModel);
+                            break;
+                        }
+                    }
+                    myAdapter= new MyRestaurantRecyclerViewAdapter(restaurantFilteredList);
+                    mRecyclerView.setAdapter(myAdapter);
+
+        }
     }
 
     @Override

@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -65,13 +65,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static int AUTOCOMPLETE_REQUEST_CODE = 1;
     public static LatLng restaurantLatLng;
     LatLng myCurrentLatLng;
+    String hungry;
+    String availableWorkmates;
+    public Place placeSearch;
     //Stock place id
     List<String> placeIdList;
     private List<MyRestaurantModel> singletonListRestaurant;
-   @BindView(R.id.fao_current_location) FloatingActionButton floatingActionButton;
-   @BindView(R.id.bottom_navigation) BottomNavigationView bottomNavigationView;
-   @BindView(R.id.autocomplete_toolbar) Toolbar toolbar;
-   @BindView(R.id.toolbar_search) ImageButton toolbar_search;
+    @BindView(R.id.fao_current_location)
+    FloatingActionButton floatingActionButton;
+    @BindView(R.id.bottom_navigation)
+    BottomNavigationView bottomNavigationView;
+    @BindView(R.id.autocomplete_toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.toolbar_search)
+    ImageButton toolbarSearch;
+    @BindView(R.id.toolbar_text)
+    TextView toolbarTitle;
 
 
     @Override
@@ -79,6 +88,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
+        hungry= getResources().getString(R.string.im_hungry);
+        availableWorkmates=getString(R.string.available_workmates);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_container_view);
@@ -95,7 +106,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         singletonListRestaurant = Restaurants.getInstance().getMyRestaurantList();
 
         //Initialize toolbar
-       initializeAutocompleteToolbar();
+        initializeAutocompleteToolbar();
         //Initialize floating action button
         floatingActionButton.setOnClickListener((View view) -> {
             singletonListRestaurant.clear();
@@ -178,8 +189,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         .title(placeLikelihood.getPlace().getName());
                                 mMap.addMarker(options);
 
-                            } else if ( firstRestaurantFound && secondRestaurantFound &&
-                            placeLikelihood.getPlace().getPhotoMetadatas() != null){
+                            } else if (firstRestaurantFound && secondRestaurantFound &&
+                                    placeLikelihood.getPlace().getPhotoMetadatas() != null) {
                                 MarkerOptions options = new MarkerOptions()
                                         .position(MapsActivity.restaurantLatLng)
                                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant))
@@ -234,10 +245,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void initializeAutocompleteToolbar() {
-        toolbar_search.setOnClickListener((View view) -> {
+        toolbarTitle.setText(hungry);
+        toolbarSearch.setOnClickListener((View view) -> {
             onSearchCalled();
         });
     }
+
     private void initializeBottomNavigation() {
         bottomNavigationView.setOnNavigationItemSelectedListener((@NonNull MenuItem item) ->
         {
@@ -246,7 +259,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             switch (item.getItemId()) {
                 case R.id.page_1:
                     startActivity(intent);
-                    toolbar.setVisibility(View.VISIBLE);
+                    Restaurants.getInstance().getFilteredRestaurantList().clear();
+                    toolbarSearch.setVisibility(View.VISIBLE);
                     //Reset boolean variables of RestaurantInformation
                     RestaurantInformation.firstRestaurant = false;
                     RestaurantInformation.secondRestaurant = false;
@@ -254,17 +268,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     floatingActionButton.setVisibility(View.VISIBLE);
                     singletonListRestaurant.clear();
                     onBackPressed();
+                    toolbarTitle.setText(hungry);
                     break;
 
                 case R.id.page_2:
-                    toolbar.setVisibility(View.VISIBLE);
+                    toolbarTitle.setText(hungry);
+                    toolbarSearch.setVisibility(View.VISIBLE);
                     floatingActionButton.hide();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
                             new RestaurantFragment()).commit();
+
                     break;
                 case R.id.page_3:
                     floatingActionButton.hide();
-                    toolbar.setVisibility(View.GONE);
+                    toolbarSearch.setVisibility(View.GONE);
+                    toolbarTitle.setText(availableWorkmates);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
                             new ColleagueFragment()).commit();
                     break;
@@ -293,9 +311,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                Place place = Autocomplete.getPlaceFromIntent(data);
-                Log.i("success", "Place: " + place.getName() + ", " + place.getId());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 20));
+                placeSearch = Autocomplete.getPlaceFromIntent(data);
+                Log.i("success", "Place: " + placeSearch.getName() + ", " + placeSearch.getId());
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placeSearch.getLatLng(), 20));
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
                 Status status = Autocomplete.getStatusFromIntent(data);

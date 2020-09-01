@@ -10,7 +10,7 @@ public class Restaurants implements Serializable {
     // Singleton
     private static final Restaurants ourInstance = new Restaurants();
     private ArrayList<MyRestaurantModel> myRestaurantList = new ArrayList<>();
-    private ArrayList<MyRestaurantModel> saveRestaurantList = new ArrayList<>();
+    private ArrayList<MyRestaurantModel> filteredRestaurantList = new ArrayList<>();
 
     //getInstance method to access Singleton
     public static Restaurants getInstance() {
@@ -25,7 +25,7 @@ public class Restaurants implements Serializable {
         return this.myRestaurantList;
     }
 
-    public ArrayList<MyRestaurantModel> getSaveRestaurantList() {
-        return this.saveRestaurantList;
+    public ArrayList<MyRestaurantModel> getFilteredRestaurantList() {
+        return this.filteredRestaurantList;
     }
 }

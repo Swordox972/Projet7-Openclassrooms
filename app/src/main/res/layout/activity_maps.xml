@@ -31,10 +31,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_toRightOf="@+id/toolbar_dehaze"
-            android:textSize="15sp"/>
+            android:layout_alignBottom="@id/toolbar_dehaze"
+            android:layout_marginBottom="15dp"
+            android:layout_toEndOf="@+id/toolbar_dehaze"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"/>
 
         <ImageButton
             android:id="@+id/toolbar_search"

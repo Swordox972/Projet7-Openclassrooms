@@ -20,27 +20,32 @@ import com.example.go4lunch.service.restaurant.RestaurantInformation;
 import com.example.go4lunch.ui.fragment.OnClickRestaurantFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class OnClickRestaurantActivity extends AppCompatActivity {
     //Initialize variables
-    private MyRestaurantModel myRestaurant;
-    private TextView restaurantName;
-    private TextView restaurantAddress;
-    private ImageView restaurantPhoto;
-    private FloatingActionButton floatingActionButton;
-    private ImageButton restaurantCall;
-    private ImageButton restaurantWebsite;
-    private ImageView star1;
-    private ImageView star2;
-    private ImageView star3;
     private boolean isSelected = false;
     Drawable fao_not_selected;
     Drawable fao_selected;
+    private MyRestaurantModel myRestaurant;
+    @BindView(R.id.detail_restaurant_name) TextView restaurantName;
+    @BindView(R.id.detail_restaurant_address) TextView restaurantAddress;
+    @BindView(R.id.detail_restaurant_photo) ImageView restaurantPhoto;
+    @BindView(R.id.fao_chose_restaurant) FloatingActionButton floatingActionButton;
+    @BindView(R.id.restaurant_call) ImageButton restaurantCall;
+    @BindView(R.id.restaurant_website) ImageButton restaurantWebsite;
+    @BindView(R.id.on_click_star1) ImageView star1;
+    @BindView(R.id.on_click_star2) ImageView star2;
+    @BindView(R.id.on_click_star3) ImageView star3;
+
 
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_click_restaurant);
+        ButterKnife.bind(this);
         // commit fragment
         getSupportFragmentManager().beginTransaction().replace(R.id.on_click_activity_fragment_container_view,
                 new OnClickRestaurantFragment()).commit();
@@ -69,15 +74,10 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     private void initializeRestaurant(String restaurantIntentCode) {
 
         myRestaurant = (MyRestaurantModel) getIntent().getSerializableExtra(restaurantIntentCode);
-
-        restaurantName = findViewById(R.id.detail_restaurant_name);
         restaurantName.setText(myRestaurant.getRestaurantName());
-        restaurantPhoto = findViewById(R.id.detail_restaurant_photo);
+        restaurantAddress.setText(myRestaurant.getRestaurantAddress());
         restaurantPhoto.setImageBitmap(RestaurantInformation.StringToBitMap(
                 myRestaurant.getRestaurantImageName()));
-        restaurantAddress = findViewById(R.id.detail_restaurant_address);
-        restaurantAddress.setText(myRestaurant.getRestaurantAddress());
-        restaurantCall = findViewById(R.id.restaurant_call);
 
         restaurantCall.setOnClickListener((View view) -> {
             if (myRestaurant.getRestaurantPhoneNumber() != null) {
@@ -88,7 +88,7 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
                 Toast.makeText(this, "No Phone number", Toast.LENGTH_SHORT).show();
             }
         });
-        restaurantWebsite = findViewById(R.id.restaurant_website);
+
         restaurantWebsite.setOnClickListener((View view) -> {
             if (myRestaurant.getRestaurantWebsite() != null) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -98,9 +98,6 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
                 Toast.makeText(this, "No website", Toast.LENGTH_SHORT).show();
             }
         });
-        star1= findViewById(R.id.on_click_star1);
-        star2= findViewById(R.id.on_click_star2);
-        star3= findViewById(R.id.on_click_star3);
 
         if (myRestaurant.getColleagueLikeList().size() == 3 && myRestaurant.getColleagueLikeList().size() < 5) {
           star1.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
@@ -124,7 +121,6 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
         fao_selected = ResourcesCompat.getDrawable(getResources(),
                 R.drawable.ic_baseline_check_circle_selected_24, null);
 
-        floatingActionButton = findViewById(R.id.fao_chose_restaurant);
         floatingActionButton.setOnClickListener((View view) -> {
             if (!isSelected) {
                 floatingActionButton.setImageDrawable(fao_selected);
