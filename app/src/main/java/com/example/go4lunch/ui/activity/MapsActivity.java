@@ -2,11 +2,13 @@ package com.example.go4lunch.ui.activity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,8 +16,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.MyRestaurantModel;
@@ -45,6 +50,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +58,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.libraries.places.api.model.Place.Type.RESTAURANT;
@@ -71,16 +78,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //Stock place id
     List<String> placeIdList;
     private List<MyRestaurantModel> singletonListRestaurant;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
     @BindView(R.id.fao_current_location)
     FloatingActionButton floatingActionButton;
     @BindView(R.id.bottom_navigation)
     BottomNavigationView bottomNavigationView;
     @BindView(R.id.autocomplete_toolbar)
     Toolbar toolbar;
+    @BindView(R.id.toolbar_dehaze)
+    ImageButton toolbarMenu;
     @BindView(R.id.toolbar_search)
     ImageButton toolbarSearch;
     @BindView(R.id.toolbar_text)
     TextView toolbarTitle;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
 
     @Override
@@ -88,8 +101,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
-        hungry= getResources().getString(R.string.im_hungry);
-        availableWorkmates=getString(R.string.available_workmates);
+        hungry = getResources().getString(R.string.im_hungry);
+        availableWorkmates = getString(R.string.available_workmates);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_container_view);
@@ -113,6 +126,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             getCurrentLocation();
         });
         initializeBottomNavigation();
+
+        //Load image in navigation view image view and dark blur it
+       ImageView imageView=navigationView.getHeaderView(0).findViewById(R.id.nav_background_image_view);
+        Glide.with(this).load("https://i.ibb.co/1fWT7g0/collegues-qui-mangent-50.jpg")
+                .transform(new BlurTransformation(25,2))
+                .into(imageView);
+        imageView.setColorFilter(0xff555555, PorterDuff.Mode.MULTIPLY);
     }
 
     @Override
@@ -120,6 +140,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         singletonListRestaurant.size();
         mMap = googleMap;
         getCurrentLocation();
+
     }
 
     private void getCurrentLocation() {
@@ -246,10 +267,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void initializeAutocompleteToolbar() {
         toolbarTitle.setText(hungry);
-        toolbarSearch.setOnClickListener((View view) -> {
-            onSearchCalled();
-        });
+        toolbarMenu.setOnClickListener((View view) -> drawerLayout.openDrawer(GravityCompat.START));
+        toolbarSearch.setOnClickListener((View view) -> onSearchCalled());
     }
+
 
     private void initializeBottomNavigation() {
         bottomNavigationView.setOnNavigationItemSelectedListener((@NonNull MenuItem item) ->
