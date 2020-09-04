@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.MyRestaurantModel;
@@ -28,6 +30,9 @@ import com.example.go4lunch.service.restaurant.RestaurantInformation;
 import com.example.go4lunch.service.restaurant.Restaurants;
 import com.example.go4lunch.ui.fragment.ColleagueFragment;
 import com.example.go4lunch.ui.fragment.RestaurantFragment;
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -38,6 +43,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -51,6 +57,9 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +67,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import jp.wasabeef.glide.transformations.BlurTransformation;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static com.google.android.libraries.places.api.model.Place.Type.RESTAURANT;
@@ -69,7 +77,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String API_KEY = BuildConfig.API_KEY;
     PlacesClient placesClient;
     private static final int RC_LOCATION = 10;
-    private static int AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static final int RC_SIGN_IN = 123;
     public static LatLng restaurantLatLng;
     LatLng myCurrentLatLng;
     String hungry;
@@ -80,6 +89,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<MyRestaurantModel> singletonListRestaurant;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    @BindView(R.id.maps_container)
+    RelativeLayout relativeLayout;
     @BindView(R.id.fao_current_location)
     FloatingActionButton floatingActionButton;
     @BindView(R.id.bottom_navigation)
@@ -101,6 +112,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
+        initializeFirebaseAuth();
         hungry = getResources().getString(R.string.im_hungry);
         availableWorkmates = getString(R.string.available_workmates);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -108,31 +120,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.fragment_container_view);
 
         mapFragment.getMapAsync(this);
-
         // Initialize the SDK
         Places.initialize(getApplicationContext(), API_KEY);
-
         // Create a new PlacesClient instance
         placesClient = Places.createClient(this);
         //Initialize placeIdList
         placeIdList = new ArrayList<>();
+
         singletonListRestaurant = Restaurants.getInstance().getMyRestaurantList();
 
         //Initialize toolbar
         initializeAutocompleteToolbar();
         //Initialize floating action button
         floatingActionButton.setOnClickListener((View view) -> {
-            singletonListRestaurant.clear();
-            getCurrentLocation();
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myCurrentLatLng, 15));
         });
         initializeBottomNavigation();
-
-        //Load image in navigation view image view and dark blur it
-       ImageView imageView=navigationView.getHeaderView(0).findViewById(R.id.nav_background_image_view);
-        Glide.with(this).load("https://i.ibb.co/1fWT7g0/collegues-qui-mangent-50.jpg")
-                .transform(new BlurTransformation(25,2))
-                .into(imageView);
-        imageView.setColorFilter(0xff555555, PorterDuff.Mode.MULTIPLY);
+        initializeNavigationViewIconsAction();
     }
 
     @Override
@@ -140,8 +144,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         singletonListRestaurant.size();
         mMap = googleMap;
         getCurrentLocation();
-
     }
+
 
     private void getCurrentLocation() {
         Restaurants.getInstance().getMyRestaurantList().clear();
@@ -265,12 +269,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
 
+    private void initializeFirebaseAuth() {
+        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                new AuthUI.IdpConfig.GoogleBuilder().build(),
+                new AuthUI.IdpConfig.FacebookBuilder().build());
+
+        startActivityForResult(AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .setIsSmartLockEnabled(false, true)
+                        .setTheme(R.style.LoginTheme)
+                        .setLogo(R.mipmap.bol_fumant)
+                        .build(),
+                RC_SIGN_IN);
+    }
+
     private void initializeAutocompleteToolbar() {
         toolbarTitle.setText(hungry);
         toolbarMenu.setOnClickListener((View view) -> drawerLayout.openDrawer(GravityCompat.START));
         toolbarSearch.setOnClickListener((View view) -> onSearchCalled());
     }
 
+    private void initializeNavigationViewIconsAction() {
+        //Load image in navigation view image view and dark blur it
+        ImageView navBackgroundImageView = navigationView.getHeaderView(0)
+                .findViewById(R.id.nav_background_image_view);
+        navBackgroundImageView.setImageDrawable(ContextCompat.getDrawable
+                (this, R.drawable.collegues_qui_mangent_50_blur));
+        navBackgroundImageView.setColorFilter(0xff555555, PorterDuff.Mode.MULTIPLY);
+
+        MenuItem logOut = navigationView.getMenu().findItem(R.id.log_out);
+        logOut.setOnMenuItemClickListener(menuItem -> {
+            AuthUI.getInstance()
+                    .signOut(this)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        public void onComplete(@NonNull Task<Void> task) {
+                            // ...
+                        }
+                    });
+            return true;
+        });
+
+    }
 
     private void initializeBottomNavigation() {
         bottomNavigationView.setOnNavigationItemSelectedListener((@NonNull MenuItem item) ->
@@ -330,6 +370,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 placeSearch = Autocomplete.getPlaceFromIntent(data);
@@ -342,8 +383,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else if (resultCode == RESULT_CANCELED) {
                 // The user canceled the operation.
             }
-            return;
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+            if (resultCode == RESULT_OK) {
+                // Successfully signed in
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                ImageView userImageView = navigationView.getHeaderView(0).findViewById(R.id.nav_user_image_view);
+                TextView userName = navigationView.getHeaderView(0).findViewById(R.id.nav_user_name);
+                TextView userEmail = navigationView.getHeaderView(0).findViewById(R.id.nav_user_email);
+                Glide.with(this).load(user.getPhotoUrl()).apply(RequestOptions.circleCropTransform())
+                        .into(userImageView);
+                userName.setText(user.getDisplayName());
+                userEmail.setText(user.getEmail());
+                Snackbar.make(relativeLayout, getString(R.string.connection_succeed), Snackbar.LENGTH_SHORT).show();
+            } else {
+                if (response == null) {
+                    Snackbar.make(relativeLayout, getString(R.string.connection_canceled), Snackbar.LENGTH_SHORT).show();
+                } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
+                    Snackbar.make(relativeLayout, getString(R.string.no_internet), Snackbar.LENGTH_SHORT).show();
+                } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+                    Snackbar.make(relativeLayout, getString(R.string.unknown_error), Snackbar.LENGTH_SHORT).show();
+                    Log.e("error", response.getError().getMessage());
+                }
+
+            }
+        }
+
     }
 }

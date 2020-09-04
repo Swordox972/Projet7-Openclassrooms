@@ -19,6 +19,12 @@
     <string name="settings">SETTINGS</string>
     <string name="log_out">LOG OUT</string>
 
+    <string name="connection_succeed">Connection succeed</string>
+    <string name="connection_failed">Connection failed</string>
+    <string name="no_internet">No internet</string>
+    <string name="connection_canceled">Connection canceled</string>
+    <string name="unknown_error">Unknown error</string>
+
     <string-array name="colleague_name">
         <item>Scarlett</item>
         <item>Hugh</item>

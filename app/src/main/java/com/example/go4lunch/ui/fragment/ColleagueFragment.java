@@ -45,8 +45,6 @@ public class ColleagueFragment extends Fragment {
         Context context = view.getContext();
         mRecyclerView = (RecyclerView) view;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-
-
         initList();
         return view;
     }
