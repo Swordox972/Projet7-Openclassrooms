@@ -78,7 +78,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     PlacesClient placesClient;
     private static final int RC_LOCATION = 10;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
-    private static final int RC_SIGN_IN = 123;
     public static LatLng restaurantLatLng;
     LatLng myCurrentLatLng;
     String hungry;
@@ -112,7 +111,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         ButterKnife.bind(this);
-        initializeFirebaseAuth();
         hungry = getResources().getString(R.string.im_hungry);
         availableWorkmates = getString(R.string.available_workmates);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -137,6 +135,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         initializeBottomNavigation();
         initializeNavigationViewIconsAction();
+
+        FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
+        ImageView userImageView = navigationView.getHeaderView(0).findViewById(R.id.nav_user_image_view);
+        TextView userName = navigationView.getHeaderView(0).findViewById(R.id.nav_user_name);
+        TextView userEmail = navigationView.getHeaderView(0).findViewById(R.id.nav_user_email);
+        Glide.with(this).load(user.getPhotoUrl()).apply(RequestOptions.circleCropTransform())
+                .into(userImageView);
+        userName.setText(user.getDisplayName());
+        userEmail.setText(user.getEmail());
     }
 
     @Override
@@ -269,21 +276,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE);
     }
 
-    private void initializeFirebaseAuth() {
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.GoogleBuilder().build(),
-                new AuthUI.IdpConfig.FacebookBuilder().build());
-
-        startActivityForResult(AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .setIsSmartLockEnabled(false, true)
-                        .setTheme(R.style.LoginTheme)
-                        .setLogo(R.mipmap.bol_fumant)
-                        .build(),
-                RC_SIGN_IN);
-    }
-
     private void initializeAutocompleteToolbar() {
         toolbarTitle.setText(hungry);
         toolbarMenu.setOnClickListener((View view) -> drawerLayout.openDrawer(GravityCompat.START));
@@ -295,7 +287,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ImageView navBackgroundImageView = navigationView.getHeaderView(0)
                 .findViewById(R.id.nav_background_image_view);
         navBackgroundImageView.setImageDrawable(ContextCompat.getDrawable
-                (this, R.drawable.collegues_qui_mangent_50_blur));
+                (this, R.drawable.collegues_qui_mangent_650_blur));
         navBackgroundImageView.setColorFilter(0xff555555, PorterDuff.Mode.MULTIPLY);
 
         MenuItem logOut = navigationView.getMenu().findItem(R.id.log_out);
@@ -304,12 +296,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .signOut(this)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         public void onComplete(@NonNull Task<Void> task) {
-                            // ...
+                            finish();
+                            startMainActivityIfUserLogOut();
                         }
                     });
             return true;
         });
 
+    }
+
+    private void startMainActivityIfUserLogOut() {
+        Intent intent= new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void initializeBottomNavigation() {
@@ -384,32 +382,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // The user canceled the operation.
             }
         }
-
-        if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-            if (resultCode == RESULT_OK) {
-                // Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                ImageView userImageView = navigationView.getHeaderView(0).findViewById(R.id.nav_user_image_view);
-                TextView userName = navigationView.getHeaderView(0).findViewById(R.id.nav_user_name);
-                TextView userEmail = navigationView.getHeaderView(0).findViewById(R.id.nav_user_email);
-                Glide.with(this).load(user.getPhotoUrl()).apply(RequestOptions.circleCropTransform())
-                        .into(userImageView);
-                userName.setText(user.getDisplayName());
-                userEmail.setText(user.getEmail());
-                Snackbar.make(relativeLayout, getString(R.string.connection_succeed), Snackbar.LENGTH_SHORT).show();
-            } else {
-                if (response == null) {
-                    Snackbar.make(relativeLayout, getString(R.string.connection_canceled), Snackbar.LENGTH_SHORT).show();
-                } else if (response.getError().getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    Snackbar.make(relativeLayout, getString(R.string.no_internet), Snackbar.LENGTH_SHORT).show();
-                } else if (response.getError().getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    Snackbar.make(relativeLayout, getString(R.string.unknown_error), Snackbar.LENGTH_SHORT).show();
-                    Log.e("error", response.getError().getMessage());
-                }
-
-            }
-        }
-
     }
 }
