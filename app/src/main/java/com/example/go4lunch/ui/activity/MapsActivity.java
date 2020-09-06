@@ -134,16 +134,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myCurrentLatLng, 15));
         });
         initializeBottomNavigation();
+        initializeNavigationViewHeader();
         initializeNavigationViewIconsAction();
-
-        FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
-        ImageView userImageView = navigationView.getHeaderView(0).findViewById(R.id.nav_user_image_view);
-        TextView userName = navigationView.getHeaderView(0).findViewById(R.id.nav_user_name);
-        TextView userEmail = navigationView.getHeaderView(0).findViewById(R.id.nav_user_email);
-        Glide.with(this).load(user.getPhotoUrl()).apply(RequestOptions.circleCropTransform())
-                .into(userImageView);
-        userName.setText(user.getDisplayName());
-        userEmail.setText(user.getEmail());
     }
 
     @Override
@@ -250,7 +242,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                         return true;
                     });
-
+                    //Clear placeIdList for not duplicate the restaurant list
                     placeIdList.clear();
                 } else {
                     Exception exception = task.getException();
@@ -282,6 +274,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         toolbarSearch.setOnClickListener((View view) -> onSearchCalled());
     }
 
+    private void initializeNavigationViewHeader() {
+        FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
+        ImageView userImageView = navigationView.getHeaderView(0).findViewById(R.id.nav_user_image_view);
+        TextView userName = navigationView.getHeaderView(0).findViewById(R.id.nav_user_name);
+        TextView userEmail = navigationView.getHeaderView(0).findViewById(R.id.nav_user_email);
+        Glide.with(this).load(user.getPhotoUrl()).apply(RequestOptions.circleCropTransform())
+                .into(userImageView);
+        userName.setText(user.getDisplayName());
+        userEmail.setText(user.getEmail());
+    }
     private void initializeNavigationViewIconsAction() {
         //Load image in navigation view image view and dark blur it
         ImageView navBackgroundImageView = navigationView.getHeaderView(0)
@@ -289,6 +291,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         navBackgroundImageView.setImageDrawable(ContextCompat.getDrawable
                 (this, R.drawable.collegues_qui_mangent_650_blur));
         navBackgroundImageView.setColorFilter(0xff555555, PorterDuff.Mode.MULTIPLY);
+
+        MenuItem yourLunch= navigationView.getMenu().findItem(R.id.your_lunch);
+        yourLunch.setOnMenuItemClickListener(menuItem -> {
+            finish();
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
+            return true;
+        });
+
+        MenuItem settings= navigationView.getMenu().findItem(R.id.settings);
+        settings.setOnMenuItemClickListener(menuItem -> {
+            finish();
+            Intent intent= new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        });
 
         MenuItem logOut = navigationView.getMenu().findItem(R.id.log_out);
         logOut.setOnMenuItemClickListener(menuItem -> {
@@ -302,6 +320,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     });
             return true;
         });
+
 
     }
 
