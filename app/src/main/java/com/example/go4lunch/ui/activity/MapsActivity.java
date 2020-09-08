@@ -302,7 +302,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         MenuItem settings= navigationView.getMenu().findItem(R.id.settings);
         settings.setOnMenuItemClickListener(menuItem -> {
-            finish();
             Intent intent= new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;

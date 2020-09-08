@@ -1,7 +1,9 @@
 package com.example.go4lunch.service.colleague;
 
+import com.example.go4lunch.R;
 import com.example.go4lunch.di.DI;
 import com.example.go4lunch.model.Colleague;
+import com.example.go4lunch.service.App;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
 
 import java.util.ArrayList;
@@ -10,13 +12,15 @@ import java.util.List;
 public class ColleagueChoice {
 
     static ColleagueApiService apiService = DI.getColleagueApiService();
-    static List<Colleague> colleagueList= apiService.getColleagues();
+    static List<Colleague> colleagueList = apiService.getColleagues();
+    static String isEatingAt = App.getContext().getResources().getString(R.string.is_eating_at);
+    static String isJoining = App.getContext().getResources().getString(R.string.is_joining);
 
     public static List<Colleague> setScarlettAndHughChoice() {
         Colleague scarlett = colleagueList.get(0);
         Colleague hugh = colleagueList.get(1);
-        scarlett.setColleagueIsJoining("is joining!");
-        hugh.setColleagueIsJoining("is joining!");
+        scarlett.setColleagueIsJoining(isJoining);
+        hugh.setColleagueIsJoining(isJoining);
         List<Colleague> colleagueChoiceList = new ArrayList<>();
         colleagueChoiceList.add(scarlett);
         colleagueChoiceList.add(hugh);
@@ -28,8 +32,8 @@ public class ColleagueChoice {
 
         Colleague nana = colleagueList.get(2);
         Colleague godfrey = colleagueList.get(3);
-        nana.setColleagueIsJoining("is joining!");
-        godfrey.setColleagueIsJoining("is joining!");
+        nana.setColleagueIsJoining(isJoining);
+        godfrey.setColleagueIsJoining(isJoining);
         List<Colleague> colleagueChoiceList = new ArrayList<>();
         colleagueChoiceList.add(nana);
         colleagueChoiceList.add(godfrey);
@@ -41,20 +45,20 @@ public class ColleagueChoice {
 
         Colleague scarlett = colleagueList.get(0);
         Colleague hugh = colleagueList.get(1);
-        scarlett.setColleagueChoice("is eating at " + RestaurantInformation.restaurantName1);
-        hugh.setColleagueChoice("is eating at " + RestaurantInformation.restaurantName1);
+        scarlett.setColleagueChoice(isEatingAt + RestaurantInformation.restaurantName1);
+        hugh.setColleagueChoice(isEatingAt + RestaurantInformation.restaurantName1);
     }
 
     public static void setNanaAndGodfreyChoiceRestaurant() {
 
         Colleague nana = colleagueList.get(2);
         Colleague godfrey = colleagueList.get(3);
-        nana.setColleagueChoice("is eating at " + RestaurantInformation.restaurantName2);
-        godfrey.setColleagueChoice("is eating at " + RestaurantInformation.restaurantName2);
+        nana.setColleagueChoice(isEatingAt + RestaurantInformation.restaurantName2);
+        godfrey.setColleagueChoice(isEatingAt + RestaurantInformation.restaurantName2);
     }
 
     public static void setOtherColleagueChoiceRestaurant() {
-        String notDecided = "hasn't decided yet";
+        String notDecided = App.getContext().getString(R.string.has_not_decided_yet);
 
         Colleague henry = colleagueList.get(4);
         Colleague angelina = colleagueList.get(5);

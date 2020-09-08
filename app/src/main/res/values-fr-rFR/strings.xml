@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Go4Lunch</string>
+    <string name="menu_title_3">Collègues</string>
+    <string name="delete_user">Supprimer le compte</string>
+    <string name="pop_up_delete_user">Voulez-vous vraiment supprimer votre compte?</string>
+    <string name="pop_up_positive_button_text">Oui</string>
+    <string name="pop_up_negative_button_text">Non</string>
+    <string name="connexion">Connexion</string>
+    <string name="detail_app_function">Déjeuner avec ses collègues</string>
+    <string name="call">Appeler</string>
+    <string name="website">Site internet</string>
+    <string name="im_hungry">J\'ai faim</string>
+    <string name="available_workmates">Collègues disponibles</string>
+    <string name="your_lunch">TON DEJEUNER</string>
+    <string name="settings">PARAMETRES</string>
+    <string name="log_out">DECONNEXION</string>
+    <string name="connection_succeed">Connexion réussie</string>
+    <string name="connection_failed">Connexion échoué</string>
+    <string name="no_internet">Pas d\'internet</string>
+    <string name="connection_canceled">Connexion annullée</string>
+    <string name="unknown_error">Erreur inconnue</string>
+    <string name="has_not_decided_yet">n\'a pas encore choisi</string>
+    <string name="is_eating_at">mange au\u0020</string>
+    <string name="is_joining">a rejoint!</string>
+</resources>
