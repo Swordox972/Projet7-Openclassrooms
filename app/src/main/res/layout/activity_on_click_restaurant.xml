@@ -56,20 +56,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:layout_marginStart="15dp"
-                />
+                android:layout_marginStart="15dp" />
 
             <ImageView
                 android:id="@+id/on_click_star2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"/>
+                android:layout_marginTop="18dp" />
 
             <ImageView
                 android:id="@+id/on_click_star3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="18dp"/>
+                android:layout_marginTop="18dp" />
         </LinearLayout>
 
         <TextView

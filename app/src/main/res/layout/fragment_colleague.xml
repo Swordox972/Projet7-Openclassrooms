@@ -40,7 +40,7 @@
         android:layout_marginStart="5dp"
         app:layout_constraintStart_toEndOf="@id/colleague_restaurant_name"
         app:layout_constraintTop_toTopOf="@id/colleague_restaurant_name"
-        app:layout_constraintBottom_toBottomOf="@id/colleague_restaurant_name"/>
+        app:layout_constraintBottom_toBottomOf="@id/colleague_restaurant_name" />
 
     <View
         android:layout_width="300dp"

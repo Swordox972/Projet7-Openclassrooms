@@ -3,7 +3,6 @@ package com.example.go4lunch.service.restaurant;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
 
@@ -45,12 +44,12 @@ public class RestaurantInformation {
         // Specify the fields to return.
         final List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME,
                 Place.Field.ADDRESS, Place.Field.OPENING_HOURS, Place.Field.TYPES,
-                Place.Field.PHOTO_METADATAS, Place.Field.LAT_LNG,Place.Field.PHONE_NUMBER,
+                Place.Field.PHOTO_METADATAS, Place.Field.LAT_LNG, Place.Field.PHONE_NUMBER,
                 Place.Field.WEBSITE_URI);
 
         //Do a loop for place id
         for (int i = 0; i < placeIdList.size(); i++) {
-             // Construct a request object, passing the place ID and fields array.
+            // Construct a request object, passing the place ID and fields array.
             final FetchPlaceRequest request = FetchPlaceRequest.newInstance(placeIdList.get(i), placeFields);
             //Fetch place
             placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
@@ -58,7 +57,7 @@ public class RestaurantInformation {
                 Log.i("success", "Place found: " + place.getName() + place.getAddress()
                         + place.getOpeningHours());
 
-                   // Get the photo metadata.
+                // Get the photo metadata.
                 final List<PhotoMetadata> metadata = place.getPhotoMetadatas();
                 if (metadata == null || metadata.isEmpty()) {
                     Log.w("success", "No photo metadata.");
@@ -100,15 +99,15 @@ public class RestaurantInformation {
                     String restaurantDistance = format + "m";
 
                     // Get the phone number
-                    String restaurantPhoneNumber= place.getPhoneNumber();
+                    String restaurantPhoneNumber = place.getPhoneNumber();
                     //Get bitmap to add in myRestaurantModel
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
                     String bitmapName = bitmapToString(bitmap);
                     //Get the website
                     if (place.getWebsiteUri() != null) {
-                        restaurantWebsite= place.getWebsiteUri().toString();
+                        restaurantWebsite = place.getWebsiteUri().toString();
                     } else {
-                        restaurantWebsite= null;
+                        restaurantWebsite = null;
                     }
                     //Create a new MyRestaurantModel and add it in the Singleton's list
                     MyRestaurantModel restaurant;
@@ -119,7 +118,7 @@ public class RestaurantInformation {
                         restaurantLatLng1 = place.getLatLng();
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber, restaurantWebsite ,
+                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber, restaurantWebsite,
                                 ColleagueChoice.setScarlettAndHughChoice(), ColleagueLike.setSevenPeopleLike());
                         firstRestaurant = true;
                         //Second restaurant
@@ -129,7 +128,7 @@ public class RestaurantInformation {
                         restaurantLatLng2 = place.getLatLng();
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber,restaurantWebsite ,
+                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber, restaurantWebsite,
                                 ColleagueChoice.setNanaAndGodfreyChoice(), ColleagueLike.setFivePeopleLikes());
                         secondRestaurant = true;
                         //Other restaurants
@@ -142,7 +141,7 @@ public class RestaurantInformation {
 
                     Restaurants.getInstance().getMyRestaurantList().add(restaurant);
                     // Reset restaurantWebsite value
-                    restaurantWebsite= null;
+                    restaurantWebsite = null;
                 }).addOnFailureListener((exception) -> {
                     if (exception instanceof ApiException) {
                         final ApiException apiException = (ApiException) exception;

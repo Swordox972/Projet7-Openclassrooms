@@ -31,8 +31,6 @@ import com.example.go4lunch.service.restaurant.Restaurants;
 import com.example.go4lunch.ui.fragment.ColleagueFragment;
 import com.example.go4lunch.ui.fragment.RestaurantFragment;
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.ErrorCodes;
-import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -57,7 +55,6 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -275,7 +272,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void initializeNavigationViewHeader() {
-        FirebaseUser user= FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         ImageView userImageView = navigationView.getHeaderView(0).findViewById(R.id.nav_user_image_view);
         TextView userName = navigationView.getHeaderView(0).findViewById(R.id.nav_user_name);
         TextView userEmail = navigationView.getHeaderView(0).findViewById(R.id.nav_user_email);
@@ -284,6 +281,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         userName.setText(user.getDisplayName());
         userEmail.setText(user.getEmail());
     }
+
     private void initializeNavigationViewIconsAction() {
         //Load image in navigation view image view and dark blur it
         ImageView navBackgroundImageView = navigationView.getHeaderView(0)
@@ -292,7 +290,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 (this, R.drawable.collegues_qui_mangent_650_blur));
         navBackgroundImageView.setColorFilter(0xff555555, PorterDuff.Mode.MULTIPLY);
 
-        MenuItem yourLunch= navigationView.getMenu().findItem(R.id.your_lunch);
+        MenuItem yourLunch = navigationView.getMenu().findItem(R.id.your_lunch);
         yourLunch.setOnMenuItemClickListener(menuItem -> {
             finish();
             Intent intent = new Intent(this, MapsActivity.class);
@@ -300,9 +298,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return true;
         });
 
-        MenuItem settings= navigationView.getMenu().findItem(R.id.settings);
+        MenuItem settings = navigationView.getMenu().findItem(R.id.settings);
         settings.setOnMenuItemClickListener(menuItem -> {
-            Intent intent= new Intent(this, SettingsActivity.class);
+            Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
         });
@@ -324,7 +322,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void startMainActivityIfUserLogOut() {
-        Intent intent= new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 

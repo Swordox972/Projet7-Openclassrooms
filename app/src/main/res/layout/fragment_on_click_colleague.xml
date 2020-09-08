@@ -20,16 +20,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-<TextView
-    android:id="@+id/fragment_on_click_colleague_name"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="15dp"
-    android:textSize="20sp"
-    android:textColor="#8E8888"
-    app:layout_constraintStart_toEndOf="@id/fragment_on_click_colleague_photo"
-    app:layout_constraintTop_toTopOf="@id/fragment_on_click_colleague_photo"
-    app:layout_constraintBottom_toBottomOf="@id/fragment_on_click_colleague_photo"/>
+    <TextView
+        android:id="@+id/fragment_on_click_colleague_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:textSize="20sp"
+        android:textColor="#8E8888"
+        app:layout_constraintStart_toEndOf="@id/fragment_on_click_colleague_photo"
+        app:layout_constraintTop_toTopOf="@id/fragment_on_click_colleague_photo"
+        app:layout_constraintBottom_toBottomOf="@id/fragment_on_click_colleague_photo" />
+
     <TextView
         android:id="@+id/fragment_on_click_colleague_restaurant_joining"
         android:layout_width="wrap_content"

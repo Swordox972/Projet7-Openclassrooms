@@ -1,27 +1,22 @@
 package com.example.go4lunch.ui.activity;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.go4lunch.R;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-        sign_out_button.setVisibility(View.GONE);
+            sign_out_button.setVisibility(View.GONE);
         } else {
             login_button.setText(getString(R.string.start_application));
         }
@@ -59,11 +54,12 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.login_button)
     public void onClickLoginButton() {
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-        this.startSignInActivity();
-        }else {
+            this.startSignInActivity();
+        } else {
             this.startMapsActivity();
         }
     }
+
     @OnClick(R.id.log_out_main_activity_button)
     public void onClickLogOutButton() {
         this.signOutFromFirebase();
@@ -98,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startMapsActivity() {
         finish();
-        Intent intent= new Intent(this, MapsActivity.class);
+        Intent intent = new Intent(this, MapsActivity.class);
         startActivity(intent);
     }
 

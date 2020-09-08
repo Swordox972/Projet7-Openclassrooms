@@ -3,13 +3,11 @@ package com.example.go4lunch.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
-
 import java.io.Serializable;
 
 public class Colleague implements Serializable, Parcelable {
 
-    public static final Parcelable.Creator CREATOR= new Parcelable.Creator<Colleague>() {
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator<Colleague>() {
         @Override
         public Colleague createFromParcel(Parcel parcel) {
             return new Colleague(parcel);
@@ -34,11 +32,11 @@ public class Colleague implements Serializable, Parcelable {
 
     //Constructor with parameters
     public Colleague(int colleagueId, String colleagueName, String colleagueIsJoining,
-            String colleagueChoice,String avatarUrl) {
+                     String colleagueChoice, String avatarUrl) {
         this.colleagueId = colleagueId;
         this.colleagueName = colleagueName;
         this.colleagueIsJoining = colleagueIsJoining;
-        this.colleagueChoice= colleagueChoice;
+        this.colleagueChoice = colleagueChoice;
         this.avatarUrl = avatarUrl;
     }
 
@@ -85,11 +83,11 @@ public class Colleague implements Serializable, Parcelable {
 
     //Parceling part
     public Colleague(Parcel in) {
-        this.colleagueId= in.readInt();
-        this.colleagueName= in.readString();
-        this.colleagueIsJoining= in.readString();
-        this.colleagueChoice= in.readString();
-        this.avatarUrl= in.readString();
+        this.colleagueId = in.readInt();
+        this.colleagueName = in.readString();
+        this.colleagueIsJoining = in.readString();
+        this.colleagueChoice = in.readString();
+        this.avatarUrl = in.readString();
     }
 
     @Override
@@ -99,11 +97,11 @@ public class Colleague implements Serializable, Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-     parcel.writeInt(colleagueId);
-     parcel.writeString(colleagueName);
-     parcel.writeString(colleagueIsJoining);
-     parcel.writeString(colleagueChoice);
-     parcel.writeString(avatarUrl);
+        parcel.writeInt(colleagueId);
+        parcel.writeString(colleagueName);
+        parcel.writeString(colleagueIsJoining);
+        parcel.writeString(colleagueChoice);
+        parcel.writeString(avatarUrl);
     }
 
 }

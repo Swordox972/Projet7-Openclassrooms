@@ -16,7 +16,8 @@
             android:icon="@drawable/ic_baseline_settings_24"
             android:title="@string/settings" />
 
-        <item android:id="@+id/log_out"
+        <item
+            android:id="@+id/log_out"
             android:icon="@drawable/ic_baseline_power_settings_new_24"
             android:title="@string/log_out" />
     </group>

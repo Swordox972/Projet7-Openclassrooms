@@ -33,10 +33,10 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantOpening = restaurantOpening;
         this.restaurantDistance = restaurantDistance;
         this.restaurantImageName = restaurantImageName;
-        this.restaurantPhoneNumber= restaurantPhoneNumber;
-        this.restaurantWebsite= restaurantWebsite;
+        this.restaurantPhoneNumber = restaurantPhoneNumber;
+        this.restaurantWebsite = restaurantWebsite;
         this.colleagueList = colleagueList;
-        this.colleagueLikeList= colleagueLikeList;
+        this.colleagueLikeList = colleagueLikeList;
     }
 
     public String getRestaurantId() {

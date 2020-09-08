@@ -68,7 +68,7 @@ public class MyRestaurantRecyclerViewAdapter extends
             holder.star1.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
             holder.star2.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
         }
-        if (myRestaurant.getColleagueLikeList().size() == 7 || myRestaurant.getColleagueLikeList().size()  > 7) {
+        if (myRestaurant.getColleagueLikeList().size() == 7 || myRestaurant.getColleagueLikeList().size() > 7) {
             holder.star1.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
             holder.star2.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
             holder.star3.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));

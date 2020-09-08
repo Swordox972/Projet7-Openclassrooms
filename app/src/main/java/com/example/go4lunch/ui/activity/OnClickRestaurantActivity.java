@@ -29,15 +29,24 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     Drawable fao_not_selected;
     Drawable fao_selected;
     private MyRestaurantModel myRestaurant;
-    @BindView(R.id.detail_restaurant_name) TextView restaurantName;
-    @BindView(R.id.detail_restaurant_address) TextView restaurantAddress;
-    @BindView(R.id.detail_restaurant_photo) ImageView restaurantPhoto;
-    @BindView(R.id.fao_chose_restaurant) FloatingActionButton floatingActionButton;
-    @BindView(R.id.restaurant_call) ImageButton restaurantCall;
-    @BindView(R.id.restaurant_website) ImageButton restaurantWebsite;
-    @BindView(R.id.on_click_star1) ImageView star1;
-    @BindView(R.id.on_click_star2) ImageView star2;
-    @BindView(R.id.on_click_star3) ImageView star3;
+    @BindView(R.id.detail_restaurant_name)
+    TextView restaurantName;
+    @BindView(R.id.detail_restaurant_address)
+    TextView restaurantAddress;
+    @BindView(R.id.detail_restaurant_photo)
+    ImageView restaurantPhoto;
+    @BindView(R.id.fao_chose_restaurant)
+    FloatingActionButton floatingActionButton;
+    @BindView(R.id.restaurant_call)
+    ImageButton restaurantCall;
+    @BindView(R.id.restaurant_website)
+    ImageButton restaurantWebsite;
+    @BindView(R.id.on_click_star1)
+    ImageView star1;
+    @BindView(R.id.on_click_star2)
+    ImageView star2;
+    @BindView(R.id.on_click_star3)
+    ImageView star3;
 
 
     @Override
@@ -100,7 +109,7 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
         });
 
         if (myRestaurant.getColleagueLikeList().size() == 3 && myRestaurant.getColleagueLikeList().size() < 5) {
-          star1.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
+            star1.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
         }
         if (myRestaurant.getColleagueLikeList().size() == 5 && myRestaurant.getColleagueLikeList().size() < 7) {
             star1.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
