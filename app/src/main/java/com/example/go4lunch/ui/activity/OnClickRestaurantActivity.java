@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,13 +16,18 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.go4lunch.R;
+import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
+import com.example.go4lunch.ui.adapter.MyRestaurantRecyclerViewAdapter;
 import com.example.go4lunch.ui.fragment.OnClickRestaurantFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class OnClickRestaurantActivity extends AppCompatActivity {
     //Initialize variables
@@ -39,6 +45,8 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
     @BindView(R.id.restaurant_call)
     ImageButton restaurantCall;
+    @BindView(R.id.restaurant_like)
+    ImageButton restaurantLike;
     @BindView(R.id.restaurant_website)
     ImageButton restaurantWebsite;
     @BindView(R.id.on_click_star1)
@@ -47,6 +55,8 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     ImageView star2;
     @BindView(R.id.on_click_star3)
     ImageView star3;
+    @BindView(R.id.on_click_activity_button_finish)
+    Button buttonFinish;
 
 
     @Override
@@ -81,7 +91,6 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     }
 
     private void initializeRestaurant(String restaurantIntentCode) {
-
         myRestaurant = (MyRestaurantModel) getIntent().getSerializableExtra(restaurantIntentCode);
         restaurantName.setText(myRestaurant.getRestaurantName());
         restaurantAddress.setText(myRestaurant.getRestaurantAddress());
@@ -98,6 +107,23 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
             }
         });
 
+        restaurantLike.setOnClickListener(view -> {
+            if (!myRestaurant.isLiked()) {
+            myRestaurant.getColleagueLikeList().add(new Colleague());
+            initializeRestaurantStars();
+            Toast.makeText(this, getString(R.string.restaurant_liked), Toast.LENGTH_SHORT)
+                    .show();
+            myRestaurant.setLiked(true);
+            }else {
+                int i = myRestaurant.getColleagueLikeList().size() - 1;
+                myRestaurant.getColleagueLikeList().remove(i);
+                initializeRestaurantStars();
+                myRestaurant.setLiked(false);
+                Toast.makeText(this, getString(R.string.restaurant_not_liked), Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
         restaurantWebsite.setOnClickListener((View view) -> {
             if (myRestaurant.getRestaurantWebsite() != null) {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -108,23 +134,34 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
             }
         });
 
-        if (myRestaurant.getColleagueLikeList().size() == 3 && myRestaurant.getColleagueLikeList().size() < 5) {
+        initializeRestaurantStars();
+    }
+
+    private void initializeRestaurantStars() {
+        List<Colleague> colleagueLikeList= myRestaurant.getColleagueLikeList();
+         if (myRestaurant.getColleagueLikeList().size() < 3) {
+             star1.setImageDrawable(null);
+             star2.setImageDrawable(null);
+             star3.setImageDrawable(null);
+         }else if (colleagueLikeList.size() == 3 && colleagueLikeList.size() < 5) {
             star1.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
-        }
-        if (myRestaurant.getColleagueLikeList().size() == 5 && myRestaurant.getColleagueLikeList().size() < 7) {
+            star2.setImageDrawable(null);
+            star3.setImageDrawable(null);
+        }else if (colleagueLikeList.size() == 5 && colleagueLikeList.size() < 7) {
             star1.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
             star2.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
-        }
-        if (myRestaurant.getColleagueLikeList().size() == 7 || myRestaurant.getColleagueLikeList().size() > 7) {
+             star3.setImageDrawable(null);
+        }else if (colleagueLikeList.size() == 7 || colleagueLikeList.size() > 7) {
             star1.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
             star2.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
             star3.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
         }
 
+
+
     }
 
     private void initializeFao() {
-
         fao_not_selected = ResourcesCompat.getDrawable(getResources(),
                 R.drawable.ic_baseline_check_circle_24, null);
         fao_selected = ResourcesCompat.getDrawable(getResources(),
@@ -143,5 +180,11 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
         });
     }
 
+    @OnClick(R.id.on_click_activity_button_finish)
+    public void onClickButtonFinish() {
+        Intent intent=getIntent().putExtra("Restaurant", myRestaurant);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
 
 }

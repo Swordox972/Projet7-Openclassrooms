@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.events.OpenRestaurantEvent;
+import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
 
@@ -47,6 +48,7 @@ public class MyRestaurantRecyclerViewAdapter extends
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final MyRestaurantModel myRestaurant = myRestaurantList.get(position);
+        List<Colleague> colleagueLikeList = myRestaurant.getColleagueLikeList();
 
         holder.restaurantName.setText(myRestaurant.getRestaurantName());
         holder.restaurantAddress.setText(myRestaurant.getRestaurantAddress());
@@ -61,14 +63,19 @@ public class MyRestaurantRecyclerViewAdapter extends
         }
 
         //Add star to restaurant considering colleagueLikeList size
-        if (myRestaurant.getColleagueLikeList().size() == 3 && myRestaurant.getColleagueLikeList().size() < 5) {
+        if (colleagueLikeList.size() < 3) {
+            holder.star1.setImageDrawable(null);
+            holder.star2.setImageDrawable(null);
+            holder.star3.setImageDrawable(null);
+        } else if (colleagueLikeList.size() == 3 && colleagueLikeList.size() < 5) {
             holder.star1.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
-        }
-        if (myRestaurant.getColleagueLikeList().size() == 5 && myRestaurant.getColleagueLikeList().size() < 7) {
+            holder.star2.setImageDrawable(null);
+            holder.star3.setImageDrawable(null);
+        } else if (colleagueLikeList.size() == 5 && colleagueLikeList.size() < 7) {
             holder.star1.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
             holder.star2.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
-        }
-        if (myRestaurant.getColleagueLikeList().size() == 7 || myRestaurant.getColleagueLikeList().size() > 7) {
+            holder.star3.setImageDrawable(null);
+        } else if (colleagueLikeList.size() == 7 || colleagueLikeList.size() > 7) {
             holder.star1.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
             holder.star2.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
             holder.star3.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
@@ -77,6 +84,7 @@ public class MyRestaurantRecyclerViewAdapter extends
         holder.itemView.setOnClickListener((View view) -> {
             EventBus.getDefault().post(new OpenRestaurantEvent(myRestaurant));
         });
+
     }
 
     @Override

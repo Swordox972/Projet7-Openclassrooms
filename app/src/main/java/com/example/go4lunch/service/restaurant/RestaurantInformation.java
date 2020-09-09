@@ -118,7 +118,8 @@ public class RestaurantInformation {
                         restaurantLatLng1 = place.getLatLng();
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber, restaurantWebsite,
+                                restaurantOpeningHours, restaurantDistance, bitmapName,
+                                restaurantPhoneNumber, restaurantWebsite, false,
                                 ColleagueChoice.setScarlettAndHughChoice(), ColleagueLike.setSevenPeopleLike());
                         firstRestaurant = true;
                         //Second restaurant
@@ -128,15 +129,17 @@ public class RestaurantInformation {
                         restaurantLatLng2 = place.getLatLng();
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber, restaurantWebsite,
+                                restaurantOpeningHours, restaurantDistance, bitmapName,
+                                restaurantPhoneNumber, restaurantWebsite, false,
                                 ColleagueChoice.setNanaAndGodfreyChoice(), ColleagueLike.setFivePeopleLikes());
                         secondRestaurant = true;
                         //Other restaurants
                     } else {
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName, restaurantPhoneNumber, restaurantWebsite,
-                                emptyColleagueList, ColleagueLike.setThreePeopleLikes());
+                                restaurantOpeningHours, restaurantDistance, bitmapName,
+                                restaurantPhoneNumber, restaurantWebsite, false,
+                                emptyColleagueList, ColleagueLike.setTwoPeopleLikes());
                     }
 
                     Restaurants.getInstance().getMyRestaurantList().add(restaurant);

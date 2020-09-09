@@ -15,7 +15,7 @@ public class ColleagueChoice {
     static List<Colleague> colleagueList = apiService.getColleagues();
     static String isEatingAt = App.getContext().getResources().getString(R.string.is_eating_at);
     static String isJoining = App.getContext().getResources().getString(R.string.is_joining);
-
+    static String notDecided = App.getContext().getString(R.string.has_not_decided_yet);
     public static List<Colleague> setScarlettAndHughChoice() {
         Colleague scarlett = colleagueList.get(0);
         Colleague hugh = colleagueList.get(1);
@@ -58,7 +58,6 @@ public class ColleagueChoice {
     }
 
     public static void setOtherColleagueChoiceRestaurant() {
-        String notDecided = App.getContext().getString(R.string.has_not_decided_yet);
 
         Colleague henry = colleagueList.get(4);
         Colleague angelina = colleagueList.get(5);

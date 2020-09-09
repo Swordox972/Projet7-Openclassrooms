@@ -13,6 +13,7 @@ public class MyRestaurantModel implements Serializable {
     private String restaurantImageName;
     private String restaurantPhoneNumber;
     private String restaurantWebsite;
+    private boolean isLiked;
     private List<Colleague> colleagueList;
     private List<Colleague> colleagueLikeList;
 
@@ -24,8 +25,8 @@ public class MyRestaurantModel implements Serializable {
     public MyRestaurantModel(String restaurantId, String restaurantName, String restaurantAddress,
                              String restaurantOpening, String restaurantDistance,
                              String restaurantImageName, String restaurantPhoneNumber,
-                             String restaurantWebsite, List<Colleague> colleagueList,
-                             List<Colleague> colleagueLikeList) {
+                             String restaurantWebsite, boolean isLiked,
+                             List<Colleague> colleagueList, List<Colleague> colleagueLikeList) {
 
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
@@ -35,6 +36,7 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantImageName = restaurantImageName;
         this.restaurantPhoneNumber = restaurantPhoneNumber;
         this.restaurantWebsite = restaurantWebsite;
+        this.isLiked= isLiked;
         this.colleagueList = colleagueList;
         this.colleagueLikeList = colleagueLikeList;
     }
@@ -101,6 +103,14 @@ public class MyRestaurantModel implements Serializable {
 
     public void setRestaurantWebsite(String restaurantWebsite) {
         this.restaurantWebsite = restaurantWebsite;
+    }
+
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
     }
 
     public List<Colleague> getColleagueList() {

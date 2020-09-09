@@ -37,6 +37,10 @@
     <string name="has_not_decided_yet">hasn\'t decided yet</string>
     <string name="is_eating_at">is eating at </string>
     <string name="is_joining">is joining!</string>
+    <string name="restaurant_liked">You like this restaurant!</string>
+    <string name="restaurant_not_liked">You don\'t like the restaurant</string>
+
+    <string name="ok" translatable="false">OK</string>
 
     <string-array name="colleague_name">
         <item>Scarlett</item>

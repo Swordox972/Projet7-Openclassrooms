@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +26,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 
 public class RestaurantFragment extends Fragment {
 
@@ -33,11 +36,13 @@ public class RestaurantFragment extends Fragment {
     private List<MyRestaurantModel> restaurantList = Restaurants.getInstance().getMyRestaurantList();
     private List<MyRestaurantModel> restaurantFilteredList;
     private MyRestaurantRecyclerViewAdapter myAdapter;
+    private OnClickRestaurantActivity onClickRestaurantActivity;
+    private static final int RESTAURANT_REQUEST_CODE = 18;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        onClickRestaurantActivity= new OnClickRestaurantActivity();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
         mapsActivity = (MapsActivity) getActivity();
@@ -87,13 +92,33 @@ public class RestaurantFragment extends Fragment {
         super.onStop();
     }
 
+
     @Subscribe
     public void onOpenRestaurant(OpenRestaurantEvent event) {
         MyRestaurantModel myRestaurantModel = event.myRestaurantModel;
+        Intent intent = new Intent(getContext(), OnClickRestaurantActivity.class);
+        intent.putExtra("Restaurant", myRestaurantModel);
         if (myRestaurantModel != null) {
-            startActivity(new Intent(getContext(), OnClickRestaurantActivity.class)
-                    .putExtra("Restaurant", myRestaurantModel));
+            startActivityForResult(intent, RESTAURANT_REQUEST_CODE);
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESTAURANT_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                MyRestaurantModel myRestaurantModel =(MyRestaurantModel) data.getSerializableExtra("Restaurant");
+                for (int i = 0; i < restaurantList.size(); i++) {
+                    String restaurantId = restaurantList.get(i).getRestaurantId();
+                    if (restaurantId.equals(myRestaurantModel.getRestaurantId())) {//REPLACE RESTAURANT MODIFIED
+                        restaurantList.set(i,myRestaurantModel);
+                        myAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+
+        }
+    }
 }
