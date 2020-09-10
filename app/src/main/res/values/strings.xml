@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Go4Lunch</string>
     <string name="title_activity_maps" translatable="false">Go4Lunch</string>
 
@@ -42,6 +42,13 @@
 
     <string name="ok" translatable="false">OK</string>
 
+    <!-- FACEBOOK PURPOSE -->
+    <string name="facebook_application_id" translatable="false">416583909320637</string>
+    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb416583909320637</string>
+    <!-- Twitter consumer key and secret -->
+    <string name="twitter_consumer_key" translatable="false">2fADjirsBAjEjzHZkIV9OUgXl</string>
+    <string name="twitter_consumer_secret" translatable="false">8x7XAfraAvfJU6vxK7gfZl0kJuHhcikMLKgaL1u5lg9fqJg9Zy</string>
+
     <string-array name="colleague_name">
         <item>Scarlett</item>
         <item>Hugh</item>
@@ -52,6 +59,5 @@
         <item>Robert</item>
         <item>Emma</item>
     </string-array>
-
 
 </resources>

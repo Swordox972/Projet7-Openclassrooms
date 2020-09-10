@@ -14,14 +14,17 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
-import com.example.go4lunch.ui.adapter.MyRestaurantRecyclerViewAdapter;
 import com.example.go4lunch.ui.fragment.OnClickRestaurantFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -35,6 +38,8 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     Drawable fao_not_selected;
     Drawable fao_selected;
     private MyRestaurantModel myRestaurant;
+    Bundle args;
+    OnClickRestaurantFragment onClickRestaurantFragment;
     @BindView(R.id.detail_restaurant_name)
     TextView restaurantName;
     @BindView(R.id.detail_restaurant_address)
@@ -65,9 +70,13 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_click_restaurant);
         ButterKnife.bind(this);
+        args = new Bundle();
         // commit fragment
+        onClickRestaurantFragment = new OnClickRestaurantFragment();
+        args.putBoolean("isSelected", false);
+        onClickRestaurantFragment.setArguments(args);
         getSupportFragmentManager().beginTransaction().replace(R.id.on_click_activity_fragment_container_view,
-                new OnClickRestaurantFragment()).commit();
+                onClickRestaurantFragment).commit();
 
         //Get restaurant data to know which restaurant the user clicked on
         //From List View
@@ -109,12 +118,12 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
 
         restaurantLike.setOnClickListener(view -> {
             if (!myRestaurant.isLiked()) {
-            myRestaurant.getColleagueLikeList().add(new Colleague());
-            initializeRestaurantStars();
-            Toast.makeText(this, getString(R.string.restaurant_liked), Toast.LENGTH_SHORT)
-                    .show();
-            myRestaurant.setLiked(true);
-            }else {
+                myRestaurant.getColleagueLikeList().add(new Colleague());
+                initializeRestaurantStars();
+                Toast.makeText(this, getString(R.string.restaurant_liked), Toast.LENGTH_SHORT)
+                        .show();
+                myRestaurant.setLiked(true);
+            } else {
                 int i = myRestaurant.getColleagueLikeList().size() - 1;
                 myRestaurant.getColleagueLikeList().remove(i);
                 initializeRestaurantStars();
@@ -138,25 +147,24 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     }
 
     private void initializeRestaurantStars() {
-        List<Colleague> colleagueLikeList= myRestaurant.getColleagueLikeList();
-         if (myRestaurant.getColleagueLikeList().size() < 3) {
-             star1.setImageDrawable(null);
-             star2.setImageDrawable(null);
-             star3.setImageDrawable(null);
-         }else if (colleagueLikeList.size() == 3 && colleagueLikeList.size() < 5) {
+        List<Colleague> colleagueLikeList = myRestaurant.getColleagueLikeList();
+        if (myRestaurant.getColleagueLikeList().size() < 3) {
+            star1.setImageDrawable(null);
+            star2.setImageDrawable(null);
+            star3.setImageDrawable(null);
+        } else if (colleagueLikeList.size() == 3 && colleagueLikeList.size() < 5) {
             star1.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
             star2.setImageDrawable(null);
             star3.setImageDrawable(null);
-        }else if (colleagueLikeList.size() == 5 && colleagueLikeList.size() < 7) {
+        } else if (colleagueLikeList.size() == 5 && colleagueLikeList.size() < 7) {
             star1.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
             star2.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
-             star3.setImageDrawable(null);
-        }else if (colleagueLikeList.size() == 7 || colleagueLikeList.size() > 7) {
+            star3.setImageDrawable(null);
+        } else if (colleagueLikeList.size() == 7 || colleagueLikeList.size() > 7) {
             star1.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
             star2.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
             star3.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
         }
-
 
 
     }
@@ -167,11 +175,20 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
         fao_selected = ResourcesCompat.getDrawable(getResources(),
                 R.drawable.ic_baseline_check_circle_selected_24, null);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Colleague me = new Colleague(9, user.getDisplayName(), getString(R.string.is_joining),
+                myRestaurant.getRestaurantName(), user.getPhotoUrl().toString());
+
         floatingActionButton.setOnClickListener((View view) -> {
             if (!isSelected) {
                 floatingActionButton.setImageDrawable(fao_selected);
                 isSelected = true;
+                myRestaurant.getColleagueList().add(me);
 
+                args.putSerializable("MyRestaurant", myRestaurant);
+                args.putBoolean("isSelected", isSelected);
+               Fragment fragment= getSupportFragmentManager().findFragmentById(R.id.on_click_activity_fragment_container_view);
+               getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
             } else {
                 floatingActionButton.setImageDrawable(fao_not_selected);
                 isSelected = false;
@@ -182,7 +199,7 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
 
     @OnClick(R.id.on_click_activity_button_finish)
     public void onClickButtonFinish() {
-        Intent intent=getIntent().putExtra("Restaurant", myRestaurant);
+        Intent intent = getIntent().putExtra("Restaurant", myRestaurant);
         setResult(RESULT_OK, intent);
         finish();
     }

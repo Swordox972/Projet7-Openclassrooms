@@ -63,10 +63,13 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
     // FirebaseUI for Firebase Auth
-    implementation 'com.firebaseui:firebase-ui-auth:6.3.0'
+    implementation 'com.firebaseui:firebase-ui-auth:6.2.0'
 
     //Facebook auth sdk
     implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+
+    //Twitter auth sdk
+    implementation("com.twitter.sdk.android:twitter-core:3.3.0@aar") { transitive = true }
 
     //Multidex
     implementation 'com.android.support:multidex:1.0.3'

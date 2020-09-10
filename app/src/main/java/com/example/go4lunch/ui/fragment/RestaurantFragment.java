@@ -118,7 +118,6 @@ public class RestaurantFragment extends Fragment {
                 }
             }
 
-
         }
     }
 }

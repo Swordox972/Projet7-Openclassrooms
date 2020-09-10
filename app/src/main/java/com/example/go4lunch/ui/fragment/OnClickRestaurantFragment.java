@@ -23,7 +23,7 @@ public class OnClickRestaurantFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private List<Colleague> colleagueList;
     private MyOnClickRecyclerViewAdapter myAdapter;
-
+    private boolean isSelected;
     public OnClickRestaurantFragment() {
         // Required empty public constructor
     }
@@ -44,6 +44,10 @@ public class OnClickRestaurantFragment extends Fragment {
         mRecyclerView = (RecyclerView) view;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         initChoiceList();
+        Bundle args= this.getArguments();
+        if (isSelected =args.getBoolean("isSelected")) {
+          refreshListAfterFaoPressed();
+        }
         return view;
     }
 
@@ -66,5 +70,11 @@ public class OnClickRestaurantFragment extends Fragment {
         }
         myAdapter = new MyOnClickRecyclerViewAdapter(colleagueList);
         mRecyclerView.setAdapter(myAdapter);
+    }
+
+    private void refreshListAfterFaoPressed() {
+        MyRestaurantModel myRestaurant= (MyRestaurantModel) getArguments().getSerializable("MyRestaurant");
+        colleagueList= myRestaurant.getColleagueList();
+        myAdapter.notifyDataSetChanged();
     }
 }

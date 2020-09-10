@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.twitter.sdk.android.core.Twitter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -68,7 +69,9 @@ public class MainActivity extends AppCompatActivity {
     private void startSignInActivity() {
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.GoogleBuilder().build(),
-                new AuthUI.IdpConfig.FacebookBuilder().build());
+                new AuthUI.IdpConfig.FacebookBuilder().build(),
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.TwitterBuilder().build());
 
         startActivityForResult(AuthUI.getInstance()
                         .createSignInIntentBuilder()

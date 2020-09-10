@@ -99,6 +99,22 @@
         map:headerLayout="@layout/nav_header"
         map:menu="@menu/menu_drawer"
         map:itemIconTint="@android:color/white"
-        map:itemTextColor="@android:color/white" />
+        map:itemTextColor="@android:color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/bol_fumant" />
+
+        </LinearLayout>
+
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

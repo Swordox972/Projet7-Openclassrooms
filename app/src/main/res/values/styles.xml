@@ -31,8 +31,5 @@
         <item name="android:textColorHint">@android:color/white</item>
     </style>
 
-    <!-- FACEBOOK PURPOSE -->
-    <string name="facebook_application_id" translatable="false">416583909320637</string>
-    <string name="facebook_login_protocol_scheme" translatable="false" tools:ignore="UnusedResources">fb416583909320637</string>
 
 </resources>
