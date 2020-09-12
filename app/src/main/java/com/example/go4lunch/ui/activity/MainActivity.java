@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             sign_out_button.setVisibility(View.GONE);
         } else {

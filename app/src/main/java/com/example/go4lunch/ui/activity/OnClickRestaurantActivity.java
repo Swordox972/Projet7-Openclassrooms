@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentContainerView;
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
+import com.example.go4lunch.service.Users;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
 import com.example.go4lunch.ui.fragment.OnClickRestaurantFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,6 +39,7 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     Drawable fao_not_selected;
     Drawable fao_selected;
     private MyRestaurantModel myRestaurant;
+    private Colleague me;
     Bundle args;
     OnClickRestaurantFragment onClickRestaurantFragment;
     @BindView(R.id.detail_restaurant_name)
@@ -176,17 +178,18 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
                 R.drawable.ic_baseline_check_circle_selected_24, null);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Colleague me = new Colleague(9, user.getDisplayName(), getString(R.string.is_joining),
+         me = new Colleague(9, user.getDisplayName(), getString(R.string.is_joining),
                 myRestaurant.getRestaurantName(), user.getPhotoUrl().toString());
-
+        //Add user to Users' list
+        Users.getInstance().getMyUserList().add(me);
         floatingActionButton.setOnClickListener((View view) -> {
             if (!isSelected) {
                 floatingActionButton.setImageDrawable(fao_selected);
                 isSelected = true;
                 myRestaurant.getColleagueList().add(me);
-
                 args.putSerializable("MyRestaurant", myRestaurant);
                 args.putBoolean("isSelected", isSelected);
+
                Fragment fragment= getSupportFragmentManager().findFragmentById(R.id.on_click_activity_fragment_container_view);
                getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
             } else {

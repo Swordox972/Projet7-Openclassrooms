@@ -1,5 +1,8 @@
 package com.example.go4lunch.ui.activity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
@@ -26,6 +29,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.MyRestaurantModel;
+import com.example.go4lunch.service.Notifications.MyReceiver;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
 import com.example.go4lunch.service.restaurant.Restaurants;
 import com.example.go4lunch.ui.fragment.ColleagueFragment;
@@ -60,6 +64,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -75,6 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     PlacesClient placesClient;
     private static final int RC_LOCATION = 10;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
+    private static final int NOTIFICATION_REQUEST_CODE= 12;
     public static LatLng restaurantLatLng;
     LatLng myCurrentLatLng;
     String hungry;
@@ -132,6 +138,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         initializeBottomNavigation();
         initializeNavigationViewHeader();
+        initializeNotification();
         initializeNavigationViewIconsAction();
     }
 
@@ -258,7 +265,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Set the fields to specify which types of place data to
         // return after the user has made a selection.
         List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG);
-
         // Start the autocomplete intent.
         Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
                 .build(this);
@@ -317,13 +323,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     });
             return true;
         });
-
-
     }
 
     private void startMainActivityIfUserLogOut() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    private void initializeNotification() {
+        Intent notifyIntent= new Intent(this, MyReceiver.class);
+        PendingIntent pendingIntent= PendingIntent.getBroadcast(this, NOTIFICATION_REQUEST_CODE,
+                notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        AlarmManager alarmManager= (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     private void initializeBottomNavigation() {
