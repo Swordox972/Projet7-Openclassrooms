@@ -80,7 +80,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     PlacesClient placesClient;
     private static final int RC_LOCATION = 10;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 1;
-    private static final int NOTIFICATION_REQUEST_CODE= 12;
+    private static final int NOTIFICATION_REQUEST_CODE = 12;
     public static LatLng restaurantLatLng;
     LatLng myCurrentLatLng;
     String hungry;
@@ -331,15 +331,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void initializeNotification() {
-        Intent notifyIntent= new Intent(this, MyReceiver.class);
-        PendingIntent pendingIntent= PendingIntent.getBroadcast(this, NOTIFICATION_REQUEST_CODE,
+        Intent notifyIntent = new Intent(this, MyReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, NOTIFICATION_REQUEST_CODE,
                 notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 12);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
-        AlarmManager alarmManager= (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);
     }
@@ -347,11 +347,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void initializeBottomNavigation() {
         bottomNavigationView.setOnNavigationItemSelectedListener((@NonNull MenuItem item) ->
         {
-            Intent intent = new Intent(this, MapsActivity.class);
 
             switch (item.getItemId()) {
                 case R.id.page_1:
-                    startActivity(intent);
+                    SupportMapFragment mapFragment = SupportMapFragment.newInstance();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
+                            mapFragment).commit();
+                    mapFragment.getMapAsync(this);
                     Restaurants.getInstance().getFilteredRestaurantList().clear();
                     toolbarSearch.setVisibility(View.VISIBLE);
                     //Reset boolean variables of RestaurantInformation
@@ -359,8 +361,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     RestaurantInformation.secondRestaurant = false;
                     //Clear restaurant list while changing fragment
                     floatingActionButton.setVisibility(View.VISIBLE);
-                    singletonListRestaurant.clear();
-                    onBackPressed();
                     toolbarTitle.setText(hungry);
                     break;
 

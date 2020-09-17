@@ -13,8 +13,8 @@
     <ImageView
         android:id="@+id/colleague_photo"
         android:contentDescription="Avatar colleague"
-        android:layout_width="250px"
-        android:layout_height="250px"
+        android:layout_width="@dimen/colleague_image_view_size"
+        android:layout_height="@dimen/colleague_image_view_size"
         android:adjustViewBounds="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -34,13 +34,23 @@
         app:layout_constraintBottom_toBottomOf="@id/colleague_photo" />
 
     <TextView
-        android:id="@+id/colleague_restaurant_choice"
+        android:id="@+id/colleague_restaurant_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         app:layout_constraintStart_toEndOf="@id/colleague_restaurant_name"
         app:layout_constraintTop_toTopOf="@id/colleague_restaurant_name"
         app:layout_constraintBottom_toBottomOf="@id/colleague_restaurant_name" />
+
+    <TextView
+        android:id="@+id/colleague_restaurant_choice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintEnd_toEndOf="@id/colleague_restaurant_status"
+        app:layout_constraintTop_toTopOf="@+id/colleague_restaurant_status"
+        app:layout_constraintBottom_toBottomOf="@+id/colleague_restaurant_status"
+        />
 
     <View
         android:layout_width="300dp"

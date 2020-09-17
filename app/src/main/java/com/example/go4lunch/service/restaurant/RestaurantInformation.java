@@ -120,7 +120,7 @@ public class RestaurantInformation {
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
                                 restaurantOpeningHours, restaurantDistance, bitmapName,
                                 restaurantPhoneNumber, restaurantWebsite, false,
-                                ColleagueChoice.setScarlettAndHughChoice(), ColleagueLike.setSevenPeopleLike());
+                                ColleagueChoice.setScarlettAndHughJoining(), ColleagueLike.setSevenPeopleLike());
                         firstRestaurant = true;
                         //Second restaurant
                     } else if (firstRestaurant && !secondRestaurant) {
@@ -131,7 +131,7 @@ public class RestaurantInformation {
                                 restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
                                 restaurantOpeningHours, restaurantDistance, bitmapName,
                                 restaurantPhoneNumber, restaurantWebsite, false,
-                                ColleagueChoice.setNanaAndGodfreyChoice(), ColleagueLike.setFivePeopleLikes());
+                                ColleagueChoice.setNanaAndGodfreyJoining(), ColleagueLike.setFivePeopleLikes());
                         secondRestaurant = true;
                         //Other restaurants
                     } else {

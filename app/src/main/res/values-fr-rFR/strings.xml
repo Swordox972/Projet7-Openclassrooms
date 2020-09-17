@@ -25,4 +25,8 @@
     <string name="is_joining">a rejoint!</string>
     <string name="restaurant_liked">Tu aimes ce restaurant!</string>
     <string name="restaurant_not_liked">Tu n\'aimes pas le restaurant</string>
+    <string name="chosen_restaurant">Restaurant choisi</string>
+    <string name="you_will_eat_at">Vous allez manger au</string>
+    <string name="at">à</string>
+    <string name="with">avec</string>
 </resources>

@@ -36,7 +36,7 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantImageName = restaurantImageName;
         this.restaurantPhoneNumber = restaurantPhoneNumber;
         this.restaurantWebsite = restaurantWebsite;
-        this.isLiked= isLiked;
+        this.isLiked = isLiked;
         this.colleagueList = colleagueList;
         this.colleagueLikeList = colleagueLikeList;
     }

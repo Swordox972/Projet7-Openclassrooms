@@ -22,7 +22,7 @@
             android:title="@string/log_out" />
     </group>
 
-    <group >
+    <group>
 
     </group>
 </menu>

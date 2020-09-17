@@ -43,17 +43,27 @@ public class MyColleagueRecyclerViewAdapter extends
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Colleague myColleague = myColleagueList.get(position);
         //Set colleague choice
-        ColleagueChoice.setScarlettAndHughChoiceRestaurant();
-        ColleagueChoice.setNanaAndGodfreyChoiceRestaurant();
-        ColleagueChoice.setOtherColleagueChoiceRestaurant();
+        ColleagueChoice.setScarlettAndHughEatingAt();
+        ColleagueChoice.setNanaAndGodfreyEatingAt();
+        ColleagueChoice.setOtherColleagueNotDecided();
 
         holder.colleagueRestaurantName.setText(myColleague.getColleagueName());
-        holder.colleagueRestaurantChoice.setText(myColleague.getColleagueChoice());
-        if (!myColleague.getColleagueChoice().equals("hasn't decided yet")) {
-            holder.colleagueRestaurantName.setTextColor(Color.parseColor("#000000"));
-            holder.colleagueRestaurantChoice.setTextColor(Color.parseColor("#000000"));
+
+        if (myColleague.getColleagueStatus() == Colleague.Status.isEatingAt) {
+            holder.colleagueRestaurantStatus.setText(holder.itemView.getContext()
+                    .getString(R.string.is_eating_at));
+        } else if (myColleague.getColleagueStatus() == Colleague.Status.notDecided) {
+            holder.colleagueRestaurantStatus.setText(holder.itemView.getContext()
+                    .getString(R.string.has_not_decided_yet));
         }
-        holder.colleagueRestaurantChoice.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+
+        holder.colleagueRestaurantChoice.setText(myColleague.getColleagueRestaurantChoice());
+
+        if (!myColleague.getColleagueStatus().equals(Colleague.Status.notDecided)) {
+            holder.colleagueRestaurantName.setTextColor(Color.parseColor("#000000"));
+            holder.colleagueRestaurantStatus.setTextColor(Color.parseColor("#000000"));
+        }
+        holder.colleagueRestaurantStatus.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         Glide.with(holder.colleaguePhoto.getContext())
                 .load(myColleague.getAvatarUrl())
                 .apply(RequestOptions.circleCropTransform())
@@ -70,6 +80,8 @@ public class MyColleagueRecyclerViewAdapter extends
         ImageView colleaguePhoto;
         @BindView(R.id.colleague_restaurant_name)
         TextView colleagueRestaurantName;
+        @BindView(R.id.colleague_restaurant_status)
+        TextView colleagueRestaurantStatus;
         @BindView(R.id.colleague_restaurant_choice)
         TextView colleagueRestaurantChoice;
 

@@ -42,7 +42,7 @@ public class RestaurantFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        onClickRestaurantActivity= new OnClickRestaurantActivity();
+        onClickRestaurantActivity = new OnClickRestaurantActivity();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
         mapsActivity = (MapsActivity) getActivity();
@@ -108,11 +108,11 @@ public class RestaurantFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RESTAURANT_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                MyRestaurantModel myRestaurantModel =(MyRestaurantModel) data.getSerializableExtra("Restaurant");
+                MyRestaurantModel myRestaurantModel = (MyRestaurantModel) data.getSerializableExtra("Restaurant");
                 for (int i = 0; i < restaurantList.size(); i++) {
                     String restaurantId = restaurantList.get(i).getRestaurantId();
                     if (restaurantId.equals(myRestaurantModel.getRestaurantId())) {//REPLACE RESTAURANT MODIFIED
-                        restaurantList.set(i,myRestaurantModel);
+                        restaurantList.set(i, myRestaurantModel);
                         myAdapter.notifyDataSetChanged();
                     }
                 }

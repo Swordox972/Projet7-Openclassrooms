@@ -5,38 +5,24 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 
-public class Colleague implements Serializable, Parcelable {
-
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator<Colleague>() {
-        @Override
-        public Colleague createFromParcel(Parcel parcel) {
-            return new Colleague(parcel);
-        }
-
-        @Override
-        public Colleague[] newArray(int i) {
-            return new Colleague[i];
-        }
-    };
-
-    int colleagueId;
-    String colleagueName;
-    String colleagueIsJoining;
-    String colleagueChoice;
-    String avatarUrl;
-
+public class Colleague implements Serializable{
+    private int colleagueId;
+    private String colleagueName;
+    private Status colleagueStatus = Status.notDecided;
+    private String colleagueRestaurantChoice;
+    private String avatarUrl;
 
     //Empty constructor
     public Colleague() {
     }
 
     //Constructor with parameters
-    public Colleague(int colleagueId, String colleagueName, String colleagueIsJoining,
-                     String colleagueChoice, String avatarUrl) {
+    public Colleague(int colleagueId, String colleagueName, Status colleagueStatus,
+                     String colleagueRestaurantChoice,String avatarUrl) {
         this.colleagueId = colleagueId;
         this.colleagueName = colleagueName;
-        this.colleagueIsJoining = colleagueIsJoining;
-        this.colleagueChoice = colleagueChoice;
+        this.colleagueStatus = colleagueStatus;
+        this.colleagueRestaurantChoice= colleagueRestaurantChoice;
         this.avatarUrl = avatarUrl;
     }
 
@@ -57,20 +43,20 @@ public class Colleague implements Serializable, Parcelable {
         this.colleagueName = colleagueName;
     }
 
-    public String getColleagueIsJoining() {
-        return colleagueIsJoining;
+    public Status getColleagueStatus() {
+        return colleagueStatus;
     }
 
-    public void setColleagueIsJoining(String colleagueIsJoining) {
-        this.colleagueIsJoining = colleagueIsJoining;
+    public void setColleagueStatus(Status colleagueStatus) {
+        this.colleagueStatus = colleagueStatus;
     }
 
-    public String getColleagueChoice() {
-        return colleagueChoice;
+    public String getColleagueRestaurantChoice() {
+        return colleagueRestaurantChoice;
     }
 
-    public void setColleagueChoice(String colleagueChoice) {
-        this.colleagueChoice = colleagueChoice;
+    public void setColleagueRestaurantChoice(String colleagueRestaurantChoice) {
+        this.colleagueRestaurantChoice = colleagueRestaurantChoice;
     }
 
     public String getAvatarUrl() {
@@ -81,27 +67,12 @@ public class Colleague implements Serializable, Parcelable {
         this.avatarUrl = avatarUrl;
     }
 
-    //Parceling part
-    public Colleague(Parcel in) {
-        this.colleagueId = in.readInt();
-        this.colleagueName = in.readString();
-        this.colleagueIsJoining = in.readString();
-        this.colleagueChoice = in.readString();
-        this.avatarUrl = in.readString();
-    }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(colleagueId);
-        parcel.writeString(colleagueName);
-        parcel.writeString(colleagueIsJoining);
-        parcel.writeString(colleagueChoice);
-        parcel.writeString(avatarUrl);
+    public enum Status {
+        isJoining,
+        isEatingAt,
+        notDecided
     }
 
 }

@@ -8,7 +8,7 @@ public class MyReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent intent1= new Intent(context, NotificationsService.class);
+        Intent intent1 = new Intent(context, NotificationsService.class);
         context.startService(intent1);
     }
 }

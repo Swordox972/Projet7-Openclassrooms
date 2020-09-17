@@ -40,7 +40,10 @@ public class MyOnClickRecyclerViewAdapter extends
         final Colleague myColleague = myColleagueList.get(position);
 
         holder.colleagueName.setText(myColleague.getColleagueName());
-        holder.restaurantJoining.setText(myColleague.getColleagueIsJoining());
+        myColleague.setColleagueStatus(Colleague.Status.isJoining);
+        if (myColleague.getColleagueStatus() == Colleague.Status.isJoining) {
+            holder.restaurantJoining.setText(holder.itemView.getContext().getString(R.string.is_joining));
+        }
         Glide.with(holder.colleaguePhoto.getContext())
                 .load(myColleague.getAvatarUrl())
                 .apply(RequestOptions.circleCropTransform())

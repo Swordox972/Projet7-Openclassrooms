@@ -16,11 +16,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".service.App">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".ui.activity.SettingsActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity
             android:name=".ui.activity.MainActivity"
             android:label="@string/title_activity_maps"
@@ -46,15 +47,19 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".ui.activity.MapsActivity"></activity>
+        <activity android:name=".ui.activity.MapsActivity">
 
-        <receiver android:name=".service.Notifications.MyReceiver"
+        </activity>
+
+        <receiver
+            android:name=".service.Notifications.MyReceiver"
             android:enabled="true"
             android:exported="false">
 
         </receiver>
 
-        <service android:name=".service.Notifications.NotificationsService"
+        <service
+            android:name=".service.Notifications.NotificationsService"
             android:exported="false">
 
         </service>

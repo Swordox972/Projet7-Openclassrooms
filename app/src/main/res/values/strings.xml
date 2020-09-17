@@ -16,6 +16,10 @@
     <string name="detail_app_function">Lunch with your workmates</string>
     <string name="start_application" translatable="false">Start Go4Lunch</string>
 
+    <string name="chosen_restaurant">Chosen restaurant</string>
+    <string name="you_will_eat_at">You will eat at</string>
+    <string name="at">at</string>
+    <string name="with">with</string>
 
     <string name="call">Call</string>
     <string name="like" translatable="false">Like</string>
