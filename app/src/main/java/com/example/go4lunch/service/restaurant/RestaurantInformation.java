@@ -6,6 +6,7 @@ import android.location.Location;
 import android.util.Base64;
 import android.util.Log;
 
+import com.example.go4lunch.api.RestaurantFirebaseHelper;
 import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.colleague.ColleagueChoice;
@@ -33,7 +34,6 @@ public class RestaurantInformation {
     public static String restaurantName2;
     public static LatLng restaurantLatLng1;
     public static LatLng restaurantLatLng2;
-    static String restaurantWebsite;
     public static boolean firstRestaurant;
     public static boolean secondRestaurant;
     public static List<Colleague> emptyColleagueList = new ArrayList<>();
@@ -104,6 +104,7 @@ public class RestaurantInformation {
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
                     String bitmapName = bitmapToString(bitmap);
                     //Get the website
+                     String restaurantWebsite;
                     if (place.getWebsiteUri() != null) {
                         restaurantWebsite = place.getWebsiteUri().toString();
                     } else {
@@ -143,8 +144,11 @@ public class RestaurantInformation {
                     }
 
                     Restaurants.getInstance().getMyRestaurantList().add(restaurant);
-                    // Reset restaurantWebsite value
-                    restaurantWebsite = null;
+
+                    //Add RestaurantFirebase to firebase
+                    RestaurantFirebaseHelper.createRestaurantFirebase(restaurant.getRestaurantId(),
+                            restaurant.getColleagueLikeList().size());
+
                 }).addOnFailureListener((exception) -> {
                     if (exception instanceof ApiException) {
                         final ApiException apiException = (ApiException) exception;

@@ -2,6 +2,7 @@ package com.example.go4lunch.service.colleague;
 
 import com.example.go4lunch.di.DI;
 import com.example.go4lunch.model.Colleague;
+import com.example.go4lunch.service.restaurant.RestaurantInformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,14 +40,18 @@ public class ColleagueChoice {
         Colleague scarlett = colleagueList.get(0);
         Colleague hugh = colleagueList.get(1);
         scarlett.setColleagueStatus(Colleague.Status.isEatingAt);
+        scarlett.setColleagueRestaurantChoice(RestaurantInformation.restaurantName1);
         hugh.setColleagueStatus(Colleague.Status.isEatingAt);
+        hugh.setColleagueRestaurantChoice(RestaurantInformation.restaurantName1);
     }
 
     public static void setNanaAndGodfreyEatingAt() {
         Colleague nana = colleagueList.get(2);
         Colleague godfrey = colleagueList.get(3);
         nana.setColleagueStatus(Colleague.Status.isEatingAt);
+        nana.setColleagueRestaurantChoice(RestaurantInformation.restaurantName2);
         godfrey.setColleagueStatus(Colleague.Status.isEatingAt);
+        godfrey.setColleagueRestaurantChoice(RestaurantInformation.restaurantName2);
     }
 
     public static void setOtherColleagueNotDecided() {

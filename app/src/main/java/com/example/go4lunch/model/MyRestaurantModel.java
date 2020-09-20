@@ -104,7 +104,7 @@ public class MyRestaurantModel implements Serializable {
     public void setRestaurantWebsite(String restaurantWebsite) {
         this.restaurantWebsite = restaurantWebsite;
     }
-
+    
     public boolean isLiked() {
         return isLiked;
     }

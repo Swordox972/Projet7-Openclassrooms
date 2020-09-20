@@ -48,7 +48,7 @@ public class MyColleagueRecyclerViewAdapter extends
         ColleagueChoice.setOtherColleagueNotDecided();
 
         holder.colleagueRestaurantName.setText(myColleague.getColleagueName());
-
+        //Put colleague status text
         if (myColleague.getColleagueStatus() == Colleague.Status.isEatingAt) {
             holder.colleagueRestaurantStatus.setText(holder.itemView.getContext()
                     .getString(R.string.is_eating_at));

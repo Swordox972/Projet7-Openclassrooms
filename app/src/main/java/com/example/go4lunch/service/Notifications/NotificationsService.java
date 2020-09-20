@@ -32,9 +32,10 @@ public class NotificationsService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        //Get the restaurant name chosen
+
         String CHANNEL_ID = "channel_1";
         String textTitle = this.getApplicationContext().getString(R.string.chosen_restaurant);
+        //Get the restaurant name chosen
         Colleague me;
         List<MyRestaurantModel> myRestaurantList = Restaurants.getInstance().getMyRestaurantList();
         MyRestaurantModel restaurantChosenByMe = new MyRestaurantModel();

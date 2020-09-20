@@ -86,8 +86,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     String hungry;
     String availableWorkmates;
     public Place placeSearch;
-    //Stock place id
-    List<String> placeIdList;
     private List<MyRestaurantModel> singletonListRestaurant;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
@@ -119,17 +117,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_container_view);
-
         mapFragment.getMapAsync(this);
         // Initialize the SDK
         Places.initialize(getApplicationContext(), API_KEY);
         // Create a new PlacesClient instance
         placesClient = Places.createClient(this);
-        //Initialize placeIdList
-        placeIdList = new ArrayList<>();
-
         singletonListRestaurant = Restaurants.getInstance().getMyRestaurantList();
-
         //Initialize toolbar
         initializeAutocompleteToolbar();
         //Initialize floating action button
@@ -166,6 +159,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     boolean firstLocation = true;
                     boolean firstRestaurantFound = false;
                     boolean secondRestaurantFound = false;
+                    //Stock place id
+                    List<String> placeIdList = new ArrayList<>();
                     for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
                         Log.i("success", String.format("Place '%s' has likelihood: %f",
                                 placeLikelihood.getPlace().getName(),
@@ -185,9 +180,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                             //Get restaurant place id and stock it in placeId list
                             String placeId = placeLikelihood.getPlace().getId();
+
                             placeIdList.add(placeId);
 
-                            //Get latitude and longitude of the first restaurant
+                            //Get latitude and longitude of restaurant
                             restaurantLatLng = placeLikelihood.getPlace().getLatLng();
 
                             /*Move camera to the first restaurant found, setFirstRestaurantFound
@@ -246,8 +242,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                         return true;
                     });
-                    //Clear placeIdList for not duplicate the restaurant list
-                    placeIdList.clear();
                 } else {
                     Exception exception = task.getException();
                     if (exception instanceof ApiException) {
@@ -347,7 +341,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void initializeBottomNavigation() {
         bottomNavigationView.setOnNavigationItemSelectedListener((@NonNull MenuItem item) ->
         {
-
             switch (item.getItemId()) {
                 case R.id.page_1:
                     SupportMapFragment mapFragment = SupportMapFragment.newInstance();

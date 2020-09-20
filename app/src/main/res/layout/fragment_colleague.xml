@@ -46,8 +46,9 @@
         android:id="@+id/colleague_restaurant_choice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        app:layout_constraintEnd_toEndOf="@id/colleague_restaurant_status"
+        android:layout_marginStart="2dp"
+        android:textColor="@android:color/black"
+        app:layout_constraintStart_toEndOf="@id/colleague_restaurant_status"
         app:layout_constraintTop_toTopOf="@+id/colleague_restaurant_status"
         app:layout_constraintBottom_toBottomOf="@+id/colleague_restaurant_status"
         />

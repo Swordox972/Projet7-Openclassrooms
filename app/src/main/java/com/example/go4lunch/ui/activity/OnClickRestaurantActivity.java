@@ -17,7 +17,9 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.go4lunch.R;
+import com.example.go4lunch.api.RestaurantFirebaseHelper;
 import com.example.go4lunch.model.Colleague;
+import com.example.go4lunch.model.MyRestaurantFirebase;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.Users;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
@@ -121,6 +123,10 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
             if (!myRestaurant.isLiked()) {
                 myRestaurant.getColleagueLikeList().add(new Colleague());
                 initializeRestaurantStars();
+                //Update myRestaurant like number
+                RestaurantFirebaseHelper.updateRestaurantFirebase(myRestaurant.getRestaurantId(),
+                        myRestaurant.getColleagueLikeList().size());
+                //Make a Toast to show user he liked the restaurant
                 Toast.makeText(this, getString(R.string.restaurant_liked), Toast.LENGTH_SHORT)
                         .show();
                 myRestaurant.setLiked(true);
@@ -129,6 +135,10 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
                 myRestaurant.getColleagueLikeList().remove(i);
                 initializeRestaurantStars();
                 myRestaurant.setLiked(false);
+                //Update myRestaurant like number
+                RestaurantFirebaseHelper.updateRestaurantFirebase(myRestaurant.getRestaurantId(),
+                        myRestaurant.getColleagueLikeList().size());
+                //Show Toast to user he disliked the restaurant
                 Toast.makeText(this, getString(R.string.restaurant_not_liked), Toast.LENGTH_SHORT)
                         .show();
             }
@@ -166,6 +176,7 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
             star2.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
             star3.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
         }
+
 
 
     }
