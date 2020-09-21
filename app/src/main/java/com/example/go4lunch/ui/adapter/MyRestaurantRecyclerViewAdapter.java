@@ -48,7 +48,7 @@ public class MyRestaurantRecyclerViewAdapter extends
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final MyRestaurantModel myRestaurant = myRestaurantList.get(position);
-        List<Colleague> colleagueLikeList = myRestaurant.getColleagueLikeList();
+        long restaurantLikeNumber = myRestaurant.getLikeNumber();
 
         holder.restaurantName.setText(myRestaurant.getRestaurantName());
         holder.restaurantAddress.setText(myRestaurant.getRestaurantAddress());
@@ -63,19 +63,19 @@ public class MyRestaurantRecyclerViewAdapter extends
         }
 
         //Add star to restaurant considering colleagueLikeList size
-        if (colleagueLikeList.size() < 3) {
+        if (restaurantLikeNumber < 3) {
             holder.star1.setImageDrawable(null);
             holder.star2.setImageDrawable(null);
             holder.star3.setImageDrawable(null);
-        } else if (colleagueLikeList.size() == 3 && colleagueLikeList.size() < 5) {
+        } else if (restaurantLikeNumber == 3 && restaurantLikeNumber < 5) {
             holder.star1.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
             holder.star2.setImageDrawable(null);
             holder.star3.setImageDrawable(null);
-        } else if (colleagueLikeList.size() == 5 && colleagueLikeList.size() < 7) {
+        } else if (restaurantLikeNumber == 5 && restaurantLikeNumber < 7) {
             holder.star1.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
             holder.star2.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
             holder.star3.setImageDrawable(null);
-        } else if (colleagueLikeList.size() == 7 || colleagueLikeList.size() > 7) {
+        } else if (restaurantLikeNumber == 7 || restaurantLikeNumber > 7) {
             holder.star1.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
             holder.star2.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));
             holder.star3.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.ic_baseline_star_yellow_18));

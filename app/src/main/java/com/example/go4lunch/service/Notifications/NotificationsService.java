@@ -32,7 +32,6 @@ public class NotificationsService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-
         String CHANNEL_ID = "channel_1";
         String textTitle = this.getApplicationContext().getString(R.string.chosen_restaurant);
         //Get the restaurant name chosen
@@ -53,7 +52,7 @@ public class NotificationsService extends IntentService {
                 if (i < restaurantChosenByMe.getColleagueList().size() - 1 &&
                         restaurantChosenByMe.getColleagueList().get(i).getColleagueName().equals(me.getColleagueName())) {
                     participants = restaurantChosenByMe.getColleagueList().get(i).getColleagueName() + ", ";
-                } else if (i == restaurantChosenByMe.getColleagueLikeList().size() - 1 &&
+                } else if (i == restaurantChosenByMe.getColleagueList().size() - 1 &&
                         restaurantChosenByMe.getColleagueList().get(i).getColleagueName().equals(me.getColleagueName())) {
                     participants = restaurantChosenByMe.getColleagueList().get(i).getColleagueName();
                 }

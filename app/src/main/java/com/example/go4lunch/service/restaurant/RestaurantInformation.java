@@ -6,18 +6,22 @@ import android.location.Location;
 import android.util.Base64;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.go4lunch.api.RestaurantFirebaseHelper;
 import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.colleague.ColleagueChoice;
-import com.example.go4lunch.service.colleague.ColleagueLike;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FetchPhotoRequest;
 import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -74,8 +78,12 @@ public class RestaurantInformation {
                 placesClient.fetchPhoto(photoRequest).addOnSuccessListener((fetchPhotoResponse) -> {
                     //Take restaurant information
                     String restaurantId = place.getId();
+
                     String restaurantName = place.getName();
-                    String restaurantAddress = place.getAddress();
+
+                    String restaurantAddressNotFormated = place.getAddress();
+                    String restaurantAddress= restaurantAddressNotFormated.substring(0,
+                            restaurantAddressNotFormated.indexOf(","));
 
                     //Get opening hours
                     Calendar calendar = Calendar.getInstance();
@@ -110,18 +118,18 @@ public class RestaurantInformation {
                     } else {
                         restaurantWebsite = null;
                     }
+
                     //Create a new MyRestaurantModel and add it in the Singleton's list
-                    MyRestaurantModel restaurant;
+                   final MyRestaurantModel restaurant;
                     //First restaurant
                     if (!firstRestaurant) {
                         restaurantId1 = place.getId();
                         restaurantName1 = place.getName();
                         restaurantLatLng1 = place.getLatLng();
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
-                                restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName,
-                                restaurantPhoneNumber, restaurantWebsite, false,
-                                ColleagueChoice.setScarlettAndHughJoining(), ColleagueLike.setSevenPeopleLike());
+                                restaurantAddress, restaurantOpeningHours, restaurantDistance,
+                                bitmapName, restaurantPhoneNumber, restaurantWebsite, false,
+                                ColleagueChoice.setScarlettAndHughJoining(), 7);
                         firstRestaurant = true;
                         //Second restaurant
                     } else if (firstRestaurant && !secondRestaurant) {
@@ -129,25 +137,35 @@ public class RestaurantInformation {
                         restaurantName2 = place.getName();
                         restaurantLatLng2 = place.getLatLng();
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
-                                restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName,
-                                restaurantPhoneNumber, restaurantWebsite, false,
-                                ColleagueChoice.setNanaAndGodfreyJoining(), ColleagueLike.setFivePeopleLikes());
+                               restaurantAddress, restaurantOpeningHours, restaurantDistance,
+                                bitmapName, restaurantPhoneNumber, restaurantWebsite, false,
+                                ColleagueChoice.setNanaAndGodfreyJoining(), 5);
                         secondRestaurant = true;
                         //Other restaurants
                     } else {
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
-                                restaurantAddress.substring(0, restaurantAddress.indexOf(",")),
-                                restaurantOpeningHours, restaurantDistance, bitmapName,
-                                restaurantPhoneNumber, restaurantWebsite, false,
-                                emptyColleagueList, ColleagueLike.setTwoPeopleLikes());
+                                restaurantAddress, restaurantOpeningHours, restaurantDistance,
+                                bitmapName, restaurantPhoneNumber, restaurantWebsite, false,
+                                emptyColleagueList, 2);
                     }
 
-                    Restaurants.getInstance().getMyRestaurantList().add(restaurant);
+                    RestaurantFirebaseHelper.getRestaurantFirebase(restaurantId)
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                             DocumentSnapshot document= task.getResult();
+                            boolean documentExists = document.exists();
+                            if(documentExists){
+                                restaurant.setLikeNumber(document.getLong("likeNumber"));
+                            } else {
+                                //Set RestaurantFirebase to firebase
+                                RestaurantFirebaseHelper.createRestaurantFirebase(restaurant.getRestaurantId(),
+                                        restaurant.getLikeNumber());
+                            }
 
-                    //Add RestaurantFirebase to firebase
-                    RestaurantFirebaseHelper.createRestaurantFirebase(restaurant.getRestaurantId(),
-                            restaurant.getColleagueLikeList().size());
+                            Restaurants.getInstance().getMyRestaurantList().add(restaurant);
+                        }
+                      });
 
                 }).addOnFailureListener((exception) -> {
                     if (exception instanceof ApiException) {

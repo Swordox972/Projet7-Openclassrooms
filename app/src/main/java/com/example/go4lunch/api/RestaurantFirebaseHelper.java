@@ -14,7 +14,7 @@ public class RestaurantFirebaseHelper {
         return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
     }
     // --- CREATE ---
-    public static Task<Void> createRestaurantFirebase(String id, int likeNumber) {
+    public static Task<Void> createRestaurantFirebase(String id, long likeNumber) {
         MyRestaurantFirebase  myRestaurantFirebase= new MyRestaurantFirebase(id, likeNumber);
         return RestaurantFirebaseHelper.getRestaurantFirebaseCollection().document(id)
                 .set(myRestaurantFirebase);
@@ -26,7 +26,7 @@ public class RestaurantFirebaseHelper {
     }
 
     // --- UPDATE ---
-    public static Task<Void> updateRestaurantFirebase(String id, int likeNumber) {
+    public static Task<Void> updateRestaurantFirebase(String id, long likeNumber) {
         return RestaurantFirebaseHelper.getRestaurantFirebaseCollection().document(id)
                 .update("likeNumber", likeNumber);
     }

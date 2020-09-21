@@ -121,23 +121,24 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
 
         restaurantLike.setOnClickListener(view -> {
             if (!myRestaurant.isLiked()) {
-                myRestaurant.getColleagueLikeList().add(new Colleague());
+                long restaurantLikeNumber= myRestaurant.getLikeNumber();
+                myRestaurant.setLikeNumber(restaurantLikeNumber + 1);
                 initializeRestaurantStars();
                 //Update myRestaurant like number
                 RestaurantFirebaseHelper.updateRestaurantFirebase(myRestaurant.getRestaurantId(),
-                        myRestaurant.getColleagueLikeList().size());
+                        myRestaurant.getLikeNumber());
                 //Make a Toast to show user he liked the restaurant
                 Toast.makeText(this, getString(R.string.restaurant_liked), Toast.LENGTH_SHORT)
                         .show();
                 myRestaurant.setLiked(true);
             } else {
-                int i = myRestaurant.getColleagueLikeList().size() - 1;
-                myRestaurant.getColleagueLikeList().remove(i);
+                long restaurantLikeNumber = myRestaurant.getLikeNumber();
+                myRestaurant.setLikeNumber(restaurantLikeNumber - 1);
                 initializeRestaurantStars();
                 myRestaurant.setLiked(false);
                 //Update myRestaurant like number
                 RestaurantFirebaseHelper.updateRestaurantFirebase(myRestaurant.getRestaurantId(),
-                        myRestaurant.getColleagueLikeList().size());
+                        myRestaurant.getLikeNumber());
                 //Show Toast to user he disliked the restaurant
                 Toast.makeText(this, getString(R.string.restaurant_not_liked), Toast.LENGTH_SHORT)
                         .show();
@@ -158,20 +159,20 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     }
 
     private void initializeRestaurantStars() {
-        List<Colleague> colleagueLikeList = myRestaurant.getColleagueLikeList();
-        if (myRestaurant.getColleagueLikeList().size() < 3) {
+        long restaurantLikeNumber= myRestaurant.getLikeNumber();
+        if (restaurantLikeNumber < 3) {
             star1.setImageDrawable(null);
             star2.setImageDrawable(null);
             star3.setImageDrawable(null);
-        } else if (colleagueLikeList.size() == 3 && colleagueLikeList.size() < 5) {
+        } else if (restaurantLikeNumber == 3 && restaurantLikeNumber < 5) {
             star1.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
             star2.setImageDrawable(null);
             star3.setImageDrawable(null);
-        } else if (colleagueLikeList.size() == 5 && colleagueLikeList.size() < 7) {
+        } else if (restaurantLikeNumber == 5 && restaurantLikeNumber < 7) {
             star1.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
             star2.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
             star3.setImageDrawable(null);
-        } else if (colleagueLikeList.size() == 7 || colleagueLikeList.size() > 7) {
+        } else if (restaurantLikeNumber == 7 || restaurantLikeNumber > 7) {
             star1.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
             star2.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
             star3.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));

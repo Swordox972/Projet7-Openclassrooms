@@ -3,12 +3,12 @@ package com.example.go4lunch.model;
 public class MyRestaurantFirebase {
 
     private String restaurantId;
-    private int likeNumber;
+    private long likeNumber;
 
     public MyRestaurantFirebase() {
     }
 
-    public MyRestaurantFirebase(String restaurantId, int likeNumber) {
+    public MyRestaurantFirebase(String restaurantId, long likeNumber) {
         this.restaurantId = restaurantId;
         this.likeNumber = likeNumber;
     }
@@ -21,11 +21,11 @@ public class MyRestaurantFirebase {
         this.restaurantId = restaurantId;
     }
 
-    public int getLikeNumber() {
+    public long getLikeNumber() {
         return likeNumber;
     }
 
-    public void setLikeNumber(int likeNumber) {
+    public void setLikeNumber(long likeNumber) {
         this.likeNumber = likeNumber;
     }
 }

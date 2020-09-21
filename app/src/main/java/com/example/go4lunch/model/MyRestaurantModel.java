@@ -15,7 +15,7 @@ public class MyRestaurantModel implements Serializable {
     private String restaurantWebsite;
     private boolean isLiked;
     private List<Colleague> colleagueList;
-    private List<Colleague> colleagueLikeList;
+    private long likeNumber;
 
     // Empty constructor
     public MyRestaurantModel() {
@@ -26,7 +26,7 @@ public class MyRestaurantModel implements Serializable {
                              String restaurantOpening, String restaurantDistance,
                              String restaurantImageName, String restaurantPhoneNumber,
                              String restaurantWebsite, boolean isLiked,
-                             List<Colleague> colleagueList, List<Colleague> colleagueLikeList) {
+                             List<Colleague> colleagueList, long likeNumber) {
 
         this.restaurantId = restaurantId;
         this.restaurantName = restaurantName;
@@ -38,7 +38,7 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantWebsite = restaurantWebsite;
         this.isLiked = isLiked;
         this.colleagueList = colleagueList;
-        this.colleagueLikeList = colleagueLikeList;
+       this.likeNumber= likeNumber;
     }
 
     public String getRestaurantId() {
@@ -121,11 +121,11 @@ public class MyRestaurantModel implements Serializable {
         this.colleagueList = colleagueList;
     }
 
-    public List<Colleague> getColleagueLikeList() {
-        return colleagueLikeList;
+    public long getLikeNumber() {
+        return likeNumber;
     }
 
-    public void setColleagueLikeList(List<Colleague> colleagueLikeList) {
-        this.colleagueLikeList = colleagueLikeList;
+    public void setLikeNumber(long likeNumber) {
+        this.likeNumber = likeNumber;
     }
 }
