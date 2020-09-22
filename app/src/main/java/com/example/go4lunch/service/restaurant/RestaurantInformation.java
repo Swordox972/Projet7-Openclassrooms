@@ -8,12 +8,16 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.go4lunch.R;
 import com.example.go4lunch.api.RestaurantFirebaseHelper;
 import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.colleague.ColleagueChoice;
+import com.example.go4lunch.ui.activity.MapsActivity;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.model.PhotoMetadata;
@@ -92,12 +96,14 @@ public class RestaurantInformation {
                                 restaurantOpeningHours = place.getOpeningHours().getWeekdayText().get(dayOfWeek + 5);
                         }
                     }
+                    //Get restaurant LatLng
+                    LatLng restaurantLatLng= place.getLatLng();
 
                     //Get restaurant distance
                     float[] results = new float[1];
                     Location.distanceBetween(myCurrentLatLng.latitude,
-                            myCurrentLatLng.longitude, place.getLatLng().latitude,
-                            place.getLatLng().longitude, results);
+                            myCurrentLatLng.longitude, restaurantLatLng.latitude,
+                            restaurantLatLng.longitude, results);
                     //format the distance value to be round
                     String format = String.format("%.0f", results[0]);
                     String restaurantDistance = format + "m";
@@ -118,9 +124,9 @@ public class RestaurantInformation {
                     //Create a new MyRestaurantModel and add it in the Singleton's list
                    final MyRestaurantModel restaurant;
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
-                                restaurantAddress, restaurantOpeningHours, restaurantDistance,
-                                bitmapName, restaurantPhoneNumber, restaurantWebsite, false,
-                                emptyColleagueList, 2);
+                                restaurantAddress, restaurantOpeningHours, restaurantLatLng,
+                                restaurantDistance, bitmapName, restaurantPhoneNumber,
+                                restaurantWebsite, false, emptyColleagueList, 2);
                     //If document exists set like number else set restaurant to firebase with id
                     // and like number
                     RestaurantFirebaseHelper.getRestaurantFirebase(restaurantId)
@@ -143,16 +149,29 @@ public class RestaurantInformation {
                            myRestaurantModelList.add(restaurant);
                             //Set colleague list and like number to first and second restaurant
                             if (myRestaurantModelList.size() == 2) {
+                                //Set colleague and like number to first restaurant
                                 restaurantName1= myRestaurantModelList.get(0).getRestaurantName();
                                 restaurantName2= myRestaurantModelList.get(1).getRestaurantName();
                                 myRestaurantModelList.get(0).setColleagueList(ColleagueChoice
                                         .setScarlettAndHughJoining());
                                 myRestaurantModelList.get(0).setLikeNumber(7);
+                                //Set marker selected to first restaurant
+                                MarkerOptions options1 = new MarkerOptions()
+                                        .position(myRestaurantModelList.get(0).getRestaurantLatLng())
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant_selected))
+                                        .title(myRestaurantModelList.get(0).getRestaurantName());
+                                MapsActivity.mMap.addMarker(options1);
 
+                                //Set colleague and like number to second restaurant
                                 myRestaurantModelList.get(1).setColleagueList(ColleagueChoice
                                         .setNanaAndGodfreyJoining());
                                 myRestaurantModelList.get(1).setLikeNumber(5);
-
+                                //Set marker selected to restaurant 2
+                                MarkerOptions options2 = new MarkerOptions()
+                                        .position(myRestaurantModelList.get(1).getRestaurantLatLng())
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant_selected))
+                                        .title(myRestaurantModelList.get(1).getRestaurantName());
+                                MapsActivity.mMap.addMarker(options2);
                                 //Add data to firebase
                                 RestaurantFirebaseHelper.createRestaurantFirebase(myRestaurantModelList
                                                 .get(0).getRestaurantId(), myRestaurantModelList

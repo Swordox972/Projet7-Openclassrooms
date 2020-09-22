@@ -167,9 +167,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 placeLikelihood.getPlace().getName(),
                                 placeLikelihood.getLikelihood()));
 
-                        //Get my current latitude and longitude
+                        //Get my current latitude and longitude and move camera to it
                         if (firstLocation) {
                             myCurrentLatLng = placeLikelihood.getPlace().getLatLng();
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myCurrentLatLng, 17));
                             firstLocation = false;
                         }
 
@@ -187,42 +188,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             //Get latitude and longitude of restaurant
                             restaurantLatLng = placeLikelihood.getPlace().getLatLng();
 
-                            /*Move camera to the first restaurant found, setFirstRestaurantFound
-                             to true and set marker selected to the first and second restaurant */
+
                             //Add marker with mMap
-                            if (!firstRestaurantFound &&
-                                    placeLikelihood.getPlace().getPhotoMetadatas() != null) {
-                                firstRestaurantFound = true;
-
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(restaurantLatLng, 15));
-                                MarkerOptions options = new MarkerOptions()
-                                        .position(MapsActivity.restaurantLatLng)
-                                        .icon(BitmapDescriptorFactory.fromResource
-                                                (R.drawable.marker_restaurant_selected))
-                                        .title(placeLikelihood.getPlace().getName());
-                                mMap.addMarker(options);
-
-
-                            } else if (firstRestaurantFound && !secondRestaurantFound &&
-                                    placeLikelihood.getPlace().getPhotoMetadatas() != null) {
-                                secondRestaurantFound = true;
-                                //Add marker selected to second restaurant
-                                MarkerOptions options = new MarkerOptions()
-                                        .position(MapsActivity.restaurantLatLng)
-                                        .icon(BitmapDescriptorFactory.fromResource
-                                                (R.drawable.marker_restaurant_selected))
-                                        .title(placeLikelihood.getPlace().getName());
-                                mMap.addMarker(options);
-
-                            } else if (firstRestaurantFound && secondRestaurantFound &&
-                                    placeLikelihood.getPlace().getPhotoMetadatas() != null) {
                                 MarkerOptions options = new MarkerOptions()
                                         .position(MapsActivity.restaurantLatLng)
                                         .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant))
                                         .title(placeLikelihood.getPlace().getName());
 
                                 mMap.addMarker(options);
-                            }
+
                         }
                     }
                     //Call method to get restaurant information

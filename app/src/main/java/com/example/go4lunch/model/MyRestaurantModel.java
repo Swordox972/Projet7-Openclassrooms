@@ -1,5 +1,7 @@
 package com.example.go4lunch.model;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,6 +11,7 @@ public class MyRestaurantModel implements Serializable {
     private String restaurantName;
     private String restaurantAddress;
     private String restaurantOpening;
+    private transient LatLng restaurantLatLng;
     private String restaurantDistance;
     private String restaurantImageName;
     private String restaurantPhoneNumber;
@@ -23,7 +26,7 @@ public class MyRestaurantModel implements Serializable {
 
     //Constructor with parameters
     public MyRestaurantModel(String restaurantId, String restaurantName, String restaurantAddress,
-                             String restaurantOpening, String restaurantDistance,
+                             String restaurantOpening,LatLng restaurantLatLng ,String restaurantDistance,
                              String restaurantImageName, String restaurantPhoneNumber,
                              String restaurantWebsite, boolean isLiked,
                              List<Colleague> colleagueList, long likeNumber) {
@@ -32,6 +35,7 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantName = restaurantName;
         this.restaurantAddress = restaurantAddress;
         this.restaurantOpening = restaurantOpening;
+        this.restaurantLatLng= restaurantLatLng;
         this.restaurantDistance = restaurantDistance;
         this.restaurantImageName = restaurantImageName;
         this.restaurantPhoneNumber = restaurantPhoneNumber;
@@ -71,6 +75,14 @@ public class MyRestaurantModel implements Serializable {
 
     public void setRestaurantOpening(String restaurantOpening) {
         this.restaurantOpening = restaurantOpening;
+    }
+
+    public LatLng getRestaurantLatLng() {
+        return restaurantLatLng;
+    }
+
+    public void setRestaurantLatLng(LatLng restaurantLatLng) {
+        this.restaurantLatLng = restaurantLatLng;
     }
 
     public String getRestaurantDistance() {
