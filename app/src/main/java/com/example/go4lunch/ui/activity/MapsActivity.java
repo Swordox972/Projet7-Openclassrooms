@@ -30,6 +30,7 @@ import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.Notifications.MyReceiver;
+import com.example.go4lunch.service.colleague.ColleagueChoice;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
 import com.example.go4lunch.service.restaurant.Restaurants;
 import com.example.go4lunch.ui.fragment.ColleagueFragment;
@@ -361,13 +362,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 case R.id.page_2:
                     toolbarTitle.setText(hungry);
                     toolbarSearch.setVisibility(View.VISIBLE);
-                    floatingActionButton.hide();
+                    floatingActionButton.setVisibility(View.GONE);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
                             new RestaurantFragment()).commit();
 
                     break;
                 case R.id.page_3:
-                    floatingActionButton.hide();
+                    floatingActionButton.setVisibility(View.GONE);
                     toolbarSearch.setVisibility(View.GONE);
                     toolbarTitle.setText(availableWorkmates);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,

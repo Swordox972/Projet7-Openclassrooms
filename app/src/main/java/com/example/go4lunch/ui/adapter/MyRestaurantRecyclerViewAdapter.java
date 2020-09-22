@@ -15,7 +15,9 @@ import com.example.go4lunch.R;
 import com.example.go4lunch.events.OpenRestaurantEvent;
 import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
+import com.example.go4lunch.service.colleague.ColleagueChoice;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
+import com.example.go4lunch.service.restaurant.Restaurants;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -56,6 +58,7 @@ public class MyRestaurantRecyclerViewAdapter extends
         holder.restaurantDistance.setText(myRestaurant.getRestaurantDistance());
         holder.restaurantImageView.setImageBitmap(RestaurantInformation.StringToBitMap(
                 myRestaurant.getRestaurantImageName()));
+
         if (myRestaurant.getColleagueList().size() != 0) {
             holder.restaurantPersonImageView.setImageDrawable(ContextCompat.getDrawable(
                     context, R.drawable.ic_outline_person_24));

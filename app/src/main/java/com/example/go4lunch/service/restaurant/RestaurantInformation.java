@@ -32,12 +32,8 @@ import java.util.List;
 public class RestaurantInformation {
 
     static String restaurantOpeningHours;
-    public static String restaurantId1;
-    public static String restaurantId2;
     public static String restaurantName1;
     public static String restaurantName2;
-    public static LatLng restaurantLatLng1;
-    public static LatLng restaurantLatLng2;
     public static boolean firstRestaurant;
     public static boolean secondRestaurant;
     public static List<Colleague> emptyColleagueList = new ArrayList<>();
@@ -121,34 +117,12 @@ public class RestaurantInformation {
 
                     //Create a new MyRestaurantModel and add it in the Singleton's list
                    final MyRestaurantModel restaurant;
-                    //First restaurant
-                    if (!firstRestaurant) {
-                        restaurantId1 = place.getId();
-                        restaurantName1 = place.getName();
-                        restaurantLatLng1 = place.getLatLng();
-                        restaurant = new MyRestaurantModel(restaurantId, restaurantName,
-                                restaurantAddress, restaurantOpeningHours, restaurantDistance,
-                                bitmapName, restaurantPhoneNumber, restaurantWebsite, false,
-                                ColleagueChoice.setScarlettAndHughJoining(), 7);
-                        firstRestaurant = true;
-                        //Second restaurant
-                    } else if (firstRestaurant && !secondRestaurant) {
-                        restaurantId2 = place.getId();
-                        restaurantName2 = place.getName();
-                        restaurantLatLng2 = place.getLatLng();
-                        restaurant = new MyRestaurantModel(restaurantId, restaurantName,
-                               restaurantAddress, restaurantOpeningHours, restaurantDistance,
-                                bitmapName, restaurantPhoneNumber, restaurantWebsite, false,
-                                ColleagueChoice.setNanaAndGodfreyJoining(), 5);
-                        secondRestaurant = true;
-                        //Other restaurants
-                    } else {
                         restaurant = new MyRestaurantModel(restaurantId, restaurantName,
                                 restaurantAddress, restaurantOpeningHours, restaurantDistance,
                                 bitmapName, restaurantPhoneNumber, restaurantWebsite, false,
                                 emptyColleagueList, 2);
-                    }
-
+                    //If document exists set like number else set restaurant to firebase with id
+                    // and like number
                     RestaurantFirebaseHelper.getRestaurantFirebase(restaurantId)
                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -163,7 +137,31 @@ public class RestaurantInformation {
                                         restaurant.getLikeNumber());
                             }
 
-                            Restaurants.getInstance().getMyRestaurantList().add(restaurant);
+                            List<MyRestaurantModel> myRestaurantModelList= Restaurants.getInstance()
+                                    .getMyRestaurantList();
+
+                           myRestaurantModelList.add(restaurant);
+                            //Set colleague list and like number to first and second restaurant
+                            if (myRestaurantModelList.size() == 2) {
+                                restaurantName1= myRestaurantModelList.get(0).getRestaurantName();
+                                restaurantName2= myRestaurantModelList.get(1).getRestaurantName();
+                                myRestaurantModelList.get(0).setColleagueList(ColleagueChoice
+                                        .setScarlettAndHughJoining());
+                                myRestaurantModelList.get(0).setLikeNumber(7);
+
+                                myRestaurantModelList.get(1).setColleagueList(ColleagueChoice
+                                        .setNanaAndGodfreyJoining());
+                                myRestaurantModelList.get(1).setLikeNumber(5);
+
+                                //Add data to firebase
+                                RestaurantFirebaseHelper.createRestaurantFirebase(myRestaurantModelList
+                                                .get(0).getRestaurantId(), myRestaurantModelList
+                                        .get(0).getLikeNumber());
+                                RestaurantFirebaseHelper.createRestaurantFirebase(myRestaurantModelList
+                                                .get(1).getRestaurantId(), myRestaurantModelList
+                                        .get(1).getLikeNumber());
+
+                            }
                         }
                       });
 
@@ -186,8 +184,9 @@ public class RestaurantInformation {
                 }
             });
         }
-
     }
+
+
 
     public static String bitmapToString(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

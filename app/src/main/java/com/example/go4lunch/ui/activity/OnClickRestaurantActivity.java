@@ -178,8 +178,6 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
             star3.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_star_yellow_18));
         }
 
-
-
     }
 
     private void initializeFao() {
