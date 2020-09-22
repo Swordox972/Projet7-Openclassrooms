@@ -128,7 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         initializeAutocompleteToolbar();
         //Initialize floating action button
         floatingActionButton.setOnClickListener((View view) -> {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myCurrentLatLng, 15));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myCurrentLatLng, 17));
         });
         initializeBottomNavigation();
         initializeNavigationViewHeader();
@@ -158,8 +158,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (task.isSuccessful()) {
                     FindCurrentPlaceResponse response = task.getResult();
                     boolean firstLocation = true;
-                    boolean firstRestaurantFound = false;
-                    boolean secondRestaurantFound = false;
                     //Stock place id
                     List<String> placeIdList = new ArrayList<>();
                     for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
@@ -169,9 +167,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         //Get my current latitude and longitude and move camera to it
                         if (firstLocation) {
+                            firstLocation = false;
                             myCurrentLatLng = placeLikelihood.getPlace().getLatLng();
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myCurrentLatLng, 17));
-                            firstLocation = false;
                         }
 
                         final Place.Type lookingFor = RESTAURANT; // Place.Type.RESTAURANT
@@ -187,7 +185,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                             //Get latitude and longitude of restaurant
                             restaurantLatLng = placeLikelihood.getPlace().getLatLng();
-
 
                             //Add marker with mMap
                                 MarkerOptions options = new MarkerOptions()

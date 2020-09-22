@@ -7,11 +7,14 @@ import com.example.go4lunch.service.colleague.DummyColleagueApiGenerator;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+@RunWith(JUnit4.class)
 public class ColleagueApiServiceUnitTest {
 
     private ColleagueApiService apiService;
