@@ -322,6 +322,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     SupportMapFragment mapFragment = SupportMapFragment.newInstance();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
                             mapFragment).commit();
+                    placeSearch= null;// Reset place search to load the restaurants again
                     mapFragment.getMapAsync(this);
                     Restaurants.getInstance().getFilteredRestaurantList().clear();
                     toolbarSearch.setVisibility(View.VISIBLE);
@@ -374,6 +375,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+                //Place search in autocomplete
                 placeSearch = Autocomplete.getPlaceFromIntent(data);
                 Log.i("success", "Place: " + placeSearch.getName() + ", " + placeSearch.getId());
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(placeSearch.getLatLng(), 20));
