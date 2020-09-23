@@ -30,7 +30,6 @@ import com.example.go4lunch.BuildConfig;
 import com.example.go4lunch.R;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.Notifications.MyReceiver;
-import com.example.go4lunch.service.colleague.ColleagueChoice;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
 import com.example.go4lunch.service.restaurant.Restaurants;
 import com.example.go4lunch.ui.fragment.ColleagueFragment;
@@ -187,12 +186,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             restaurantLatLng = placeLikelihood.getPlace().getLatLng();
 
                             //Add marker with mMap
-                                MarkerOptions options = new MarkerOptions()
-                                        .position(MapsActivity.restaurantLatLng)
-                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant))
-                                        .title(placeLikelihood.getPlace().getName());
+                            MarkerOptions options = new MarkerOptions()
+                                    .position(MapsActivity.restaurantLatLng)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant))
+                                    .title(placeLikelihood.getPlace().getName());
 
-                                mMap.addMarker(options);
+                            mMap.addMarker(options);
 
                         }
                     }
@@ -319,7 +318,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     SupportMapFragment mapFragment = SupportMapFragment.newInstance();
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view,
                             mapFragment).commit();
-                    placeSearch= null;// Reset place search to load the restaurants again
+                    placeSearch = null;// Reset place search to load the restaurants again
                     mapFragment.getMapAsync(this);
                     Restaurants.getInstance().getFilteredRestaurantList().clear();
                     toolbarSearch.setVisibility(View.VISIBLE);

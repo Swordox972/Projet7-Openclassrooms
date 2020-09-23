@@ -1,11 +1,8 @@
 package com.example.go4lunch.model;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import java.io.Serializable;
 
-public class Colleague implements Serializable{
+public class Colleague implements Serializable {
     private int colleagueId;
     private String colleagueName;
     private Status colleagueStatus = Status.notDecided;
@@ -18,11 +15,11 @@ public class Colleague implements Serializable{
 
     //Constructor with parameters
     public Colleague(int colleagueId, String colleagueName, Status colleagueStatus,
-                     String colleagueRestaurantChoice,String avatarUrl) {
+                     String colleagueRestaurantChoice, String avatarUrl) {
         this.colleagueId = colleagueId;
         this.colleagueName = colleagueName;
         this.colleagueStatus = colleagueStatus;
-        this.colleagueRestaurantChoice= colleagueRestaurantChoice;
+        this.colleagueRestaurantChoice = colleagueRestaurantChoice;
         this.avatarUrl = avatarUrl;
     }
 
@@ -66,7 +63,6 @@ public class Colleague implements Serializable{
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
     }
-
 
 
     public enum Status {

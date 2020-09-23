@@ -36,13 +36,12 @@ public class RestaurantFragment extends Fragment {
     private List<MyRestaurantModel> restaurantList = Restaurants.getInstance().getMyRestaurantList();
     private List<MyRestaurantModel> restaurantFilteredList;
     private MyRestaurantRecyclerViewAdapter myAdapter;
-    private OnClickRestaurantActivity onClickRestaurantActivity;
+
     private static final int RESTAURANT_REQUEST_CODE = 18;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        onClickRestaurantActivity = new OnClickRestaurantActivity();
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_restaurant_list, container, false);
         mapsActivity = (MapsActivity) getActivity();

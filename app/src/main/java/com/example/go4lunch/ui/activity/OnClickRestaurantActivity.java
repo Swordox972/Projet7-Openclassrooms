@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 import com.example.go4lunch.R;
 import com.example.go4lunch.api.RestaurantFirebaseHelper;
 import com.example.go4lunch.model.Colleague;
-import com.example.go4lunch.model.MyRestaurantFirebase;
 import com.example.go4lunch.model.MyRestaurantModel;
 import com.example.go4lunch.service.Users;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
@@ -27,8 +26,6 @@ import com.example.go4lunch.ui.fragment.OnClickRestaurantFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -121,7 +118,7 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
 
         restaurantLike.setOnClickListener(view -> {
             if (!myRestaurant.isLiked()) {
-                long restaurantLikeNumber= myRestaurant.getLikeNumber();
+                long restaurantLikeNumber = myRestaurant.getLikeNumber();
                 myRestaurant.setLikeNumber(restaurantLikeNumber + 1);
                 initializeRestaurantStars();
                 //Update myRestaurant like number
@@ -159,7 +156,7 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
     }
 
     private void initializeRestaurantStars() {
-        long restaurantLikeNumber= myRestaurant.getLikeNumber();
+        long restaurantLikeNumber = myRestaurant.getLikeNumber();
         if (restaurantLikeNumber < 3) {
             star1.setImageDrawable(null);
             star2.setImageDrawable(null);

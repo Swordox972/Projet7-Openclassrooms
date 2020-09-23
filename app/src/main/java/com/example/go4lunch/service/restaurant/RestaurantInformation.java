@@ -82,7 +82,7 @@ public class RestaurantInformation {
                     String restaurantName = place.getName();
 
                     String restaurantAddressNotFormated = place.getAddress();
-                    String restaurantAddress= restaurantAddressNotFormated.substring(0,
+                    String restaurantAddress = restaurantAddressNotFormated.substring(0,
                             restaurantAddressNotFormated.indexOf(","));
 
                     //Get opening hours
@@ -97,7 +97,7 @@ public class RestaurantInformation {
                         }
                     }
                     //Get restaurant LatLng
-                    LatLng restaurantLatLng= place.getLatLng();
+                    LatLng restaurantLatLng = place.getLatLng();
 
                     //Get restaurant distance
                     float[] results = new float[1];
@@ -114,7 +114,7 @@ public class RestaurantInformation {
                     Bitmap bitmap = fetchPhotoResponse.getBitmap();
                     String bitmapName = bitmapToString(bitmap);
                     //Get the website
-                     String restaurantWebsite;
+                    String restaurantWebsite;
                     if (place.getWebsiteUri() != null) {
                         restaurantWebsite = place.getWebsiteUri().toString();
                     } else {
@@ -122,67 +122,67 @@ public class RestaurantInformation {
                     }
 
                     //Create a new MyRestaurantModel and add it in the Singleton's list
-                   final MyRestaurantModel restaurant;
-                        restaurant = new MyRestaurantModel(restaurantId, restaurantName,
-                                restaurantAddress, restaurantOpeningHours, restaurantLatLng,
-                                restaurantDistance, bitmapName, restaurantPhoneNumber,
-                                restaurantWebsite, false, emptyColleagueList, 2);
+                    final MyRestaurantModel restaurant;
+                    restaurant = new MyRestaurantModel(restaurantId, restaurantName,
+                            restaurantAddress, restaurantOpeningHours, restaurantLatLng,
+                            restaurantDistance, bitmapName, restaurantPhoneNumber,
+                            restaurantWebsite, false, emptyColleagueList, 2);
                     //If document exists set like number else set restaurant to firebase with id
                     // and like number
                     RestaurantFirebaseHelper.getRestaurantFirebase(restaurantId)
                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                             DocumentSnapshot document= task.getResult();
-                            boolean documentExists = document.exists();
-                            if(documentExists){
-                                restaurant.setLikeNumber(document.getLong("likeNumber"));
-                            } else {
-                                //Set RestaurantFirebase to firebase
-                                RestaurantFirebaseHelper.createRestaurantFirebase(restaurant.getRestaurantId(),
-                                        restaurant.getLikeNumber());
-                            }
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    DocumentSnapshot document = task.getResult();
+                                    boolean documentExists = document.exists();
+                                    if (documentExists) {
+                                        restaurant.setLikeNumber(document.getLong("likeNumber"));
+                                    } else {
+                                        //Set RestaurantFirebase to firebase
+                                        RestaurantFirebaseHelper.createRestaurantFirebase(restaurant.getRestaurantId(),
+                                                restaurant.getLikeNumber());
+                                    }
 
-                            List<MyRestaurantModel> myRestaurantModelList= Restaurants.getInstance()
-                                    .getMyRestaurantList();
+                                    List<MyRestaurantModel> myRestaurantModelList = Restaurants.getInstance()
+                                            .getMyRestaurantList();
 
-                           myRestaurantModelList.add(restaurant);
-                            //Set colleague list and like number to first and second restaurant
-                            if (myRestaurantModelList.size() == 2) {
-                                //Set colleague and like number to first restaurant
-                                restaurantName1= myRestaurantModelList.get(0).getRestaurantName();
-                                restaurantName2= myRestaurantModelList.get(1).getRestaurantName();
-                                myRestaurantModelList.get(0).setColleagueList(ColleagueChoice
-                                        .setScarlettAndHughJoining());
-                                myRestaurantModelList.get(0).setLikeNumber(7);
-                                //Set marker selected to first restaurant
-                                MarkerOptions options1 = new MarkerOptions()
-                                        .position(myRestaurantModelList.get(0).getRestaurantLatLng())
-                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant_selected))
-                                        .title(myRestaurantModelList.get(0).getRestaurantName());
-                                MapsActivity.mMap.addMarker(options1);
+                                    myRestaurantModelList.add(restaurant);
+                                    //Set colleague list and like number to first and second restaurant
+                                    if (myRestaurantModelList.size() == 2) {
+                                        //Set colleague and like number to first restaurant
+                                        restaurantName1 = myRestaurantModelList.get(0).getRestaurantName();
+                                        restaurantName2 = myRestaurantModelList.get(1).getRestaurantName();
+                                        myRestaurantModelList.get(0).setColleagueList(ColleagueChoice
+                                                .setScarlettAndHughJoining());
+                                        myRestaurantModelList.get(0).setLikeNumber(7);
+                                        //Set marker selected to first restaurant
+                                        MarkerOptions options1 = new MarkerOptions()
+                                                .position(myRestaurantModelList.get(0).getRestaurantLatLng())
+                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant_selected))
+                                                .title(myRestaurantModelList.get(0).getRestaurantName());
+                                        MapsActivity.mMap.addMarker(options1);
 
-                                //Set colleague and like number to second restaurant
-                                myRestaurantModelList.get(1).setColleagueList(ColleagueChoice
-                                        .setNanaAndGodfreyJoining());
-                                myRestaurantModelList.get(1).setLikeNumber(5);
-                                //Set marker selected to restaurant 2
-                                MarkerOptions options2 = new MarkerOptions()
-                                        .position(myRestaurantModelList.get(1).getRestaurantLatLng())
-                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant_selected))
-                                        .title(myRestaurantModelList.get(1).getRestaurantName());
-                                MapsActivity.mMap.addMarker(options2);
-                                //Add data to firebase
-                                RestaurantFirebaseHelper.createRestaurantFirebase(myRestaurantModelList
+                                        //Set colleague and like number to second restaurant
+                                        myRestaurantModelList.get(1).setColleagueList(ColleagueChoice
+                                                .setNanaAndGodfreyJoining());
+                                        myRestaurantModelList.get(1).setLikeNumber(5);
+                                        //Set marker selected to restaurant 2
+                                        MarkerOptions options2 = new MarkerOptions()
+                                                .position(myRestaurantModelList.get(1).getRestaurantLatLng())
+                                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_restaurant_selected))
+                                                .title(myRestaurantModelList.get(1).getRestaurantName());
+                                        MapsActivity.mMap.addMarker(options2);
+                                        //Add data to firebase
+                                        RestaurantFirebaseHelper.createRestaurantFirebase(myRestaurantModelList
                                                 .get(0).getRestaurantId(), myRestaurantModelList
-                                        .get(0).getLikeNumber());
-                                RestaurantFirebaseHelper.createRestaurantFirebase(myRestaurantModelList
+                                                .get(0).getLikeNumber());
+                                        RestaurantFirebaseHelper.createRestaurantFirebase(myRestaurantModelList
                                                 .get(1).getRestaurantId(), myRestaurantModelList
-                                        .get(1).getLikeNumber());
+                                                .get(1).getLikeNumber());
 
-                            }
-                        }
-                      });
+                                    }
+                                }
+                            });
 
                 }).addOnFailureListener((exception) -> {
                     if (exception instanceof ApiException) {
@@ -204,7 +204,6 @@ public class RestaurantInformation {
             });
         }
     }
-
 
 
     public static String bitmapToString(Bitmap bitmap) {

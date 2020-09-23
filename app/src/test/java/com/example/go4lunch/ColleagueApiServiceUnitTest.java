@@ -26,8 +26,8 @@ public class ColleagueApiServiceUnitTest {
 
     @Test
     public void getColleagueWithSuccess() {
-        List<Colleague> colleagueList= apiService.getColleagues();
-        List<Colleague> expectedColleagueList= DummyColleagueApiGenerator.DUMMY_COLLEAGUES;
+        List<Colleague> colleagueList = apiService.getColleagues();
+        List<Colleague> expectedColleagueList = DummyColleagueApiGenerator.DUMMY_COLLEAGUES;
 
         assertEquals(colleagueList, expectedColleagueList);
     }

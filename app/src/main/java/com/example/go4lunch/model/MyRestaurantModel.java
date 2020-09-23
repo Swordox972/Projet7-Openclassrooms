@@ -26,7 +26,7 @@ public class MyRestaurantModel implements Serializable {
 
     //Constructor with parameters
     public MyRestaurantModel(String restaurantId, String restaurantName, String restaurantAddress,
-                             String restaurantOpening,LatLng restaurantLatLng ,String restaurantDistance,
+                             String restaurantOpening, LatLng restaurantLatLng, String restaurantDistance,
                              String restaurantImageName, String restaurantPhoneNumber,
                              String restaurantWebsite, boolean isLiked,
                              List<Colleague> colleagueList, long likeNumber) {
@@ -35,14 +35,14 @@ public class MyRestaurantModel implements Serializable {
         this.restaurantName = restaurantName;
         this.restaurantAddress = restaurantAddress;
         this.restaurantOpening = restaurantOpening;
-        this.restaurantLatLng= restaurantLatLng;
+        this.restaurantLatLng = restaurantLatLng;
         this.restaurantDistance = restaurantDistance;
         this.restaurantImageName = restaurantImageName;
         this.restaurantPhoneNumber = restaurantPhoneNumber;
         this.restaurantWebsite = restaurantWebsite;
         this.isLiked = isLiked;
         this.colleagueList = colleagueList;
-       this.likeNumber= likeNumber;
+        this.likeNumber = likeNumber;
     }
 
     public String getRestaurantId() {
@@ -116,7 +116,7 @@ public class MyRestaurantModel implements Serializable {
     public void setRestaurantWebsite(String restaurantWebsite) {
         this.restaurantWebsite = restaurantWebsite;
     }
-    
+
     public boolean isLiked() {
         return isLiked;
     }

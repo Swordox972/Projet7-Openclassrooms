@@ -13,11 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.go4lunch.R;
 import com.example.go4lunch.events.OpenRestaurantEvent;
-import com.example.go4lunch.model.Colleague;
 import com.example.go4lunch.model.MyRestaurantModel;
-import com.example.go4lunch.service.colleague.ColleagueChoice;
 import com.example.go4lunch.service.restaurant.RestaurantInformation;
-import com.example.go4lunch.service.restaurant.Restaurants;
 
 import org.greenrobot.eventbus.EventBus;
 

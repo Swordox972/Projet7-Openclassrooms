@@ -7,15 +7,16 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RestaurantFirebaseHelper {
-    private static final String COLLECTION_NAME= "RestaurantFirebase";
+    private static final String COLLECTION_NAME = "RestaurantFirebase";
 
     // --- COLLECTION REFERENCE ---
     public static CollectionReference getRestaurantFirebaseCollection() {
         return FirebaseFirestore.getInstance().collection(COLLECTION_NAME);
     }
+
     // --- CREATE ---
     public static Task<Void> createRestaurantFirebase(String id, long likeNumber) {
-        MyRestaurantFirebase  myRestaurantFirebase= new MyRestaurantFirebase(id, likeNumber);
+        MyRestaurantFirebase myRestaurantFirebase = new MyRestaurantFirebase(id, likeNumber);
         return RestaurantFirebaseHelper.getRestaurantFirebaseCollection().document(id)
                 .set(myRestaurantFirebase);
     }

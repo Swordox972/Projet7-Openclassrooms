@@ -61,10 +61,10 @@ public class NotificationsService extends IntentService {
             String messageBody = this.getApplicationContext().getString(R.string.you_will_eat_at) +
                     " " + me.getColleagueRestaurantChoice() + " " + this.getApplicationContext()
                     .getString(R.string.at) + " " + restaurantChosenByMe.getRestaurantAddress() + " "
-                    + this.getApplicationContext().getString(R.string.with)+ participants;
+                    + this.getApplicationContext().getString(R.string.with) + participants;
 
             //Create a pendingIntent
-            Context context= this.getApplicationContext();
+            Context context = this.getApplicationContext();
             Intent intent1 = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent1,
                     PendingIntent.FLAG_ONE_SHOT);
@@ -98,7 +98,7 @@ public class NotificationsService extends IntentService {
 
     }
 
-    }
+}
 
 
 

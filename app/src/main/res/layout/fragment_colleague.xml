@@ -50,8 +50,7 @@
         android:textColor="@android:color/black"
         app:layout_constraintStart_toEndOf="@id/colleague_restaurant_status"
         app:layout_constraintTop_toTopOf="@+id/colleague_restaurant_status"
-        app:layout_constraintBottom_toBottomOf="@+id/colleague_restaurant_status"
-        />
+        app:layout_constraintBottom_toBottomOf="@+id/colleague_restaurant_status" />
 
     <View
         android:layout_width="300dp"
