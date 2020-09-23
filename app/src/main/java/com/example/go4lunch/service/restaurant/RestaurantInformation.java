@@ -118,7 +118,7 @@ public class RestaurantInformation {
                     if (place.getWebsiteUri() != null) {
                         restaurantWebsite = place.getWebsiteUri().toString();
                     } else {
-                        restaurantWebsite = null;
+                        restaurantWebsite = "null";
                     }
 
                     //Create a new MyRestaurantModel and add it in the Singleton's list

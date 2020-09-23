@@ -1,5 +1,6 @@
 package com.example.go4lunch.ui.activity;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -143,10 +144,14 @@ public class OnClickRestaurantActivity extends AppCompatActivity {
         });
 
         restaurantWebsite.setOnClickListener((View view) -> {
-            if (myRestaurant.getRestaurantWebsite() != null) {
+            if (myRestaurant.getRestaurantWebsite() != "null") {
+                try {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setData(Uri.parse(myRestaurant.getRestaurantWebsite()));
                 startActivity(intent);
+                }catch (ActivityNotFoundException e) {
+
+                }
             } else {
                 Toast.makeText(this, "No website", Toast.LENGTH_SHORT).show();
             }
